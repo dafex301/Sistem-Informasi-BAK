@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
 
   if (token) {
     const user = await verifyToken(token);
-    console.log(user);
+    // console.log(user);
   }
 
   if (request.nextUrl.pathname.startsWith("/about")) {
