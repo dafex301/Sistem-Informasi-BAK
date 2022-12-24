@@ -3,6 +3,7 @@ import { getAuth, onAuthStateChanged, signOut as signout } from "firebase/auth";
 import { setCookie, destroyCookie } from "nookies";
 import { db } from "./firebaseConfig/init";
 import { doc, getDoc } from "firebase/firestore";
+import * as jose from "jose";
 
 export type TIdTokenResult = {
   token: string;
@@ -77,13 +78,31 @@ export default function AuthContextProvider({ children }: Props) {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setUserData(docSnap.data() as UserData);
+          const userDataObj: UserData = {
+            name: docSnap.data()?.name,
+            nim: docSnap.data()?.nim,
+            role: docSnap.data()?.role,
+          };
 
-          // Set token for backend calls
-          setCookie(null, "userData", JSON.stringify(docSnap.data()), {
+          const secret = new TextEncoder().encode(
+            process.env.NEXT_PUBLIC_JWT_KEY
+          );
+          const alg = "HS256";
+
+          const jwt = await new jose.SignJWT(userDataObj)
+            .setProtectedHeader({ alg })
+            .setIssuedAt()
+            .setIssuer("dafex")
+            .setAudience("sistem-informasi-bak")
+            .setExpirationTime("24h")
+            .sign(secret);
+
+          setCookie(null, "user", jwt, {
             maxAge: 30 * 24 * 60 * 60,
             path: "/",
           });
+
+          setUserData(userDataObj);
         }
 
         // Save decoded token on the state

@@ -15,7 +15,6 @@ import { doc, setDoc } from "firebase/firestore";
 // Other module
 import { setCookie, destroyCookie } from "nookies";
 
-
 export const createAccount = async (auth: Auth, email: string, password: string, name: string, nim: string, role: string) => {
     // Create an account in firebase then store it in firestore with name, nim, and role
     await createUserWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
