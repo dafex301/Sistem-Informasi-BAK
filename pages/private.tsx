@@ -8,7 +8,6 @@ const Home: NextPage = () => {
 
   if (loading) return <h1>Loading...</h1>;
   if (!user) return <h1>U need to login</h1>;
-  console.log(user);
   return (
     <>
       <Head>

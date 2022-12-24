@@ -1,6 +1,8 @@
 import { useState, useEffect, useContext, createContext } from "react";
 import { getAuth, onAuthStateChanged, signOut as signout } from "firebase/auth";
 import { setCookie, destroyCookie } from "nookies";
+import { db } from "./firebaseConfig/init";
+import { doc, getDoc } from "firebase/firestore";
 
 export type TIdTokenResult = {
   token: string;
@@ -28,7 +30,13 @@ export type TIdFirebase = {
   sub: string;
   uid: string;
   user_id: string;
-}
+};
+
+export type UserData = {
+  name: string;
+  nim: string;
+  role: string;
+};
 
 type Props = {
   children: React.ReactNode;
@@ -36,21 +44,24 @@ type Props = {
 
 type UserContext = {
   user: TIdTokenResult | null;
+  userData: UserData | null;
   loading: boolean;
 };
 
 const authContext = createContext<UserContext>({
   user: null,
+  userData: null,
   loading: true,
 });
 
 export default function AuthContextProvider({ children }: Props) {
   const [user, setUser] = useState<TIdTokenResult | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       //user returned from firebase not the state
       if (user) {
         // Save token for backend calls
@@ -61,6 +72,20 @@ export default function AuthContextProvider({ children }: Props) {
           })
         );
 
+        // Get user data from firestore
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setUserData(docSnap.data() as UserData);
+
+          // Set token for backend calls
+          setCookie(null, "userData", JSON.stringify(docSnap.data()), {
+            maxAge: 30 * 24 * 60 * 60,
+            path: "/",
+          });
+        }
+
         // Save decoded token on the state
         user.getIdTokenResult().then((result) => setUser(result));
       }
@@ -70,7 +95,7 @@ export default function AuthContextProvider({ children }: Props) {
   }, []);
 
   return (
-    <authContext.Provider value={{ user, loading }}>
+    <authContext.Provider value={{ user, userData, loading }}>
       {children}
     </authContext.Provider>
   );
