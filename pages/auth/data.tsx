@@ -63,12 +63,16 @@ const Data: NextPage = () => {
             no_induk: nim,
             role: "mahasiswa",
           };
-          createToken(userData).then((jwt) => {
-            setCookie(null, "user", jwt, {
-              maxAge: 30 * 24 * 60 * 60,
-              path: "/",
+          createToken(userData)
+            .then((jwt) => {
+              setCookie(null, "user", jwt, {
+                maxAge: 30 * 24 * 60 * 60,
+                path: "/",
+              });
+            })
+            .then(() => {
+              route.push("/");
             });
-          });
         });
       } catch (e: any) {
         const errorCode = e.code;

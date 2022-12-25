@@ -3,7 +3,13 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  GithubAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { useState } from "react";
 import { useAuth } from "../../lib/authContext";
 import Loading from "../../components/Loading";
@@ -54,6 +60,54 @@ const Login: NextPage = () => {
         const identifier = error.identifier;
         // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  }
+
+  function handleLoginWithFacebook() {
+    const facebookProvider = new FacebookAuthProvider();
+
+    signInWithPopup(auth, facebookProvider)
+      // .then((result) => {
+      // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+      // const credential = FacebookAuthProvider.credentialFromResult(result);
+      // const token = credential.accessToken;
+      // The signed-in user info.
+      // const user = result.user;
+      // })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The identifier of the user's account used.
+        const identifier = error.identifier;
+        // The AuthCredential type that was used.
+        const credential = FacebookAuthProvider.credentialFromError(error);
+        // ...
+      });
+  }
+
+  function handleLoginWithGithub() {
+    const githubProvider = new GithubAuthProvider();
+
+    signInWithPopup(auth, githubProvider)
+      .then((result) => {
+        // This gives you a GitHub Access Token. You can use it to access the GitHub API.
+        const credential = GithubAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+        console.log(token);
+        // The signed-in user info.
+        const user = result.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The identifier of the user's account used.
+        const identifier = error.identifier;
+        // The AuthCredential type that was used.
+        const credential = GithubAuthProvider.credentialFromError(error);
         // ...
       });
   }
@@ -120,12 +174,14 @@ const Login: NextPage = () => {
                 alt={"Google Icon"}
               />
               <Image
+                onClick={handleLoginWithGithub}
                 className="grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300 "
                 src={githubIcon}
                 alt={"Github Icon"}
                 width={25}
               />
               <Image
+                onClick={handleLoginWithFacebook}
                 className="ml-2 grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300"
                 src={facebookIcon}
                 alt={"Facebook Icon"}
