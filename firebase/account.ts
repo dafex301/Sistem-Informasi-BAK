@@ -99,6 +99,22 @@ export const loginAccount = async (
   }
 };
 
+export const writeUserToDb = async (
+  auth: Auth,
+  name: string,
+  no_induk: string
+): Promise<void> => {
+  const user = auth.currentUser;
+  if (user) {
+    await setDoc(doc(db, "users", user.uid), {
+      name: name,
+      no_induk: no_induk,
+      role: "mahasiswa",
+      email: user.email,
+    });
+  }
+};
+
 export const signOut = async () => {
   const auth = getAuth();
   destroyCookie(null, "idToken");

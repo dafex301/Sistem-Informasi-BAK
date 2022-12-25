@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import verifyToken from "./lib/jwt/verifyToken";
+import { verifyToken } from "./lib/jwt/token";
 
 export async function middleware(request: NextRequest) {
   let res = NextResponse.next();

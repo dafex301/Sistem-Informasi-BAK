@@ -3,7 +3,7 @@ import { GetServerSidePropsContext, NextApiHandler } from "next";
 import adminInit from "./firebaseConfig/init-admin";
 import { jwtVerify } from "jose";
 import { UserData } from "./authContext";
-import verifyToken from "./jwt/verifyToken";
+import verifyToken from "./jwt/token";
 
 export const authServer = async (ctx: GetServerSidePropsContext) => {
   const { idToken } = nookies.get(ctx);

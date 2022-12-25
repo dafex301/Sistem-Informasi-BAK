@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import { getAuth } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../../lib/authContext";
 import { createAccount } from "../../firebase/account";
 import Loading from "../../components/Loading";
@@ -19,7 +19,7 @@ type registerForm = {
 const nameRegex = /^[a-zA-Z '-]+$/;
 const nimRegex = /^[0-9]+$/;
 
-const Home: NextPage = () => {
+const Register: NextPage = () => {
   const { user, userData, loading } = useAuth();
 
   const [name, setName] = useState<string>("");
@@ -182,7 +182,7 @@ const Home: NextPage = () => {
               )}
             </div>
             <button
-              className="mt-5 w-full border p-2 bg-gradient-to-r from-gray-800 bg-gray-500 text-white rounded-[4px] hover:bg-slate-400 scale-105 duration-300"
+              className="mt-5 w-full border p-2 bg-gradient-to-r from-gray-800 bg-gray-500 text-white rounded-[4px] hover:bg-slate-400 duration-300"
               onClick={handleRegister}
             >
               Daftar
@@ -220,4 +220,4 @@ const Home: NextPage = () => {
   return <Loading />;
 };
 
-export default Home;
+export default Register;

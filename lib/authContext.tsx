@@ -4,6 +4,7 @@ import { setCookie, destroyCookie } from "nookies";
 import { db } from "./firebaseConfig/init";
 import { doc, getDoc } from "firebase/firestore";
 import * as jose from "jose";
+import { createToken } from "./jwt/token";
 
 export type TIdTokenResult = {
   token: string;
@@ -84,18 +85,7 @@ export default function AuthContextProvider({ children }: Props) {
             role: docSnap.data()?.role,
           };
 
-          const secret = new TextEncoder().encode(
-            process.env.NEXT_PUBLIC_JWT_KEY
-          );
-          const alg = "HS256";
-
-          const jwt = await new jose.SignJWT(userDataObj)
-            .setProtectedHeader({ alg })
-            .setIssuedAt()
-            .setIssuer("dafex")
-            .setAudience("sistem-informasi-bak")
-            .setExpirationTime("24h")
-            .sign(secret);
+          const jwt = await createToken(userDataObj);
 
           setCookie(null, "user", jwt, {
             maxAge: 30 * 24 * 60 * 60,

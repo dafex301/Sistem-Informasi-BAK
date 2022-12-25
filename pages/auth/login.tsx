@@ -19,13 +19,9 @@ const Login: NextPage = () => {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
 
-  const { user, loading } = useAuth();
+  const { user, userData, loading } = useAuth();
   const auth = getAuth();
   const route = useRouter();
-
-  if (user) {
-    route.push("/");
-  }
 
   function handleLogin() {
     loginAccount(auth, identifier, password)
@@ -43,16 +39,13 @@ const Login: NextPage = () => {
     const googleProvider = new GoogleAuthProvider();
 
     signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        // const token = credential.accessToken;
-        // The signed-in user info.
-        console.log("result:\n", result);
-        const user = result.user;
-        console.log("sign with google", user);
-        // ...
-      })
+      // .then((result) => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      // const credential = GoogleAuthProvider.credentialFromResult(result);
+      // const token = credential.accessToken;
+      // The signed-in user info.
+      // const user = result.user;
+      // })
       .catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
@@ -103,7 +96,7 @@ const Login: NextPage = () => {
               />
             </div>
             <button
-              className="mt-5 w-full border p-2 bg-gradient-to-r from-gray-800 bg-gray-500 text-white rounded-[4px] hover:bg-slate-400 scale-105 duration-300"
+              className="mt-5 w-full border p-2 bg-gradient-to-r from-gray-800 bg-gray-500 text-white rounded-[4px] hover:bg-slate-400 duration-300"
               onClick={handleLogin}
             >
               Masuk
@@ -150,6 +143,14 @@ const Login: NextPage = () => {
         </div>
       </>
     );
+  }
+
+  if (user && userData) {
+    route.push("/");
+  }
+
+  if (user && !userData) {
+    route.push("/auth/data");
   }
 
   return <Loading />;
