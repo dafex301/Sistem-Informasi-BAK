@@ -35,7 +35,7 @@ export type TIdFirebase = {
 
 export type UserData = {
   name: string;
-  nim: string;
+  no_induk: string;
   role: string;
 };
 
@@ -80,7 +80,7 @@ export default function AuthContextProvider({ children }: Props) {
         if (docSnap.exists()) {
           const userDataObj: UserData = {
             name: docSnap.data()?.name,
-            nim: docSnap.data()?.nim,
+            no_induk: docSnap.data()?.no_induk,
             role: docSnap.data()?.role,
           };
 

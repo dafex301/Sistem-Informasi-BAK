@@ -1,9 +1,17 @@
 import { useAuth } from "../../lib/authContext";
 import Link from "next/link";
-import { signOut } from '../../firebase/account';
+import { signOut } from "../../firebase/account";
+import { useRouter } from "next/router";
 
 export default function Header(props: any) {
   const { user, loading } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await signOut().then(() => {
+      router.push("/login");
+    });
+  };
 
   return (
     <div className="flex h-full flex-row">
@@ -16,12 +24,12 @@ export default function Header(props: any) {
       <div className="m-auto space-x-2">
         {!user && !loading ? (
           <>
-            <Link passHref href="/signup">
-              <button className="m-auto"> Signup</button>
+            <Link passHref href="/register">
+              <button className="m-auto"> Register</button>
             </Link>
 
-            <Link passHref href="/signin">
-              <button className="m-auto"> Signin</button>
+            <Link passHref href="/login">
+              <button className="m-auto"> Login</button>
             </Link>
           </>
         ) : null}
@@ -35,7 +43,7 @@ export default function Header(props: any) {
               <button> Private</button>
             </Link>
 
-            <button onClick={signOut}> Signout</button>
+            <button onClick={handleLogout}> Signout</button>
           </>
         ) : null}
       </div>

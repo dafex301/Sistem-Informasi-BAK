@@ -21,7 +21,7 @@ export const authDataServer = async (ctx: GetServerSidePropsContext) => {
 
   const userData = {
     name: data.name,
-    nim: data.nim,
+    no_induk: data.no_induk,
     role: data.role,
   };
 
