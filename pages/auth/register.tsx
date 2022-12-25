@@ -4,9 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { useAuth } from "../lib/authContext";
-import { createAccount } from "../firebase/account";
-import Loading from "../components/Loading";
+import { useAuth } from "../../lib/authContext";
+import { createAccount } from "../../firebase/account";
+import Loading from "../../components/Loading";
 import { useRouter } from "next/router";
 
 type registerForm = {
@@ -16,7 +16,7 @@ type registerForm = {
   password: string;
 };
 
-const nameRegex = /^[a-zA-Z ]+$/;
+const nameRegex = /^[a-zA-Z '-]+$/;
 const nimRegex = /^[0-9]+$/;
 
 const Home: NextPage = () => {
@@ -78,9 +78,7 @@ const Home: NextPage = () => {
       }));
     }
 
-    console.log(error);
-
-    if (!error) {
+    if (!error.name && !error.nim && !error.email && !error.password) {
       try {
         createAccount(auth, email, password, name, nim, "mahasiswa");
       } catch (e: any) {
@@ -193,7 +191,7 @@ const Home: NextPage = () => {
               <div></div>
               <div>
                 Sudah punya akun?{" "}
-                <Link href="/login" className="hover:underline">
+                <Link href="/auth/login" className="hover:underline">
                   Masuk
                 </Link>
               </div>

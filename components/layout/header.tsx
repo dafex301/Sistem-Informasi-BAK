@@ -9,7 +9,7 @@ export default function Header(props: any) {
 
   const handleLogout = async () => {
     await signOut().then(() => {
-      router.push("/login");
+      router.push("/auth/login");
     });
   };
 
@@ -24,11 +24,11 @@ export default function Header(props: any) {
       <div className="m-auto space-x-2">
         {!user && !loading ? (
           <>
-            <Link passHref href="/register">
+            <Link passHref href="/auth/register">
               <button className="m-auto"> Register</button>
             </Link>
 
-            <Link passHref href="/login">
+            <Link passHref href="/auth/login">
               <button className="m-auto"> Login</button>
             </Link>
           </>

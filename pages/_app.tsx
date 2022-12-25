@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 function MyApp({ Component, pageProps }: AppProps) {
   const route = useRouter();
 
-  if (route.pathname === "/login" || route.pathname === "/register") {
+  if (route.pathname.startsWith("/auth")) {
     return (
       <FirebaseProvider>
         <Component {...pageProps} />
