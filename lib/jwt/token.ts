@@ -1,13 +1,23 @@
 import { jwtVerify, SignJWT } from "jose";
-import { setCookie } from "nookies";
+import { destroyCookie, setCookie } from "nookies";
 
 export async function verifyToken(token: string) {
   const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_JWT_KEY);
-  const { payload, protectedHeader } = await jwtVerify(token, secret, {
+  const verifyResult = await jwtVerify(token, secret, {
     issuer: "dafex",
     audience: "sistem-informasi-bak",
+  }).catch((err) => {
+    destroyCookie(null, "user");
+    destroyCookie(null, "idToken");
+    return null;
   });
-  return payload;
+
+  if (verifyResult) {
+    const payload = verifyResult.payload;
+    return payload;
+  }
+
+  return null;
 }
 
 export async function createToken(payload: any) {

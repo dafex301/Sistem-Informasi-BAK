@@ -8,9 +8,7 @@ export default function Header(props: any) {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await signOut().then(() => {
-      router.push("/auth/login");
-    });
+    await signOut();
   };
 
   return (

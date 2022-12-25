@@ -12,10 +12,18 @@ export default function Layout({ children }: Props) {
   const { user, userData, loading } = useAuth();
   const route = useRouter();
 
+  // console.log(user);
+  console.log(userData);
+
   if (!loading && !user) {
     route.push("/auth/login");
   }
-  if (!loading && user) {
+
+  if (!loading && user && !userData) {
+    route.push("/auth/data");
+  }
+
+  if (!loading && user && userData) {
     return (
       <>
         <div

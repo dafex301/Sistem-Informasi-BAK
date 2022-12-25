@@ -95,10 +95,10 @@ const Login: NextPage = () => {
         // This gives you a GitHub Access Token. You can use it to access the GitHub API.
         const credential = GithubAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
-        console.log(token);
+        // console.log(token);
         // The signed-in user info.
         const user = result.user;
-        console.log(user);
+        // console.log(user);
       })
       .catch((error) => {
         // Handle Errors here.

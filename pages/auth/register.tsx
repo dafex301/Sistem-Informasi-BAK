@@ -89,10 +89,6 @@ const Register: NextPage = () => {
     }
   };
 
-  if (user) {
-    route.push("/");
-  }
-
   if (!loading && !user) {
     return (
       <>
@@ -215,6 +211,14 @@ const Register: NextPage = () => {
         </div>
       </>
     );
+  }
+
+  if (user) {
+    route.push("/");
+  }
+
+  if (user && !userData) {
+    route.push("/auth/data");
   }
 
   return <Loading />;
