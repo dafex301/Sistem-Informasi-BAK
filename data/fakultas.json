@@ -1,0 +1,58 @@
+[
+  {
+    "kode": "FT",
+    "name": "Fakultas Teknik"
+  },
+  {
+    "kode": "FISIP",
+    "name": "Fakultas Ilmu Sosial dan Ilmu Politik"
+  },
+  {
+    "kode": "FK",
+    "name": "Fakultas Kedokteran"
+  },
+  {
+    "kode": "FEB",
+    "name": "Fakultas Ekonomika dan Bisnis"
+  },
+  {
+    "kode": "FH",
+    "name": "Fakultas Hukum"
+  },
+  {
+    "kode": "FH",
+    "name": "Fakultas Hukum"
+  },
+  {
+    "kode": "FPIK",
+    "name": "Fakultas Perikanan dan Ilmu Kelautan"
+  },
+  {
+    "kode": "FPsi",
+    "name": "Fakultas Psikologi"
+  },
+  {
+    "kode": "FPP",
+    "name": "Fakultas Peternakan dan Pertanian"
+  },
+  {
+    "kode": "FIB",
+    "name": "Fakultas Ilmu Budaya"
+  },
+  {
+    "kode": "FKM",
+    "name": "Fakultas Kesehatan Masyarakat"
+  },
+  {
+    "kode": "FSM",
+    "name": "Fakultas Sains dan Matematika"
+  },
+  {
+    "kode": "SV",
+    "name": "Sekolah Vokasi"
+  },
+  {
+    "kode": "PS",
+    "name": "Pasca Sarjana"
+  }
+]

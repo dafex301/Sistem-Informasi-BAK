@@ -121,8 +121,6 @@ const Login: NextPage = () => {
         const token = credential?.accessToken;
         // The signed-in user info.
         const user = result.user;
-
-        console.log(user);
       })
       .catch((error) => {
         // Handle Errors here.
@@ -143,74 +141,72 @@ const Login: NextPage = () => {
           <title>Login</title>
           <link rel="icon" href="/undip.png" />
         </Head>
-        <AuthLayout>
-          <div className="flex flex-col text-sm rounded-md">
-            <input
-              className="mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 "
-              type="text"
-              placeholder={"Email/NIM/NIP"}
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-              name="identifier"
-            />
-            <input
-              className={
-                "mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 "
-              }
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              name="password"
-            />
-          </div>
-          <button
-            className="w-full border p-2 bg-gradient-to-r from-gray-800 bg-gray-500 text-white rounded-[4px] hover:bg-slate-400 duration-300"
-            onClick={handleLogin}
-          >
-            {"Masuk"}
-          </button>
-          {/* Error message */}
-          {error && <div className="mt-5 text-sm text-red-500">{error}</div>}
-          <div className="mt-5 flex justify-between text-sm text-gray-600">
-            <button className="hover:underline">{"Lupa password?"}</button>
-            <Link href="/auth/register" className="hover:underline">
-              Daftar
-            </Link>
-          </div>
-          <div className="flex justify-center mt-5 text-sm">
-            <p className="text-gray-400">Atau login menggunakan</p>
-          </div>
-          <div className="mt-3 items-center flex justify-center gap-3">
-            <Image
-              onClick={handleLoginWithGoogle}
-              className="grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300"
-              src={googleIcon}
-              alt={"Google Icon"}
-            />
-            <Image
-              onClick={handleLoginWithGithub}
-              className="grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300 "
-              src={githubIcon}
-              alt={"Github Icon"}
-              width={25}
-            />
-            <Image
-              onClick={handleLoginWithFacebook}
-              className="ml-2 grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300"
-              src={facebookIcon}
-              alt={"Facebook Icon"}
-              width={26}
-            />
-            <Image
-              onClick={handleLoginWithMicrosoft}
-              className="ml-3 grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300"
-              src={microsoftIcon}
-              alt={"Facebook Icon"}
-              width={25}
-            />
-          </div>
-        </AuthLayout>
+        <div className="flex flex-col text-sm rounded-md">
+          <input
+            className="mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 "
+            type="text"
+            placeholder={"Email/NIM/NIP"}
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
+            name="identifier"
+          />
+          <input
+            className={
+              "mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 "
+            }
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+          />
+        </div>
+        <button
+          className="w-full border p-2 bg-gradient-to-r from-gray-800 bg-gray-500 text-white rounded-[4px] hover:bg-slate-400 duration-300"
+          onClick={handleLogin}
+        >
+          {"Masuk"}
+        </button>
+        {/* Error message */}
+        {error && <div className="mt-5 text-sm text-red-500">{error}</div>}
+        <div className="mt-5 flex justify-between text-sm text-gray-600">
+          <button className="hover:underline">{"Lupa password?"}</button>
+          <Link href="/auth/register" className="hover:underline">
+            Daftar
+          </Link>
+        </div>
+        <div className="flex justify-center mt-5 text-sm">
+          <p className="text-gray-400">Atau login menggunakan</p>
+        </div>
+        <div className="mt-3 items-center flex justify-center gap-3">
+          <Image
+            onClick={handleLoginWithGoogle}
+            className="grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300"
+            src={googleIcon}
+            alt={"Google Icon"}
+          />
+          <Image
+            onClick={handleLoginWithGithub}
+            className="grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300 "
+            src={githubIcon}
+            alt={"Github Icon"}
+            width={25}
+          />
+          <Image
+            onClick={handleLoginWithFacebook}
+            className="ml-2 grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300"
+            src={facebookIcon}
+            alt={"Facebook Icon"}
+            width={26}
+          />
+          <Image
+            onClick={handleLoginWithMicrosoft}
+            className="ml-3 grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300"
+            src={microsoftIcon}
+            alt={"Facebook Icon"}
+            width={25}
+          />
+        </div>
       </>
     );
   }

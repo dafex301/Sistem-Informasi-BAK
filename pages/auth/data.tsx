@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useAuth, UserData } from "../../lib/authContext";
@@ -14,6 +13,7 @@ import { AuthLayout } from "../../components/layout/AuthLayout";
 type dataForm = {
   name: string;
   nim: string;
+  password: string;
 };
 
 const nameRegex = /^[a-zA-Z '-]+$/;
@@ -21,27 +21,33 @@ const nimRegex = /^[0-9]+$/;
 
 const Data: NextPage = () => {
   const { user, userData, loading, setUserData } = useAuth();
-
-  useEffect(() => {
-    if (user) {
-      setName(user.claims.name);
-    }
-  }, [user]);
+  // console.log(user);
 
   const [name, setName] = useState<string>("");
   const [nim, setNim] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<dataForm>({
     name: "",
     nim: "",
+    password: "",
   });
   const auth = getAuth();
 
   const route = useRouter();
 
+  useEffect(() => {
+    if (user) {
+      setName(user.claims.name);
+      setEmail(user.claims.email);
+    }
+  }, [user]);
+
   const handleData = async () => {
     setError({
       name: "",
       nim: "",
+      password: "",
     });
 
     if (!name) {
@@ -62,9 +68,16 @@ const Data: NextPage = () => {
       }));
     }
 
+    if (!password) {
+      setError((error) => ({
+        ...error,
+        password: "Password tidak boleh kosong",
+      }));
+    }
+
     if (!error.name && !error.nim) {
       try {
-        await writeUserToDb(auth, name, nim).then(() => {
+        await writeUserToDb(auth, name, nim, email, password).then(() => {
           const userData: UserData = {
             name: name,
             no_induk: nim,
@@ -97,49 +110,76 @@ const Data: NextPage = () => {
           <title>Data</title>
           <link rel="icon" href="/undip.png" />
         </Head>
-        <AuthLayout>
-          <div className="flex flex-col text-sm rounded-md">
-            {/* Name */}
-            <input
-              className={
-                error.name
-                  ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
-                  : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
-              }
-              type="text"
-              placeholder="Nama"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              name="name"
-            />
-            {error.name && (
-              <p className="text-red-500 mb-3 text-xs">{error.name}</p>
-            )}
 
-            {/* NIM/NIP */}
-            <input
-              className={
-                error.nim
-                  ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
-                  : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
-              }
-              type="number"
-              placeholder="NIM/NIP"
-              value={nim}
-              onChange={(e) => setNim(e.target.value)}
-              name="nim"
-            />
-            {error.nim && (
-              <p className="text-red-500 mb-3 text-xs">{error.nim}</p>
-            )}
-          </div>
-          <button
-            className="mt-5 w-full border p-2 bg-gradient-to-r from-gray-800 bg-gray-500 text-white rounded-[4px] hover:bg-slate-400 duration-300"
-            onClick={handleData}
-          >
-            Daftar
-          </button>
-        </AuthLayout>
+        <div className="flex flex-col text-sm rounded-md">
+          {/* Name */}
+          <input
+            className={`text-gray-500 rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none`}
+            type="text"
+            value={email}
+            name="email"
+            disabled
+          />
+          {error.name && (
+            <p className="text-red-500 mb-3 text-xs">{error.name}</p>
+          )}
+          {/* Name */}
+          <input
+            className={
+              error.name
+                ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
+                : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
+            }
+            type="text"
+            placeholder="Nama"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            name="name"
+          />
+          {error.name && (
+            <p className="text-red-500 mb-3 text-xs">{error.name}</p>
+          )}
+
+          {/* NIM/NIP */}
+          <input
+            className={
+              error.nim
+                ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
+                : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
+            }
+            type="number"
+            placeholder="NIM/NIP"
+            value={nim}
+            onChange={(e) => setNim(e.target.value)}
+            name="nim"
+          />
+          {error.nim && (
+            <p className="text-red-500 mb-3 text-xs">{error.nim}</p>
+          )}
+
+          {/* Password */}
+          <input
+            className={
+              error.nim
+                ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
+                : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
+            }
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+          />
+          {error.password && (
+            <p className="text-red-500 mb-3 text-xs">{error.password}</p>
+          )}
+        </div>
+        <button
+          className="mt-5 w-full border p-2 bg-gradient-to-r from-gray-800 bg-gray-500 text-white rounded-[4px] hover:bg-slate-400 duration-300"
+          onClick={handleData}
+        >
+          Daftar
+        </button>
       </>
     );
   }

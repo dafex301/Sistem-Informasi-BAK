@@ -97,92 +97,90 @@ const Register: NextPage = () => {
           <title>Register</title>
           <link rel="icon" href="/undip.png" />
         </Head>
-        <AuthLayout>
-          <div className="flex flex-col text-sm rounded-md">
-            {/* Name */}
-            <input
-              className={
-                error.name
-                  ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
-                  : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
-              }
-              type="text"
-              placeholder="Nama"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              name="name"
-            />
-            {error.name && (
-              <p className="text-red-500 mb-3 text-xs">{error.name}</p>
-            )}
+        <div className="flex flex-col text-sm rounded-md">
+          {/* Name */}
+          <input
+            className={
+              error.name
+                ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
+                : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
+            }
+            type="text"
+            placeholder="Nama"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            name="name"
+          />
+          {error.name && (
+            <p className="text-red-500 mb-3 text-xs">{error.name}</p>
+          )}
 
-            {/* NIM/NIP */}
-            <input
-              className={
-                error.nim
-                  ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
-                  : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
-              }
-              type="number"
-              placeholder="NIM/NIP"
-              value={nim}
-              onChange={(e) => setNim(e.target.value)}
-              name="nim"
-            />
-            {error.nim && (
-              <p className="text-red-500 mb-3 text-xs">{error.nim}</p>
-            )}
+          {/* NIM/NIP */}
+          <input
+            className={
+              error.nim
+                ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
+                : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
+            }
+            type="number"
+            placeholder="NIM/NIP"
+            value={nim}
+            onChange={(e) => setNim(e.target.value)}
+            name="nim"
+          />
+          {error.nim && (
+            <p className="text-red-500 mb-3 text-xs">{error.nim}</p>
+          )}
 
-            {/* Email */}
-            <input
-              className={
-                error.email
-                  ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
-                  : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
-              }
-              type="text"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              name="email"
-            />
-            {error.email && (
-              <p className="text-red-500 mb-3 text-xs">{error.email}</p>
-            )}
+          {/* Email */}
+          <input
+            className={
+              error.email
+                ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
+                : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
+            }
+            type="text"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+          />
+          {error.email && (
+            <p className="text-red-500 mb-3 text-xs">{error.email}</p>
+          )}
 
-            {/* Password */}
-            <input
-              className={
-                error.password
-                  ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
-                  : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
-              }
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              name="password"
-            />
-            {error.password && (
-              <p className="text-red-500 mb-3 text-xs">{error.password}</p>
-            )}
+          {/* Password */}
+          <input
+            className={
+              error.password
+                ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
+                : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
+            }
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+          />
+          {error.password && (
+            <p className="text-red-500 mb-3 text-xs">{error.password}</p>
+          )}
+        </div>
+        <button
+          className="mt-5 w-full border p-2 bg-gradient-to-r from-gray-800 bg-gray-500 text-white rounded-[4px] hover:bg-slate-400 duration-300"
+          onClick={handleRegister}
+        >
+          Daftar
+        </button>
+        <div className="mt-5 flex justify-between text-sm text-gray-600">
+          <div></div>
+          <div>
+            Sudah punya akun?{" "}
+            <Link href="/auth/login" className="hover:underline">
+              Masuk
+            </Link>
           </div>
-          <button
-            className="mt-5 w-full border p-2 bg-gradient-to-r from-gray-800 bg-gray-500 text-white rounded-[4px] hover:bg-slate-400 duration-300"
-            onClick={handleRegister}
-          >
-            Daftar
-          </button>
-          <div className="mt-5 flex justify-between text-sm text-gray-600">
-            <div></div>
-            <div>
-              Sudah punya akun?{" "}
-              <Link href="/auth/login" className="hover:underline">
-                Masuk
-              </Link>
-            </div>
-          </div>
-        </AuthLayout>
+        </div>
       </>
     );
   }

@@ -6,15 +6,19 @@ import { useAuth } from "../lib/authContext";
 const Home: NextPage = () => {
   const { user, userData, loading } = useAuth();
   const [role, setRole] = useState<string>("");
-  const addRole = async () => {
-    const res = await fetch("/api/auth/roles/dosen", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ user_id: user?.claims.user_id }),
-    });
-    const data = await res.json();
+  const testRequest = async () => {
+    if (user) {
+      const res = await fetch("/api/auth/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: user.token,
+        },
+        body: JSON.stringify({ user_id: user.claims.user_id }),
+      });
+      const data = await res.json();
+      console.log(data);
+    }
   };
 
   return (
@@ -29,7 +33,7 @@ const Home: NextPage = () => {
         className="border border-red-500"
         type="text"
       />
-      <button onClick={addRole}>Submit</button>
+      <button onClick={testRequest}>Submit</button>
 
       <main>Sweet home</main>
     </>

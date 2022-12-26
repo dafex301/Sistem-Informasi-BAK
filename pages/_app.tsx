@@ -4,6 +4,7 @@ import Layout from "../components/layout/Layout";
 import FirebaseProvider from "../lib/authContext";
 import "../lib/firebaseConfig/init";
 import { useRouter } from "next/router";
+import { AuthLayout } from "../components/layout/AuthLayout";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const route = useRouter();
@@ -11,7 +12,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   if (route.pathname.startsWith("/auth")) {
     return (
       <FirebaseProvider>
-        <Component {...pageProps} />
+        <AuthLayout>
+          <Component {...pageProps} />
+        </AuthLayout>
       </FirebaseProvider>
     );
   }

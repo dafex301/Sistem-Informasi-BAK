@@ -9,6 +9,8 @@ import {
   signOut as signout,
   onAuthStateChanged,
   Auth,
+  EmailAuthProvider,
+  linkWithCredential,
 } from "firebase/auth";
 import {
   doc,
@@ -48,17 +50,6 @@ export const createAccount = async (
   );
 };
 
-export const findEmailByNoInduk = async (no_induk: string): Promise<string> => {
-  // Find email by nim
-  const q = query(collection(db, "users"), where("no_induk", "==", no_induk));
-  const querySnapshot = await getDocs(q);
-  let email = "";
-  querySnapshot.forEach((doc) => {
-    email = doc.data().email;
-  });
-  return email;
-};
-
 export const loginAccount = async (
   auth: Auth,
   identifier: string,
@@ -87,7 +78,10 @@ export const loginAccount = async (
 
   if (isNoInduk) {
     try {
-      const email = await findEmailByNoInduk(identifier);
+      // Get email by requesting to /api/auth/email/[no_induk]
+      const email = await fetch(`/api/auth/email/${identifier}`)
+        .then((res) => res.json())
+        .then((data) => data.email);
       await signInWithEmailAndPassword(auth, email, password).then(
         async (userCredential) => {
           const user = userCredential.user;
@@ -103,18 +97,30 @@ export const loginAccount = async (
   }
 };
 
+// Write user to Firestore and link it to email
+// This function fire when users login with third party
 export const writeUserToDb = async (
   auth: Auth,
   name: string,
-  no_induk: string
+  no_induk: string,
+  email: string,
+  password: string
 ): Promise<void> => {
+  const credential = EmailAuthProvider.credential(email, password);
   const user = auth.currentUser;
   if (user) {
+    // Link user with email
+    await linkWithCredential(user, credential);
+
+    // Write user to firestore
+    const time = new Date();
     await setDoc(doc(db, "users", user.uid), {
       name: name,
       no_induk: no_induk,
       role: "mahasiswa",
       email: user.email,
+      created_at: time,
+      modified_at: time,
     });
   }
 };
