@@ -19,7 +19,7 @@ const nameRegex = /^[a-zA-Z '-]+$/;
 const nimRegex = /^[0-9]+$/;
 
 const Data: NextPage = () => {
-  const { user, userData, loading } = useAuth();
+  const { user, userData, loading, setUserData } = useAuth();
 
   const [name, setName] = useState<string>("");
   const [nim, setNim] = useState<string>("");
@@ -71,7 +71,7 @@ const Data: NextPage = () => {
               });
             })
             .then(() => {
-              route.push("/");
+              setUserData(userData);
             });
         });
       } catch (e: any) {

@@ -46,24 +46,22 @@ type Props = {
 
 type UserContext = {
   user: TIdTokenResult | null;
-  userData: UserData | Promise<jose.JWTPayload> | jose.JWTPayload | null;
+  userData: UserData | null;
   loading: boolean;
+  setUserData: Function;
 };
 
 const authContext = createContext<UserContext>({
   user: null,
   userData: null,
   loading: true,
+  setUserData: Function,
 });
 
 export default function AuthContextProvider({ children }: Props) {
   const [user, setUser] = useState<TIdTokenResult | null>(null);
-  const [userData, setUserData] = useState<
-    UserData | null | Promise<jose.JWTPayload> | jose.JWTPayload
-  >(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const userToken = parseCookies().user;
 
   useEffect(() => {
     const auth = getAuth();
@@ -108,15 +106,8 @@ export default function AuthContextProvider({ children }: Props) {
     });
   }, []);
 
-  useEffect(() => {
-    if (userToken) {
-      const userData = verifyToken(userToken);
-      setUserData(userData);
-    }
-  }, [userToken]);
-
   return (
-    <authContext.Provider value={{ user, userData, loading }}>
+    <authContext.Provider value={{ user, userData, loading, setUserData }}>
       {children}
     </authContext.Provider>
   );
