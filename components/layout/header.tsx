@@ -2,6 +2,7 @@ import { useAuth } from "../../lib/authContext";
 import Link from "next/link";
 import { signOut } from "../../firebase/account";
 import { useRouter } from "next/router";
+import { destroyCookie } from "nookies";
 
 export default function Header(props: any) {
   const { user, loading } = useAuth();

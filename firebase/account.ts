@@ -40,6 +40,10 @@ export const createAccount = async (
         role: role,
         email: email,
       });
+      setCookie(null, "idToken", await user.getIdToken(), {
+        maxAge: 30 * 24 * 60 * 60,
+        path: "/",
+      });
     }
   );
 };
@@ -68,9 +72,9 @@ export const loginAccount = async (
   if (isEmail) {
     try {
       await signInWithEmailAndPassword(auth, identifier, password).then(
-        (userCredential) => {
+        async (userCredential) => {
           const user = userCredential.user;
-          setCookie(null, "idToken", user.uid, {
+          setCookie(null, "idToken", await user.getIdToken(), {
             maxAge: 30 * 24 * 60 * 60,
             path: "/",
           });
@@ -85,9 +89,9 @@ export const loginAccount = async (
     try {
       const email = await findEmailByNoInduk(identifier);
       await signInWithEmailAndPassword(auth, email, password).then(
-        (userCredential) => {
+        async (userCredential) => {
           const user = userCredential.user;
-          setCookie(null, "idToken", user.uid, {
+          setCookie(null, "idToken", await user.getIdToken(), {
             maxAge: 30 * 24 * 60 * 60,
             path: "/",
           });
@@ -116,8 +120,8 @@ export const writeUserToDb = async (
 };
 
 export const signOut = async () => {
-  const auth = getAuth();
-  destroyCookie(null, "idToken");
-  destroyCookie(null, "user");
-  await signout(auth);
+  await signout(auth).then(() => {
+    destroyCookie(null, "idToken");
+    destroyCookie(null, "user");
+  });
 };

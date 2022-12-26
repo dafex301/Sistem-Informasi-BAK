@@ -3,10 +3,7 @@ import Footer from "./Footer";
 import { useAuth } from "../../lib/authContext";
 import Loading from "../Loading";
 import { useRouter } from "next/router";
-
-type Props = {
-  children: React.ReactNode;
-};
+import { Props } from "../type";
 
 export default function Layout({ children }: Props) {
   const { user, userData, loading } = useAuth();

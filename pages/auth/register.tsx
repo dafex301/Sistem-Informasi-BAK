@@ -8,6 +8,7 @@ import { useAuth } from "../../lib/authContext";
 import { createAccount } from "../../firebase/account";
 import Loading from "../../components/Loading";
 import { useRouter } from "next/router";
+import { AuthLayout } from "../../components/layout/AuthLayout";
 
 type registerForm = {
   name: string;
@@ -96,119 +97,92 @@ const Register: NextPage = () => {
           <title>Register</title>
           <link rel="icon" href="/undip.png" />
         </Head>
-        <div className="flex items-center justify-center h-screen">
-          {/* Login Container */}
-          <div className="min-w-fit flex-col border bg-white px-6 py-14 shadow-md rounded-[4px] ">
-            <div className="mb-8 flex flex-col justify-center items-center">
-              <Image src="/undip.png" alt={"undip"} width={80} height={80} />
-              <h1 className="w-11/12 text-center text-2xl font-medium mt-3">
-                Sistem Informasi
-              </h1>
-              <h1 className="w-11/12 text-center">
-                Biro Akademik dan Kemahasiswaan
-              </h1>
-            </div>
-            <div className="flex flex-col text-sm rounded-md">
-              {/* Name */}
-              <input
-                className={
-                  error.name
-                    ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
-                    : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
-                }
-                type="text"
-                placeholder="Nama"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                name="name"
-              />
-              {error.name && (
-                <p className="text-red-500 mb-3 text-xs">{error.name}</p>
-              )}
+        <AuthLayout>
+          <div className="flex flex-col text-sm rounded-md">
+            {/* Name */}
+            <input
+              className={
+                error.name
+                  ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
+                  : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
+              }
+              type="text"
+              placeholder="Nama"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              name="name"
+            />
+            {error.name && (
+              <p className="text-red-500 mb-3 text-xs">{error.name}</p>
+            )}
 
-              {/* NIM/NIP */}
-              <input
-                className={
-                  error.nim
-                    ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
-                    : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
-                }
-                type="number"
-                placeholder="NIM/NIP"
-                value={nim}
-                onChange={(e) => setNim(e.target.value)}
-                name="nim"
-              />
-              {error.nim && (
-                <p className="text-red-500 mb-3 text-xs">{error.nim}</p>
-              )}
+            {/* NIM/NIP */}
+            <input
+              className={
+                error.nim
+                  ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
+                  : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
+              }
+              type="number"
+              placeholder="NIM/NIP"
+              value={nim}
+              onChange={(e) => setNim(e.target.value)}
+              name="nim"
+            />
+            {error.nim && (
+              <p className="text-red-500 mb-3 text-xs">{error.nim}</p>
+            )}
 
-              {/* Email */}
-              <input
-                className={
-                  error.email
-                    ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
-                    : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
-                }
-                type="text"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                name="email"
-              />
-              {error.email && (
-                <p className="text-red-500 mb-3 text-xs">{error.email}</p>
-              )}
+            {/* Email */}
+            <input
+              className={
+                error.email
+                  ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
+                  : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
+              }
+              type="text"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+            />
+            {error.email && (
+              <p className="text-red-500 mb-3 text-xs">{error.email}</p>
+            )}
 
-              {/* Password */}
-              <input
-                className={
-                  error.password
-                    ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
-                    : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
-                }
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                name="password"
-              />
-              {error.password && (
-                <p className="text-red-500 mb-3 text-xs">{error.password}</p>
-              )}
-            </div>
-            <button
-              className="mt-5 w-full border p-2 bg-gradient-to-r from-gray-800 bg-gray-500 text-white rounded-[4px] hover:bg-slate-400 duration-300"
-              onClick={handleRegister}
-            >
-              Daftar
-            </button>
-            <div className="mt-5 flex justify-between text-sm text-gray-600">
-              <div></div>
-              <div>
-                Sudah punya akun?{" "}
-                <Link href="/auth/login" className="hover:underline">
-                  Masuk
-                </Link>
-              </div>
-            </div>
-            <div className="mt-5 flex text-center text-sm text-gray-400">
-              <p>
-                Jika terdapat pertanyaan seputar sistem dapat menghubungi
-                <br />
-                <a
-                  href="https://instagram.com/dafex30"
-                  target={"_blank"}
-                  className="underline"
-                  rel="noreferrer"
-                >
-                  @dafex30
-                </a>{" "}
-                via instagram.
-              </p>
+            {/* Password */}
+            <input
+              className={
+                error.password
+                  ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
+                  : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
+              }
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+            />
+            {error.password && (
+              <p className="text-red-500 mb-3 text-xs">{error.password}</p>
+            )}
+          </div>
+          <button
+            className="mt-5 w-full border p-2 bg-gradient-to-r from-gray-800 bg-gray-500 text-white rounded-[4px] hover:bg-slate-400 duration-300"
+            onClick={handleRegister}
+          >
+            Daftar
+          </button>
+          <div className="mt-5 flex justify-between text-sm text-gray-600">
+            <div></div>
+            <div>
+              Sudah punya akun?{" "}
+              <Link href="/auth/login" className="hover:underline">
+                Masuk
+              </Link>
             </div>
           </div>
-        </div>
+        </AuthLayout>
       </>
     );
   }
