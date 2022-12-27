@@ -184,9 +184,7 @@ const Data: NextPage = () => {
     );
   }
 
-  if (user && userData) {
-    route.push("/");
-  }
+  
 
   if (!loading && !user) {
     route.push("/auth/login");

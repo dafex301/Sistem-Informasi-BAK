@@ -1,8 +1,21 @@
 import React from "react";
 import Image from "next/image";
 import { Props } from "../type";
+import { useRouter } from "next/router";
+import { useAuth } from "../../lib/authContext";
 
 export const AuthLayout = ({ children }: Props) => {
+  const { loading, user, userData } = useAuth();
+  const route = useRouter();
+
+  if (user && userData) {
+    route.push("/");
+  }
+
+  if (user && !userData) {
+    route.push("/auth/data");
+  }
+
   return (
     <div className="flex items-center justify-center h-screen">
       {/* Login Container */}

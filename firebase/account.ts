@@ -3,14 +3,13 @@ import { auth, db } from "../lib/firebaseConfig/init";
 
 // Firebase SDK
 import {
-  getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut as signout,
-  onAuthStateChanged,
   Auth,
   EmailAuthProvider,
   linkWithCredential,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import {
   doc,
@@ -125,7 +124,39 @@ export const writeUserToDb = async (
   }
 };
 
+export const forgetPassword = async (
+  auth: Auth,
+  identifier: string
+): Promise<void> => {
+  // Check if identifier is an email or nim
+  const isEmail = identifier.includes("@");
+  const isNoInduk = !isEmail;
+
+  // Login with email
+  if (isEmail) {
+    try {
+      await sendPasswordResetEmail(auth, identifier);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  if (isNoInduk) {
+    try {
+      // Get email by requesting to /api/auth/email/[no_induk]
+      const email = await fetch(`/api/auth/email/${identifier}`)
+        .then((res) => res.json())
+        .then((data) => data.email);
+      await sendPasswordResetEmail(auth, email);
+    } catch (error) {
+      throw error;
+    }
+  }
+};
+
 export const signOut = async () => {
+  // destroyCookie(null, "idToken");
+  // destroyCookie(null, "user");
   await signout(auth).then(() => {
     destroyCookie(null, "idToken");
     destroyCookie(null, "user");

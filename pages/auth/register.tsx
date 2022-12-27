@@ -1,14 +1,11 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import Image from "next/image";
 import { getAuth } from "firebase/auth";
 import { useState } from "react";
 import { useAuth } from "../../lib/authContext";
 import { createAccount } from "../../firebase/account";
 import Loading from "../../components/Loading";
-import { useRouter } from "next/router";
-import { AuthLayout } from "../../components/layout/AuthLayout";
 
 type registerForm = {
   name: string;
@@ -34,8 +31,6 @@ const Register: NextPage = () => {
     password: "",
   });
   const auth = getAuth();
-
-  const route = useRouter();
 
   const handleRegister = async () => {
     setError({
@@ -183,14 +178,6 @@ const Register: NextPage = () => {
         </div>
       </>
     );
-  }
-
-  if (user) {
-    route.push("/");
-  }
-
-  if (user && !userData) {
-    route.push("/auth/data");
   }
 
   return <Loading />;

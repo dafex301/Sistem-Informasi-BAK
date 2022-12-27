@@ -21,7 +21,6 @@ import googleIcon from "../../public/icons/google.svg";
 import facebookIcon from "../../public/icons/facebook.svg";
 import githubIcon from "../../public/icons/github.svg";
 import microsoftIcon from "../../public/icons/microsoft.svg";
-import { AuthLayout } from "../../components/layout/AuthLayout";
 
 const Login: NextPage = () => {
   const [identifier, setIdentifier] = useState<string>("");
@@ -35,8 +34,6 @@ const Login: NextPage = () => {
   function handleLogin() {
     loginAccount(auth, identifier, password).catch((error) => {
       setError("Login gagal. Email dan/atau password salah.");
-      // setIdentifier("");
-      // setPassword("");
     });
   }
 
@@ -170,7 +167,9 @@ const Login: NextPage = () => {
         {/* Error message */}
         {error && <div className="mt-5 text-sm text-red-500">{error}</div>}
         <div className="mt-5 flex justify-between text-sm text-gray-600">
-          <button className="hover:underline">{"Lupa password?"}</button>
+          <Link href="/auth/forget" className="hover:underline">
+            {"Lupa password?"}
+          </Link>
           <Link href="/auth/register" className="hover:underline">
             Daftar
           </Link>
@@ -209,14 +208,6 @@ const Login: NextPage = () => {
         </div>
       </>
     );
-  }
-
-  if (user && userData) {
-    route.push("/");
-  }
-
-  if (user && !userData) {
-    route.push("/auth/data");
   }
 
   return <Loading />;
