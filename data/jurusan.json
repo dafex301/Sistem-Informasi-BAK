@@ -1,0 +1,334 @@
+[
+  {
+    "faculty": "FEB",
+    "name": "Akuntansi"
+  },
+  {
+    "faculty": "FEB",
+    "name": "Manajemen"
+  },
+  {
+    "faculty": "FEB",
+    "name": "Ilmu Ekonomi"
+  },
+  {
+    "faculty": "FEB",
+    "name": "Ekonomi Syariah"
+  },
+  {
+    "faculty": "FEB",
+    "name": "Ekonomi Pembangunan"
+  },
+  {
+    "faculty": "FH",
+    "name": "Ilmu Hukum"
+  },
+  {
+    "faculty": "FISIP",
+    "name": "Hubungan Internasional"
+  },
+  {
+    "faculty": "FISIP",
+    "name": "Ilmu Administrasi"
+  },
+  {
+    "faculty": "FISIP",
+    "name": "Ilmu Politik"
+  },
+  {
+    "faculty": "FISIP",
+    "name": "Ilmu Pemerintahan"
+  },
+  {
+    "faculty": "FISIP",
+    "name": "Administrasi Negara (Publik)"
+  },
+  {
+    "faculty": "FISIP",
+    "name": "Administrasi Bisnis (Niaga)"
+  },
+  {
+    "faculty": "FISIP",
+    "name": "Ilmu Komunikasi"
+  },
+  {
+    "faculty": "FK",
+    "name": "Farmasi"
+  },
+  {
+    "faculty": "FK",
+    "name": "Pendidikan Dokter"
+  },
+  {
+    "faculty": "FK",
+    "name": "Ilmu Keperawatan"
+  },
+  {
+    "faculty": "FK",
+    "name": "Gizi"
+  },
+  {
+    "faculty": "FK",
+    "name": "Pendidikan Dokter Gigi"
+  },
+  {
+    "faculty": "FK",
+    "name": "Radiologi"
+  },
+  {
+    "faculty": "FK",
+    "name": "Lainnya"
+  },
+  {
+    "faculty": "FPIK",
+    "name": "Kelautan"
+  },
+  {
+    "faculty": "FPIK",
+    "name": "Budidaya Perairan (Akuakultur)"
+  },
+  {
+    "faculty": "FPIK",
+    "name": "Perikanan"
+  },
+  {
+    "faculty": "FPIK",
+    "name": "Lainnya"
+  },
+  {
+    "faculty": "FPP",
+    "name": "Agribisnis"
+  },
+  {
+    "faculty": "FPP",
+    "name": "Peternakan"
+  },
+  {
+    "faculty": "FPP",
+    "name": "Ilmu dan Teknologi Pangan"
+  },
+  {
+    "faculty": "FPP",
+    "name": "Agroteknologi"
+  },
+  {
+    "faculty": "FPsi",
+    "name": "Psikologi"
+  },
+  {
+    "faculty": "FSM",
+    "name": "Informatika"
+  },
+  {
+    "faculty": "FSM",
+    "name": "Matematika"
+  },
+  {
+    "faculty": "FSM",
+    "name": "Biologi"
+  },
+  {
+    "faculty": "FSM",
+    "name": "Kimia"
+  },
+  {
+    "faculty": "FSM",
+    "name": "Fisika"
+  },
+  {
+    "faculty": "FSM",
+    "name": "Statistika"
+  },
+  {
+    "faculty": "FSM",
+    "name": "Bioteknologi"
+  },
+  {
+    "faculty": "FT",
+    "name": "Teknik Sipil"
+  },
+  {
+    "faculty": "FT",
+    "name": "Arsitektur"
+  },
+  {
+    "faculty": "FT",
+    "name": "Teknik Kimia"
+  },
+  {
+    "faculty": "FT",
+    "name": "Teknik Mesin"
+  },
+  {
+    "faculty": "FT",
+    "name": "Teknik Elektro"
+  },
+  {
+    "faculty": "FT",
+    "name": "Perencanaan Wilayah dan Kota"
+  },
+  {
+    "faculty": "FT",
+    "name": "Teknik Industri"
+  },
+  {
+    "faculty": "FT",
+    "name": "Teknik Lingkungan"
+  },
+  {
+    "faculty": "FT",
+    "name": "Teknik Geologi"
+  },
+  {
+    "faculty": "FT",
+    "name": "Teknik Geodesi"
+  },
+  {
+    "faculty": "FT",
+    "name": "Teknik Perkapalan"
+  },
+  {
+    "faculty": "FIB",
+    "name": "Antropologi"
+  },
+  {
+    "faculty": "FIB",
+    "name": "Sastra Indonesia"
+  },
+  {
+    "faculty": "FIB",
+    "name": "Sastra Inggris"
+  },
+  {
+    "faculty": "FIB",
+    "name": "Ilmu Perpustakaan"
+  },
+  {
+    "faculty": "FIB",
+    "name": "Sejarah"
+  },
+  {
+    "faculty": "FIB",
+    "name": "Kearsipan"
+  },
+  {
+    "faculty": "FIB",
+    "name": "Sastra Jepang"
+  },
+  {
+    "faculty": "FIB",
+    "name": "Lainnya"
+  },
+  {
+    "faculty": "FKM",
+    "name": "Kesehatan Masyarakat"
+  },
+  {
+    "faculty": "FKM",
+    "name": "Kesehatan Lingkungan"
+  },
+  {
+    "faculty": "SV",
+    "name": "Teknik Industri"
+  },
+  {
+    "faculty": "SV",
+    "name": "Teknik Sipil"
+  },
+  {
+    "faculty": "SV",
+    "name": "Teknik Kimia"
+  },
+  {
+    "faculty": "SV",
+    "name": "Teknik Mesin"
+  },
+  {
+    "faculty": "SV",
+    "name": "Teknik Elektro"
+  },
+  {
+    "faculty": "SV",
+    "name": "Perencanaan Wilayah dan Kota"
+  },
+  {
+    "faculty": "SV",
+    "name": "Arsitektur"
+  },
+  {
+    "faculty": "SV",
+    "name": "Ilmu Ekonomi"
+  },
+  {
+    "faculty": "SV",
+    "name": "Manajemen"
+  },
+  {
+    "faculty": "SV",
+    "name": "Perpajakan"
+  },
+  {
+    "faculty": "SV",
+    "name": "Akuntansi"
+  },
+  {
+    "faculty": "SV",
+    "name": "Ilmu Administrasi"
+  },
+  {
+    "faculty": "SV",
+    "name": "Ilmu Perpustakaan"
+  },
+  {
+    "faculty": "SV",
+    "name": "Sastra Inggris"
+  },
+  {
+    "faculty": "SV",
+    "name": "Public Relations"
+  },
+  {
+    "faculty": "SV",
+    "name": "Teknik Perkapalan"
+  },
+  {
+    "faculty": "SV",
+    "name": "Instrumentasi"
+  },
+  {
+    "faculty": "SV",
+    "name": "Sastra Jepang"
+  },
+  {
+    "faculty": "SV",
+    "name": "Peternakan"
+  },
+  {
+    "faculty": "SV",
+    "name": "Ilmu Teknik"
+  },
+  {
+    "faculty": "SV",
+    "name": "Administrasi Perkantoran"
+  },
+  {
+    "faculty": "SV",
+    "name": "Lainnya"
+  },
+  {
+    "faculty": "SV",
+    "name": "Kearsipan"
+  },
+  {
+    "faculty": "PS",
+    "name": "Lainnya"
+  },
+  {
+    "faculty": "PS",
+    "name": "Teknik Lingkungan"
+  },
+  {
+    "faculty": "PS",
+    "name": "Sistem Informasi"
+  }
+]

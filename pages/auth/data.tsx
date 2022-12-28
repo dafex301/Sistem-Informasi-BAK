@@ -21,7 +21,6 @@ const nimRegex = /^[0-9]+$/;
 
 const Data: NextPage = () => {
   const { user, userData, loading, setUserData } = useAuth();
-  // console.log(user);
 
   const [name, setName] = useState<string>("");
   const [nim, setNim] = useState<string>("");
@@ -102,7 +101,7 @@ const Data: NextPage = () => {
     }
   };
 
-  if (!loading && user && !userData) {
+  if (user && !userData) {
     // setName(user.claims.name);
     return (
       <>
@@ -183,8 +182,6 @@ const Data: NextPage = () => {
       </>
     );
   }
-
-  
 
   if (!loading && !user) {
     route.push("/auth/login");

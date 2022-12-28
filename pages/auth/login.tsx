@@ -13,7 +13,6 @@ import {
 } from "firebase/auth";
 import { useState } from "react";
 import { useAuth } from "../../lib/authContext";
-import Loading from "../../components/Loading";
 import { loginAccount } from "../../firebase/account";
 
 // Icon
@@ -210,7 +209,7 @@ const Login: NextPage = () => {
     );
   }
 
-  return <Loading />;
+  return <></>;
 };
 
 export default Login;

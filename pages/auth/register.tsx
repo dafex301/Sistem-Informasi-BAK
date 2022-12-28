@@ -180,7 +180,7 @@ const Register: NextPage = () => {
     );
   }
 
-  return <Loading />;
+  return <></>;
 };
 
 export default Register;
