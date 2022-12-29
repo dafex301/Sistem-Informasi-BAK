@@ -1,25 +1,23 @@
 import React from "react";
 import type { NextPage } from "next";
+import Image from "next/image";
 import Head from "next/head";
 import { useAuth } from "../lib/authContext";
 
 // Function
-import { loginWithProvider } from "../firebase/account";
+import { linkWithProvider } from "../firebase/account";
 
 // Icon
 import googleIcon from "../public/icons/google.svg";
 import facebookIcon from "../public/icons/facebook.svg";
 import githubIcon from "../public/icons/github.svg";
 import microsoftIcon from "../public/icons/microsoft.svg";
-import { getAuth } from "firebase/auth";
-import Image from "next/image";
+import ConnectButton from "../components/button/ConnectButton";
 
 const Profile: NextPage = () => {
   const { user, userData, loading } = useAuth();
-  const auth = getAuth();
 
-  console.log(user);
-  console.log(userData);
+  const providers = user?.claims.firebase.identities;
 
   return (
     <>
@@ -31,17 +29,30 @@ const Profile: NextPage = () => {
         <h1>Profile</h1>
         <h1>Name : {userData?.name}</h1>
         <h1>Email : {user?.claims.email}</h1>
-        <button
-          aria-label="Sync Google Account"
-          role="button"
-          className="focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded-lg border-gray-700 flex items-center w-full mt-10"
-          onClick={() => loginWithProvider("google")}
-        >
-          <Image src={googleIcon} alt={"Google Icon"} />
-          <p className="text-base font-medium text-gray-700">
-            Sync Google Account
-          </p>
-        </button>
+        <ConnectButton
+          identities={providers["google.com"]}
+          icon={googleIcon}
+          provider={"Google"}
+          handler={() => linkWithProvider("google")}
+        ></ConnectButton>
+        <ConnectButton
+          identities={providers["facebook.com"]}
+          icon={facebookIcon}
+          provider={"Facebook"}
+          handler={() => linkWithProvider("facebook")}
+        ></ConnectButton>
+        <ConnectButton
+          identities={providers["microsoft.com"]}
+          icon={microsoftIcon}
+          provider={"Microsoft"}
+          handler={() => linkWithProvider("microsoft")}
+        ></ConnectButton>
+        <ConnectButton
+          identities={providers["github.com"]}
+          icon={githubIcon}
+          provider={"GitHub"}
+          handler={() => linkWithProvider("github")}
+        ></ConnectButton>
       </main>
     </>
   );

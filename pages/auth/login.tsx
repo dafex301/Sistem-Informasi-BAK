@@ -87,9 +87,10 @@ const Login: NextPage = () => {
         <div className="mt-3 items-center flex justify-center gap-3">
           <Image
             onClick={() => handleLoginWithProvider("google")}
-            className="grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300"
+            className="mr-3 grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300"
             src={googleIcon}
             alt={"Google Icon"}
+            width={25}
           />
           <Image
             onClick={() => handleLoginWithProvider("github")}

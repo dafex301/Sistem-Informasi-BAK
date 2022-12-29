@@ -15,6 +15,7 @@ import {
   GithubAuthProvider,
   signInWithPopup,
   OAuthProvider,
+  linkWithPopup,
 } from "firebase/auth";
 import {
   doc,
@@ -121,6 +122,27 @@ export const loginWithProvider = async (provider: string) => {
     }
   } catch (error: any) {
     throw error;
+  }
+};
+
+export const linkWithProvider = async (provider: string) => {
+  if (auth.currentUser) {
+    try {
+      if (provider === "google") {
+        await linkWithPopup(auth.currentUser, googleProvider);
+      }
+      if (provider === "facebook") {
+        await linkWithPopup(auth.currentUser, facebookProvider);
+      }
+      if (provider === "github") {
+        await linkWithPopup(auth.currentUser, githubProvider);
+      }
+      if (provider === "microsoft") {
+        await linkWithPopup(auth.currentUser, microsoftProvider);
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
   }
 };
 

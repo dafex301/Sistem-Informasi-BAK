@@ -27,7 +27,7 @@ export default function Layout({ children }: Props) {
           <div className=" h-16 ">
             <Header />
           </div>
-          <div className="m-5">{children}</div>
+          <div className="flex-grow m-5">{children}</div>
           <Footer />
         </div>
       </>
