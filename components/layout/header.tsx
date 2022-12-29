@@ -34,8 +34,8 @@ export default function Header(props: any) {
         ) : null}
         {user ? (
           <>
-            <Link href="/privatessr">
-              <button> PrivateSSR</button>
+            <Link href="/profile">
+              <button> Profile</button>
             </Link>
 
             <Link href="/private">
