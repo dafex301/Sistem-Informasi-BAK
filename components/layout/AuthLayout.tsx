@@ -13,7 +13,7 @@ export const AuthLayout = ({ children }: Props) => {
     route.push("/");
   }
 
-  if (!loading) {
+  if (!loading && !userData) {
     return (
       <div className="flex items-center justify-center h-screen">
         {/* Login Container */}

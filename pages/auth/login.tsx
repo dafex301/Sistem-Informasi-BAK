@@ -3,17 +3,9 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-  GithubAuthProvider,
-  signInWithPopup,
-  OAuthProvider,
-} from "firebase/auth";
 import { useState } from "react";
 import { useAuth } from "../../lib/authContext";
-import { loginAccount } from "../../firebase/account";
+import { loginAccount, loginWithProvider } from "../../firebase/account";
 
 // Icon
 import googleIcon from "../../public/icons/google.svg";
@@ -27,107 +19,23 @@ const Login: NextPage = () => {
   const [error, setError] = useState<string>("");
 
   const { user, userData, loading } = useAuth();
-  const auth = getAuth();
+
   const route = useRouter();
 
   function handleLogin() {
-    loginAccount(auth, identifier, password).catch((error) => {
+    loginAccount(identifier, password).catch((error) => {
       setError("Login gagal. Email dan/atau password salah.");
     });
   }
 
-  function handleLoginWithGoogle() {
-    const googleProvider = new GoogleAuthProvider();
-
-    signInWithPopup(auth, googleProvider)
-      // .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      // const credential = GoogleAuthProvider.credentialFromResult(result);
-      // const token = credential.accessToken;
-      // The signed-in user info.
-      // const user = result.user;
-      // })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The identifier of the user's account used.
-        const identifier = error.identifier;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
-  }
-
-  function handleLoginWithFacebook() {
-    const facebookProvider = new FacebookAuthProvider();
-
-    signInWithPopup(auth, facebookProvider)
-      // .then((result) => {
-      // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-      // const credential = FacebookAuthProvider.credentialFromResult(result);
-      // const token = credential.accessToken;
-      // The signed-in user info.
-      // const user = result.user;
-      // })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The identifier of the user's account used.
-        const identifier = error.identifier;
-        // The AuthCredential type that was used.
-        const credential = FacebookAuthProvider.credentialFromError(error);
-        // ...
-      });
-  }
-
-  function handleLoginWithGithub() {
-    const githubProvider = new GithubAuthProvider();
-
-    signInWithPopup(auth, githubProvider)
-      .then((result) => {
-        // This gives you a GitHub Access Token. You can use it to access the GitHub API.
-        const credential = GithubAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        // console.log(token);
-        // The signed-in user info.
-        const user = result.user;
-        // console.log(user);
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The identifier of the user's account used.
-        const identifier = error.identifier;
-        // The AuthCredential type that was used.
-        const credential = GithubAuthProvider.credentialFromError(error);
-        // ...
-      });
-  }
-
-  function handleLoginWithMicrosoft() {
-    const microsoftProvider = new OAuthProvider("microsoft.com");
-
-    signInWithPopup(auth, microsoftProvider)
-      .then((result) => {
-        // This gives you a Microsoft Access Token. You can use it to access the Microsoft API.
-        const credential = OAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The identifier of the user's account used.
-        const identifier = error.identifier;
-        // The AuthCredential type that was used.
-        const credential = OAuthProvider.credentialFromError(error);
-        // ...
-      });
+  function handleLoginWithProvider(provider: string) {
+    loginWithProvider(provider).catch((error) => {
+      if (error.code == "auth/account-exists-with-different-credential") {
+        setError(
+          "Login gagal. Email sudah digunakan untuk login dengan cara lain."
+        );
+      }
+    });
   }
 
   if (!loading && !user) {
@@ -178,27 +86,27 @@ const Login: NextPage = () => {
         </div>
         <div className="mt-3 items-center flex justify-center gap-3">
           <Image
-            onClick={handleLoginWithGoogle}
+            onClick={() => handleLoginWithProvider("google")}
             className="grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300"
             src={googleIcon}
             alt={"Google Icon"}
           />
           <Image
-            onClick={handleLoginWithGithub}
+            onClick={() => handleLoginWithProvider("github")}
             className="grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300 "
             src={githubIcon}
             alt={"Github Icon"}
             width={25}
           />
           <Image
-            onClick={handleLoginWithFacebook}
+            onClick={() => handleLoginWithProvider("facebook")}
             className="ml-2 grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300"
             src={facebookIcon}
             alt={"Facebook Icon"}
             width={26}
           />
           <Image
-            onClick={handleLoginWithMicrosoft}
+            onClick={() => handleLoginWithProvider("microsoft")}
             className="ml-3 grayscale cursor-pointer hover:grayscale-0 scale-105 duration-300"
             src={microsoftIcon}
             alt={"Facebook Icon"}
@@ -207,6 +115,10 @@ const Login: NextPage = () => {
         </div>
       </>
     );
+  }
+
+  if (!loading && user && !userData) {
+    route.push("/auth/data");
   }
 
   return <></>;

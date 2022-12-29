@@ -10,6 +10,11 @@ import {
   EmailAuthProvider,
   linkWithCredential,
   sendPasswordResetEmail,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  GithubAuthProvider,
+  signInWithPopup,
+  OAuthProvider,
 } from "firebase/auth";
 import {
   doc,
@@ -22,6 +27,11 @@ import {
 
 // Other module
 import { setCookie, destroyCookie } from "nookies";
+
+const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
+const githubProvider = new GithubAuthProvider();
+const microsoftProvider = new OAuthProvider("microsoft.com");
 
 export const createAccount = async (
   auth: Auth,
@@ -50,7 +60,6 @@ export const createAccount = async (
 };
 
 export const loginAccount = async (
-  auth: Auth,
   identifier: string,
   password: string
 ): Promise<void> => {
@@ -93,6 +102,25 @@ export const loginAccount = async (
     } catch (error) {
       throw error;
     }
+  }
+};
+
+export const loginWithProvider = async (provider: string) => {
+  try {
+    if (provider === "google") {
+      await signInWithPopup(auth, googleProvider);
+    }
+    if (provider === "facebook") {
+      await signInWithPopup(auth, facebookProvider);
+    }
+    if (provider === "github") {
+      await signInWithPopup(auth, githubProvider);
+    }
+    if (provider === "microsoft") {
+      await signInWithPopup(auth, microsoftProvider);
+    }
+  } catch (error: any) {
+    throw error;
   }
 };
 
@@ -155,10 +183,7 @@ export const forgetPassword = async (
 };
 
 export const signOut = async () => {
-  // destroyCookie(null, "idToken");
-  // destroyCookie(null, "user");
-  await signout(auth).then(() => {
-    destroyCookie(null, "idToken");
-    destroyCookie(null, "user");
-  });
+  destroyCookie(null, "idToken", { path: "/" });
+  destroyCookie(null, "user", { path: "/" });
+  await signout(auth);
 };

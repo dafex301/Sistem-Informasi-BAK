@@ -3,7 +3,6 @@ import { getAuth, onAuthStateChanged, signOut as signout } from "firebase/auth";
 import { setCookie, destroyCookie, parseCookies } from "nookies";
 import { db } from "./firebaseConfig/init";
 import { doc, getDoc } from "firebase/firestore";
-import * as jose from "jose";
 import { createToken, verifyToken } from "./jwt/token";
 
 export type TIdTokenResult = {
@@ -63,7 +62,7 @@ export default function AuthContextProvider({ children }: Props) {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // console.log(user);
+  console.log(user);
 
   useEffect(() => {
     const auth = getAuth();
@@ -103,7 +102,10 @@ export default function AuthContextProvider({ children }: Props) {
         user.getIdTokenResult().then((result) => setUser(result));
       }
 
-      if (!user) setUser(null);
+      if (!user) {
+        setUser(null);
+        setUserData(null);
+      }
       setLoading(false);
     });
   }, []);
