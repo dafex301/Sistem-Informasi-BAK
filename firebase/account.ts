@@ -51,6 +51,8 @@ export const createAccount = async (
         no_induk: no_induk,
         role: role,
         email: email,
+        created_at: new Date(),
+        modified_at: new Date(),
       });
       setCookie(null, "idToken", await user.getIdToken(), {
         maxAge: 30 * 24 * 60 * 60,

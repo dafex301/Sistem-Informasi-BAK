@@ -1,14 +1,30 @@
+// Next
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "react-tailwind-table/dist/index.css";
 
-import Table from "react-tailwind-table";
-import { collection, getDocs } from "firebase/firestore";
+// Firebase
+import {
+  collection,
+  DocumentData,
+  getDocs,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { db } from "../../lib/firebaseConfig/init";
+import { useAuth } from "../../lib/authContext";
+
+// Components
+import Table, { Icolumn, Irow } from "react-tailwind-table";
 
 const Home: NextPage = () => {
-  const [data, setData] = useState([]);
+  const { user, userData, loading } = useAuth();
+  const [data, setData] = useState<DocumentData[]>([]);
+
+  // Firebase Query
+  const q = query(collection(db, "users"), orderBy("created_at", "desc"));
+
   const tableStyling = {
     // base_bg_color: "bg-green-600",
     // base_text_color: "text-green-600",
@@ -43,14 +59,40 @@ const Home: NextPage = () => {
     },
   };
 
-  const usersRef = collection(db, "users");
-  console.log(usersRef);
-  // const querySnapshot = await getDocs(usersRef);
-  // querySnapshot.forEach((doc) => {
-  //   // doc.data() is never undefined for query doc snapshots
-  //   console.log(doc.id, " => ", doc.data());
-  //   // setData((prev) => [...prev, doc.data()]);
-  // });
+  type Irender_row = (
+    row: Irow,
+    col: Icolumn,
+    display_value: any
+  ) => JSX.Element | string;
+
+  const rowcheck: Irender_row = (row, column, display_value) => {
+    if (column.field === "actions") {
+      return (
+        <>
+          <button className="border p-2">{display_value}</button>
+        </>
+      );
+    }
+
+    if (column.field === "name") {
+      return <p className="font-semibold">{display_value}</p>;
+    }
+
+    return display_value;
+  };
+
+  useEffect(() => {
+    if (data.length === 0) {
+      let tempData: DocumentData[] = [];
+      const querySnapshot = getDocs(q);
+      querySnapshot.then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          tempData.push(doc.data());
+        });
+        setData(tempData);
+      });
+    }
+  });
 
   return (
     <>
@@ -61,11 +103,12 @@ const Home: NextPage = () => {
       <main>Account management</main>
       <Table
         // per_page={3}
+        row_render={rowcheck}
         styling={tableStyling}
         columns={[
           {
-            field: "front_end_position.name",
-            use: "Position",
+            field: "no_induk",
+            use: "NIM/NIP",
           },
           {
             // use_in_display: false,
@@ -74,113 +117,17 @@ const Home: NextPage = () => {
           },
 
           {
-            field: "shirt_number",
-            use: "Actionz",
+            field: "role",
+            use: "Role",
+            // use_in_search:false
+          },
+          {
+            field: "email",
+            use: "Actions",
             // use_in_search:false
           },
         ]}
-        rows={[
-          {
-            id: 1,
-            name: "Sadio Mane",
-            country_id: 3,
-            club_id: 2,
-            position_id: 1,
-            shirt_number: "10",
-            created_by: 2,
-            deleted_at: null,
-            created_at: "12/12/12 15:00:00",
-            updated_at: "12/12/12 15:00:00",
-            is_defender: false,
-            is_midfielder: false,
-            is_forward: true,
-            is_goalkeeper: false,
-            front_end_position: {
-              name: "attach",
-              id: 2,
-            },
-          },
-          {
-            id: 2,
-            name: "Mohammed Sala",
-            country_id: 3,
-            club_id: 2,
-            position_id: 1,
-            shirt_number: "11",
-            created_by: 2,
-            deleted_at: null,
-            created_at: "12/12/12 15:00:00",
-            updated_at: "12/12/12 15:00:00",
-            is_defender: false,
-            is_midfielder: false,
-            is_forward: true,
-            is_goalkeeper: false,
-            front_end_position: {
-              name: "Forward",
-              id: 4,
-            },
-          },
-          {
-            id: 3,
-            name: "Robertor Fermino",
-            country_id: 3,
-            club_id: 2,
-            position_id: 1,
-            shirt_number: "8",
-            created_by: 2,
-            deleted_at: null,
-            created_at: "12/12/12 15:00:00",
-            updated_at: "12/12/12 15:00:00",
-            is_defender: false,
-            is_midfielder: false,
-            is_forward: true,
-            is_goalkeeper: false,
-            front_end_position: {
-              name: "Defence",
-              id: 9,
-            },
-          },
-          {
-            id: 3,
-            name: "Robertor Fermino",
-            country_id: 3,
-            club_id: 2,
-            position_id: 1,
-            shirt_number: "8",
-            created_by: 2,
-            deleted_at: null,
-            created_at: "12/12/12 15:00:00",
-            updated_at: "12/12/12 15:00:00",
-            is_defender: false,
-            is_midfielder: false,
-            is_forward: true,
-            is_goalkeeper: false,
-            front_end_position: {
-              name: "Defence",
-              id: 9,
-            },
-          },
-          {
-            id: 3,
-            name: "Robertor Fermino",
-            country_id: 3,
-            club_id: 2,
-            position_id: 1,
-            shirt_number: "8",
-            created_by: 2,
-            deleted_at: null,
-            created_at: "12/12/12 15:00:00",
-            updated_at: "12/12/12 15:00:00",
-            is_defender: false,
-            is_midfielder: false,
-            is_forward: true,
-            is_goalkeeper: false,
-            front_end_position: {
-              name: "Defence",
-              id: 9,
-            },
-          },
-        ]}
+        rows={data}
       ></Table>
     </>
   );

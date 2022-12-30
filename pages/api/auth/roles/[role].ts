@@ -8,7 +8,7 @@ const handler: NextApiHandler = async (
 ) => {
   const role = req.query.role;
   const { user_id } = req.body;
-  const claims = { role: role };
+  const claims = { admin: true };
 
   try {
     await admin.auth().setCustomUserClaims(user_id, claims);
