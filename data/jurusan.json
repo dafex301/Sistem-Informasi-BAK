@@ -1,334 +1,334 @@
 [
   {
-    "faculty": "FEB",
+    "faculty": "Fakultas Ekonomika dan Bisnis",
     "name": "Akuntansi"
   },
   {
-    "faculty": "FEB",
+    "faculty": "Fakultas Ekonomika dan Bisnis",
     "name": "Manajemen"
   },
   {
-    "faculty": "FEB",
+    "faculty": "Fakultas Ekonomika dan Bisnis",
     "name": "Ilmu Ekonomi"
   },
   {
-    "faculty": "FEB",
+    "faculty": "Fakultas Ekonomika dan Bisnis",
     "name": "Ekonomi Syariah"
   },
   {
-    "faculty": "FEB",
+    "faculty": "Fakultas Ekonomika dan Bisnis",
     "name": "Ekonomi Pembangunan"
   },
   {
-    "faculty": "FH",
+    "faculty": "Fakultas Hukum",
     "name": "Ilmu Hukum"
   },
   {
-    "faculty": "FISIP",
+    "faculty": "Fakultas Ilmu Sosial dan Ilmu Politik",
     "name": "Hubungan Internasional"
   },
   {
-    "faculty": "FISIP",
+    "faculty": "Fakultas Ilmu Sosial dan Ilmu Politik",
     "name": "Ilmu Administrasi"
   },
   {
-    "faculty": "FISIP",
+    "faculty": "Fakultas Ilmu Sosial dan Ilmu Politik",
     "name": "Ilmu Politik"
   },
   {
-    "faculty": "FISIP",
+    "faculty": "Fakultas Ilmu Sosial dan Ilmu Politik",
     "name": "Ilmu Pemerintahan"
   },
   {
-    "faculty": "FISIP",
+    "faculty": "Fakultas Ilmu Sosial dan Ilmu Politik",
     "name": "Administrasi Negara (Publik)"
   },
   {
-    "faculty": "FISIP",
+    "faculty": "Fakultas Ilmu Sosial dan Ilmu Politik",
     "name": "Administrasi Bisnis (Niaga)"
   },
   {
-    "faculty": "FISIP",
+    "faculty": "Fakultas Ilmu Sosial dan Ilmu Politik",
     "name": "Ilmu Komunikasi"
   },
   {
-    "faculty": "FK",
+    "faculty": "Fakultas Kedokteran",
     "name": "Farmasi"
   },
   {
-    "faculty": "FK",
+    "faculty": "Fakultas Kedokteran",
     "name": "Pendidikan Dokter"
   },
   {
-    "faculty": "FK",
+    "faculty": "Fakultas Kedokteran",
     "name": "Ilmu Keperawatan"
   },
   {
-    "faculty": "FK",
+    "faculty": "Fakultas Kedokteran",
     "name": "Gizi"
   },
   {
-    "faculty": "FK",
+    "faculty": "Fakultas Kedokteran",
     "name": "Pendidikan Dokter Gigi"
   },
   {
-    "faculty": "FK",
+    "faculty": "Fakultas Kedokteran",
     "name": "Radiologi"
   },
   {
-    "faculty": "FK",
+    "faculty": "Fakultas Kedokteran",
     "name": "Lainnya"
   },
   {
-    "faculty": "FPIK",
+    "faculty": "Fakultas Perikanan dan Ilmu Kelautan",
     "name": "Kelautan"
   },
   {
-    "faculty": "FPIK",
+    "faculty": "Fakultas Perikanan dan Ilmu Kelautan",
     "name": "Budidaya Perairan (Akuakultur)"
   },
   {
-    "faculty": "FPIK",
+    "faculty": "Fakultas Perikanan dan Ilmu Kelautan",
     "name": "Perikanan"
   },
   {
-    "faculty": "FPIK",
+    "faculty": "Fakultas Perikanan dan Ilmu Kelautan",
     "name": "Lainnya"
   },
   {
-    "faculty": "FPP",
+    "faculty": "Fakultas Peternakan dan Pertanian",
     "name": "Agribisnis"
   },
   {
-    "faculty": "FPP",
+    "faculty": "Fakultas Peternakan dan Pertanian",
     "name": "Peternakan"
   },
   {
-    "faculty": "FPP",
+    "faculty": "Fakultas Peternakan dan Pertanian",
     "name": "Ilmu dan Teknologi Pangan"
   },
   {
-    "faculty": "FPP",
+    "faculty": "Fakultas Peternakan dan Pertanian",
     "name": "Agroteknologi"
   },
   {
-    "faculty": "FPsi",
+    "faculty": "Fakultas Psikologi",
     "name": "Psikologi"
   },
   {
-    "faculty": "FSM",
+    "faculty": "Fakultas Sains dan Matematika",
     "name": "Informatika"
   },
   {
-    "faculty": "FSM",
+    "faculty": "Fakultas Sains dan Matematika",
     "name": "Matematika"
   },
   {
-    "faculty": "FSM",
+    "faculty": "Fakultas Sains dan Matematika",
     "name": "Biologi"
   },
   {
-    "faculty": "FSM",
+    "faculty": "Fakultas Sains dan Matematika",
     "name": "Kimia"
   },
   {
-    "faculty": "FSM",
+    "faculty": "Fakultas Sains dan Matematika",
     "name": "Fisika"
   },
   {
-    "faculty": "FSM",
+    "faculty": "Fakultas Sains dan Matematika",
     "name": "Statistika"
   },
   {
-    "faculty": "FSM",
+    "faculty": "Fakultas Sains dan Matematika",
     "name": "Bioteknologi"
   },
   {
-    "faculty": "FT",
+    "faculty": "Fakultas Teknik",
     "name": "Teknik Sipil"
   },
   {
-    "faculty": "FT",
+    "faculty": "Fakultas Teknik",
     "name": "Arsitektur"
   },
   {
-    "faculty": "FT",
+    "faculty": "Fakultas Teknik",
     "name": "Teknik Kimia"
   },
   {
-    "faculty": "FT",
+    "faculty": "Fakultas Teknik",
     "name": "Teknik Mesin"
   },
   {
-    "faculty": "FT",
+    "faculty": "Fakultas Teknik",
     "name": "Teknik Elektro"
   },
   {
-    "faculty": "FT",
+    "faculty": "Fakultas Teknik",
     "name": "Perencanaan Wilayah dan Kota"
   },
   {
-    "faculty": "FT",
+    "faculty": "Fakultas Teknik",
     "name": "Teknik Industri"
   },
   {
-    "faculty": "FT",
+    "faculty": "Fakultas Teknik",
     "name": "Teknik Lingkungan"
   },
   {
-    "faculty": "FT",
+    "faculty": "Fakultas Teknik",
     "name": "Teknik Geologi"
   },
   {
-    "faculty": "FT",
+    "faculty": "Fakultas Teknik",
     "name": "Teknik Geodesi"
   },
   {
-    "faculty": "FT",
+    "faculty": "Fakultas Teknik",
     "name": "Teknik Perkapalan"
   },
   {
-    "faculty": "FIB",
+    "faculty": "Fakultas Ilmu Budaya",
     "name": "Antropologi"
   },
   {
-    "faculty": "FIB",
+    "faculty": "Fakultas Ilmu Budaya",
     "name": "Sastra Indonesia"
   },
   {
-    "faculty": "FIB",
+    "faculty": "Fakultas Ilmu Budaya",
     "name": "Sastra Inggris"
   },
   {
-    "faculty": "FIB",
+    "faculty": "Fakultas Ilmu Budaya",
     "name": "Ilmu Perpustakaan"
   },
   {
-    "faculty": "FIB",
+    "faculty": "Fakultas Ilmu Budaya",
     "name": "Sejarah"
   },
   {
-    "faculty": "FIB",
+    "faculty": "Fakultas Ilmu Budaya",
     "name": "Kearsipan"
   },
   {
-    "faculty": "FIB",
+    "faculty": "Fakultas Ilmu Budaya",
     "name": "Sastra Jepang"
   },
   {
-    "faculty": "FIB",
+    "faculty": "Fakultas Ilmu Budaya",
     "name": "Lainnya"
   },
   {
-    "faculty": "FKM",
+    "faculty": "Fakultas Kesehatan Masyarakat",
     "name": "Kesehatan Masyarakat"
   },
   {
-    "faculty": "FKM",
+    "faculty": "Fakultas Kesehatan Masyarakat",
     "name": "Kesehatan Lingkungan"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Teknik Industri"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Teknik Sipil"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Teknik Kimia"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Teknik Mesin"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Teknik Elektro"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Perencanaan Wilayah dan Kota"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Arsitektur"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Ilmu Ekonomi"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Manajemen"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Perpajakan"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Akuntansi"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Ilmu Administrasi"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Ilmu Perpustakaan"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Sastra Inggris"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Public Relations"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Teknik Perkapalan"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Instrumentasi"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Sastra Jepang"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Peternakan"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Ilmu Teknik"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Administrasi Perkantoran"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Lainnya"
   },
   {
-    "faculty": "SV",
+    "faculty": "Sekolah Vokasi",
     "name": "Kearsipan"
   },
   {
-    "faculty": "PS",
+    "faculty": "Pasca Sarjana",
     "name": "Lainnya"
   },
   {
-    "faculty": "PS",
+    "faculty": "Pasca Sarjana",
     "name": "Teknik Lingkungan"
   },
   {
-    "faculty": "PS",
+    "faculty": "Pasca Sarjana",
     "name": "Sistem Informasi"
   }
 ]

@@ -96,8 +96,8 @@ const Register: NextPage = () => {
           <input
             className={
               error.name
-                ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
-                : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
+                ? "col-span-2 rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
+                : `col-span-2 rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
             }
             type="text"
             placeholder="Nama"
@@ -113,8 +113,8 @@ const Register: NextPage = () => {
           <input
             className={
               error.nim
-                ? " rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
-                : ` rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
+                ? "col-span-2 rounded-[4px] mb-1 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500 border-red-500"
+                : `col-span-2 rounded-[4px] mb-5 border p-3 hover:outline-none focus:outline-none hover:border-yellow-500`
             }
             type="number"
             placeholder="NIM/NIP"
