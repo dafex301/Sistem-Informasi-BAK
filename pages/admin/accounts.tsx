@@ -20,8 +20,10 @@ import { Button, Dropdown } from "flowbite-react";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { Irender_row } from "../../interface/table";
 import { tableStyling } from "../../components/table/tableStyling";
+import { useAuth } from "../../lib/authContext";
 
 const Home: NextPage = () => {
+  const { user } = useAuth();
   const [data, setData] = useState<DocumentData[]>([]);
 
   // Firebase Query
@@ -61,7 +63,11 @@ const Home: NextPage = () => {
           <Button className="p-0">
             <PencilIcon className="h-4 w-4 text-white" />
           </Button>
-          <Button className="p-0" color={"failure"}>
+          <Button
+            className="p-0"
+            color={"failure"}
+            onClick={() => handleDelete(row.email)}
+          >
             <TrashIcon className="h-4 w-4 text-white" />
           </Button>
         </div>
@@ -93,6 +99,28 @@ const Home: NextPage = () => {
     });
     setData(tempData);
   };
+
+  const handleDelete = (email: string) => {
+    if (user) {
+      // Request to /api/auth/delete with email as body
+      fetch(`/api/auth/delete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization token
+          Authorization: user.token,
+        },
+        body: JSON.stringify({ email }),
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          console.log(result);
+          let tempData = data.filter((row) => row.email !== email);
+          setData(tempData);
+        });
+    }
+  };
+
   useEffect(() => {
     if (data.length === 0) {
       let tempData: DocumentData[] = [];
