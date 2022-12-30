@@ -90,7 +90,6 @@ const Register: NextPage = () => {
       <>
         <Head>
           <title>Register</title>
-          <link rel="icon" href="/undip.png" />
         </Head>
         <div className="flex flex-col text-sm rounded-md">
           {/* Name */}

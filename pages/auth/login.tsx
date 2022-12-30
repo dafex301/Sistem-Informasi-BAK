@@ -43,7 +43,6 @@ const Login: NextPage = () => {
       <>
         <Head>
           <title>Login</title>
-          <link rel="icon" href="/undip.png" />
         </Head>
         <div className="flex flex-col text-sm rounded-md">
           <input

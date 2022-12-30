@@ -49,7 +49,6 @@ const Forget: NextPage = (props: Props) => {
       <>
         <Head>
           <title>Forget Password</title>
-          <link rel="icon" href="/undip.png" />
         </Head>
         {success !== null && (
           <div

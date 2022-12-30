@@ -76,23 +76,25 @@ const Data: NextPage = () => {
 
     if (!error.name && !error.nim) {
       try {
-        await writeUserToDb(auth, name, nim, email, password, "Mahasiswa").then(() => {
-          const userData: UserData = {
-            name: name,
-            no_induk: nim,
-            role: "Mahasiswa",
-          };
-          createToken(userData)
-            .then((jwt) => {
-              setCookie(null, "user", jwt, {
-                maxAge: 30 * 24 * 60 * 60,
-                path: "/",
+        await writeUserToDb(auth, name, nim, email, password, "Mahasiswa").then(
+          () => {
+            const userData: UserData = {
+              name: name,
+              no_induk: nim,
+              role: "Mahasiswa",
+            };
+            createToken(userData)
+              .then((jwt) => {
+                setCookie(null, "user", jwt, {
+                  maxAge: 30 * 24 * 60 * 60,
+                  path: "/",
+                });
+              })
+              .then(() => {
+                setUserData(userData);
               });
-            })
-            .then(() => {
-              setUserData(userData);
-            });
-        });
+          }
+        );
       } catch (e: any) {
         const errorCode = e.code;
         const errorMessage = e.message;
@@ -107,7 +109,6 @@ const Data: NextPage = () => {
       <>
         <Head>
           <title>Data</title>
-          <link rel="icon" href="/undip.png" />
         </Head>
 
         <div className="flex flex-col text-sm rounded-md">
