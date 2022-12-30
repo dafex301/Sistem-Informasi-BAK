@@ -155,7 +155,8 @@ export const writeUserToDb = async (
   name: string,
   no_induk: string,
   email: string,
-  password: string
+  password: string,
+  role: string
 ): Promise<void> => {
   const credential = EmailAuthProvider.credential(email, password);
   const user = auth.currentUser;
@@ -168,7 +169,7 @@ export const writeUserToDb = async (
     await setDoc(doc(db, "users", user.uid), {
       name: name,
       no_induk: no_induk,
-      role: "mahasiswa",
+      role: role,
       email: user.email,
       created_at: time,
       modified_at: time,

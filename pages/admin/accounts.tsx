@@ -13,63 +13,40 @@ import {
   query,
 } from "firebase/firestore";
 import { db } from "../../lib/firebaseConfig/init";
-import { useAuth } from "../../lib/authContext";
 
 // Components
-import Table, { Icolumn, Irow } from "react-tailwind-table";
+import Table from "react-tailwind-table";
+import { Button, Dropdown } from "flowbite-react";
+import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { Irender_row } from "../../interface/table";
+import { tableStyling } from "../../components/table/tableStyling";
 
 const Home: NextPage = () => {
-  const { user, userData, loading } = useAuth();
   const [data, setData] = useState<DocumentData[]>([]);
 
   // Firebase Query
   const q = query(collection(db, "users"), orderBy("created_at", "desc"));
 
-  const tableStyling = {
-    // base_bg_color: "bg-green-600",
-    // base_text_color: "text-green-600",
-    top: {
-      // title:"text-red-700"
-      elements: {
-        // main: "bg-green-700",
-        // search: "text-white",
-        bulk_select: {
-          // main: "bg-green-700 text-white",
-          // button:"bg-yellow-700 text-black px-5 "
-        },
-        // export:"text-yellow-800"
-      },
-    },
-    table_head: {
-      table_row: "",
-      table_data: "text-white bg-gray-500",
-    },
-    table_body: {
-      // main: "bg-red-600",
-      // table_row: "text-yellow-900",
-      // table_data: "text-base"
-    },
-    footer: {
-      // main: "bg-yellow-700",
-      statistics: {
-        // main: "bg-white text-green-900",
-        // bold_numbers:"text-yellow-800 font-thin"
-      },
-      // page_numbers: "bg-red-600 text-white",
-    },
-  };
-
-  type Irender_row = (
-    row: Irow,
-    col: Icolumn,
-    display_value: any
-  ) => JSX.Element | string;
-
+  // Table setting
   const rowcheck: Irender_row = (row, column, display_value) => {
-    if (column.field === "actions") {
+    if (column.field === "role") {
       return (
         <>
-          <button className="border p-2">{display_value}</button>
+          <Dropdown className="" inline color="light" label={row.role}>
+            {["Mahasiswa", "Staff", "Admin"].map((role) => {
+              if (role !== row.role) {
+                return (
+                  <Dropdown.Item
+                    className=""
+                    key={role}
+                    onClick={() => handleRoleChange(row.email, role)}
+                  >
+                    {role}
+                  </Dropdown.Item>
+                );
+              }
+            })}
+          </Dropdown>
         </>
       );
     }
@@ -78,9 +55,44 @@ const Home: NextPage = () => {
       return <p className="font-semibold">{display_value}</p>;
     }
 
+    if (column.field === "actions") {
+      return (
+        <div className="flex gap-1">
+          <Button className="p-0">
+            <PencilIcon className="h-4 w-4 text-white" />
+          </Button>
+          <Button className="p-0" color={"failure"}>
+            <TrashIcon className="h-4 w-4 text-white" />
+          </Button>
+        </div>
+      );
+    }
+
     return display_value;
   };
 
+  const handleRoleChange = (email: string, role: string) => {
+    // Request to /api/auth/roles/${role} with email as body
+    fetch(`/api/auth/roles/${role}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result);
+      });
+
+    let tempData = data.map((row) => {
+      if (row.email === email) {
+        row.role = role;
+      }
+      return row;
+    });
+    setData(tempData);
+  };
   useEffect(() => {
     if (data.length === 0) {
       let tempData: DocumentData[] = [];
@@ -100,35 +112,36 @@ const Home: NextPage = () => {
         <title>Account Management</title>
       </Head>
 
-      <main>Account management</main>
-      <Table
-        // per_page={3}
-        row_render={rowcheck}
-        styling={tableStyling}
-        columns={[
-          {
-            field: "no_induk",
-            use: "NIM/NIP",
-          },
-          {
-            // use_in_display: false,
-            field: "name", //Object destructure
-            use: "Name",
-          },
+      <div className="rounded-3xl drop-shadow-lg">
+        <Table
+          // per_page={3}
+          row_render={rowcheck}
+          styling={tableStyling}
+          columns={[
+            {
+              field: "no_induk",
+              use: "NIM/NIP",
+            },
+            {
+              // use_in_display: false,
+              field: "name", //Object destructure
+              use: "Name",
+            },
 
-          {
-            field: "role",
-            use: "Role",
-            // use_in_search:false
-          },
-          {
-            field: "email",
-            use: "Actions",
-            // use_in_search:false
-          },
-        ]}
-        rows={data}
-      ></Table>
+            {
+              field: "role",
+              use: "Role",
+              // use_in_search:false
+            },
+            {
+              field: "actions",
+              use: "Actions",
+              // use_in_search:false
+            },
+          ]}
+          rows={data}
+        ></Table>
+      </div>
     </>
   );
 };

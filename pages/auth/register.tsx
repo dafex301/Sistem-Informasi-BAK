@@ -76,7 +76,7 @@ const Register: NextPage = () => {
 
     if (!error.name && !error.nim && !error.email && !error.password) {
       try {
-        createAccount(auth, email, password, name, nim, "mahasiswa");
+        createAccount(auth, email, password, name, nim, "Mahasiswa");
       } catch (e: any) {
         const errorCode = e.code;
         const errorMessage = e.message;

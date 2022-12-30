@@ -76,11 +76,11 @@ const Data: NextPage = () => {
 
     if (!error.name && !error.nim) {
       try {
-        await writeUserToDb(auth, name, nim, email, password).then(() => {
+        await writeUserToDb(auth, name, nim, email, password, "Mahasiswa").then(() => {
           const userData: UserData = {
             name: name,
             no_induk: nim,
-            role: "mahasiswa",
+            role: "Mahasiswa",
           };
           createToken(userData)
             .then((jwt) => {
