@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ResponseData } from "../../../interface/response";
-import admin from "../../../lib/firebaseConfig/init-admin";
+import { ResponseData } from "../../../../interface/response";
+import admin from "../../../../lib/firebaseConfig/init-admin";
 
 interface UpdateData {
   email: string;

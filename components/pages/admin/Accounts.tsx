@@ -17,14 +17,7 @@ import { db } from "../../../lib/firebaseConfig/init";
 
 // Components
 import Table from "react-tailwind-table";
-import {
-  Button,
-  Select,
-  Dropdown,
-  Label,
-  Modal,
-  TextInput,
-} from "flowbite-react";
+import { Label, Modal } from "flowbite-react";
 import {
   PencilIcon,
   TrashIcon,
@@ -38,6 +31,7 @@ import { IFakultas } from "../../../interface/fakultas";
 import { IJurusan } from "../../../interface/jurusan";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Select, Button, Chip, Input, Option } from "@material-tailwind/react";
 
 interface AccountsProps {
   role: string;
@@ -86,22 +80,14 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
     if (column.field === "status") {
       return (
         <>
-          <Dropdown className="" inline color="light" label={row.status}>
-            {["Aktif", "Nonaktif"].map((status) => {
-              if (status !== row.status) {
-                return (
-                  <Dropdown.Item
-                    className=""
-                    key={status}
-                    onClick={() => handleStatusChange(row.email, status)}
-                    value={status}
-                  >
-                    {status}
-                  </Dropdown.Item>
-                );
-              }
-            })}
-          </Dropdown>
+          <Chip
+            value={row.status}
+            className={
+              row.status === "Aktif"
+                ? "bg-green-500 px-2 font-normal"
+                : "bg-red-500 px-2 font-normal"
+            }
+          />
         </>
       );
     }
@@ -113,15 +99,18 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
     if (column.field === "actions") {
       return (
         <div className="flex gap-1">
-          <Button className="p-0" onClick={() => handleUpdateButton(row)}>
-            <PencilIcon className="h-4 w-4 text-white" />
+          <Button
+            className="p-3 hover:bg-blue-700"
+            onClick={() => handleUpdateButton(row)}
+          >
+            <PencilIcon className="w-5" />
           </Button>
           <Button
-            className="p-0"
-            color={"failure"}
+            className="p-3 hover:bg-red-700"
+            color="red"
             onClick={() => handleDeleteButton(row)}
           >
-            <TrashIcon className="h-4 w-4 text-white" />
+            <TrashIcon className="w-5 " />
           </Button>
         </div>
       );
@@ -300,7 +289,7 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
         {
           // use_in_display: false,
           field: "name", //Object destructure
-          use: "Name",
+          use: "Nama",
         },
 
         {
@@ -328,7 +317,7 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
         {
           // use_in_display: false,
           field: "name", //Object destructure
-          use: "Name",
+          use: "Nama",
         },
 
         {
@@ -358,7 +347,7 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
         {
           // use_in_display: false,
           field: "name", //Object destructure
-          use: "Name",
+          use: "Nama",
         },
 
         {
@@ -407,7 +396,7 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
                 Apakah anda yakin menghapus akun ini?
               </h3>
               <div className="flex justify-center gap-4">
-                <Button color="failure" onClick={handleDelete}>
+                <Button color="red" onClick={handleDelete}>
                   Ya, saya yakin
                 </Button>
                 <Button color="gray" onClick={() => setModal(null)}>
@@ -426,89 +415,54 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
                 Update Akun
               </h3>
               <div className="space-y-2">
-                <div id="no_induk">
-                  <div className="mb-1 block">
-                    <Label htmlFor="no_induk" value="NIM/NIP" />
-                  </div>
-                  <TextInput
-                    id="no_induk"
-                    placeholder="NIM/NIP"
-                    required={true}
-                    value={updatedNoInduk}
-                    onChange={(e) => setUpdatedNoInduk(e.target.value)}
-                  />
-                </div>
-                <div id="name">
-                  <div className="mb-1 block">
-                    <Label htmlFor="name" value="Nama" />
-                  </div>
-                  <TextInput
-                    id="name"
-                    placeholder="Nama"
-                    required={true}
-                    value={updatedName}
-                    onChange={(e) => setUpdatedName(e.target.value)}
-                  />
-                </div>
-                <div id="phone">
-                  <div className="mb-1 block">
-                    <Label htmlFor="phone" value="No HP" />
-                  </div>
-                  <TextInput
-                    id="phone"
-                    placeholder="No HP"
-                    required={true}
-                    value={updatedPhone}
-                    onChange={(e) => setUpdatedPhone(e.target.value)}
-                  />
-                </div>
+                <Input
+                  label={role === "Mahasiswa" ? "NIM" : "NIP"}
+                  id="no_induk"
+                  required={true}
+                  value={updatedNoInduk}
+                  onChange={(e) => setUpdatedNoInduk(e.target.value)}
+                />
+                <Input
+                  label="Nama"
+                  id="name"
+                  required={true}
+                  value={updatedName}
+                  onChange={(e) => setUpdatedName(e.target.value)}
+                />
+                <Input
+                  id="no-hp"
+                  label="No HP"
+                  required={true}
+                  value={updatedPhone}
+                  onChange={(e) => setUpdatedPhone(e.target.value)}
+                />
                 <div className={role === "Mahasiswa" ? "space-y-2" : "hidden"}>
-                  <div id="fakultas">
-                    <div className="mb-1 block">
-                      <Label htmlFor="fakultas" value="Fakultas" />
-                    </div>
-                    <Select
-                      name="fakultas"
-                      id="fakultas"
-                      onChange={(e) => setUpdatedFakultas(e.target.value)}
-                      value={updatedFakultas}
-                    >
-                      <option value="">Pilih Fakultas</option>
-                      {fakultasData.map((fakultas: IFakultas) => (
-                        <option key={fakultas.kode} value={fakultas.name}>
-                          {fakultas.name}
-                        </option>
-                      ))}
-                    </Select>
-                  </div>
-                  <div id="jurusan">
-                    <div className="mb-1 block">
-                      <Label htmlFor="jurusan" value="Jurusan" />
-                    </div>
-                    <Select
-                      name="jurusan"
-                      id="jurusan"
-                      onChange={(e) => setUpdatedJurusan(e.target.value)}
-                      value={updatedJurusan}
-                    >
-                      <option value="">Pilih Jurusan</option>
-                      {jurusan.map((j: IJurusan, i: number) => (
-                        <option key={i} value={j.name}>
-                          {j.name}
-                        </option>
-                      ))}
-                    </Select>
-                  </div>
+                  <Select
+                    id="fakultas"
+                    value={updatedFakultas}
+                    label="Fakultas"
+                  >
+                    {fakultasData.map((fakultas: IFakultas) => (
+                      <Option key={fakultas.kode} value={fakultas.name}>
+                        {fakultas.name}
+                      </Option>
+                    ))}
+                  </Select>
+                  <Select id="jurusan" value={updatedJurusan} label="Jurusan">
+                    {jurusan.map((j: IJurusan, i: number) => (
+                      <Option key={i} value={j.name}>
+                        {j.name}
+                      </Option>
+                    ))}
+                  </Select>
                 </div>
                 <div className={role === "Staff" ? "space-y-2" : "hidden"}>
                   <div id="jabatan-container">
-                    <div className="mb-1 block">
-                      <Label htmlFor="jabatan" value="Jabatan" />
-                    </div>
-                    <TextInput
+                    <Input
                       name="jabatan"
                       id="jabatan"
                       onChange={(e) => setUpdatedJabatan(e.target.value)}
+                      label="Jabatan"
                       value={updatedJabatan}
                     />
                   </div>
