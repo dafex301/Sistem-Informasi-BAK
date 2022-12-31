@@ -414,7 +414,7 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
               <h3 className="text-xl font-medium text-gray-900 dark:text-white">
                 Update Akun
               </h3>
-              <div className="space-y-2">
+              <div className="space-y-5">
                 <Input
                   label={role === "Mahasiswa" ? "NIM" : "NIP"}
                   id="no_induk"
@@ -436,7 +436,7 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
                   value={updatedPhone}
                   onChange={(e) => setUpdatedPhone(e.target.value)}
                 />
-                <div className={role === "Mahasiswa" ? "space-y-2" : "hidden"}>
+                <div className={role === "Mahasiswa" ? "space-y-5" : "hidden"}>
                   <Select
                     id="fakultas"
                     value={updatedFakultas}
@@ -448,7 +448,7 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
                       </Option>
                     ))}
                   </Select>
-                  <Select id="jurusan" value={updatedJurusan} label="Jurusan">
+                  <Select value={updatedJurusan} label="Jurusan">
                     {jurusan.map((j: IJurusan, i: number) => (
                       <Option key={i} value={j.name}>
                         {j.name}
