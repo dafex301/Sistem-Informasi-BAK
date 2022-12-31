@@ -94,6 +94,7 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
                     className=""
                     key={status}
                     onClick={() => handleStatusChange(row.email, status)}
+                    value={status}
                   >
                     {status}
                   </Dropdown.Item>
@@ -148,11 +149,12 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
 
       let tempData = data.map((row) => {
         if (row.email === email) {
-          row.role = role;
+          row.status = status;
         }
         return row;
       });
       setData(tempData);
+      toast.success("Status berhasil diubah");
     }
   };
 
@@ -216,8 +218,6 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
           jurusan: updatedJurusan,
           phone: updatedPhone,
           jabatan: updatedJabatan,
-          status: updatedStatus,
-          role: role,
         }),
       })
         .then((res) => res.json())
@@ -233,7 +233,6 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
           row.jurusan = updatedJurusan;
           row.phone = updatedPhone;
           row.jabatan = updatedJabatan;
-          row.status = updatedStatus;
         }
         return row;
       });
