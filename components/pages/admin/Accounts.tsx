@@ -11,8 +11,9 @@ import {
   getDocs,
   orderBy,
   query,
+  where,
 } from "firebase/firestore";
-import { db } from "../../lib/firebaseConfig/init";
+import { db } from "../../../lib/firebaseConfig/init";
 
 // Components
 import Table from "react-tailwind-table";
@@ -29,16 +30,20 @@ import {
   TrashIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/solid";
-import { Irender_row } from "../../interface/table";
-import { tableStyling } from "../../components/table/tableStyling";
-import { useAuth } from "../../lib/authContext";
-import { userAccount } from "../../interface/userAccount";
-import { IFakultas } from "../../interface/fakultas";
-import { IJurusan } from "../../interface/jurusan";
+import { Irender_row } from "../../../interface/table";
+import { tableStyling } from "../../table/tableStyling";
+import { useAuth } from "../../../lib/authContext";
+import { userAccount } from "../../../interface/userAccount";
+import { IFakultas } from "../../../interface/fakultas";
+import { IJurusan } from "../../../interface/jurusan";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Accounts: NextPage = () => {
+interface AccountsProps {
+  role: string;
+}
+
+const Accounts: NextPage<AccountsProps> = ({ role }) => {
   // =============== State ===============
   const { user } = useAuth();
   const [data, setData] = useState<DocumentData[]>([]);
@@ -54,12 +59,15 @@ const Accounts: NextPage = () => {
   const [jurusan, setJurusan] = useState<IJurusan[]>([]);
 
   // =============== Data =================
-  const fakultasData = require("../../data/fakultas.json");
-  const jurusanData = require("../../data/jurusan.json");
+  const fakultasData = require("../../../data/fakultas.json");
+  const jurusanData = require("../../../data/jurusan.json");
 
   // =============== Firebase Query ===============
-  const q = query(collection(db, "users"), orderBy("created_at", "desc"));
-
+  const q = query(
+    collection(db, "users"),
+    where("role", "==", role),
+    orderBy("name", "asc")
+  );
   // =============== Table Row ===============
   const rowcheck: Irender_row = (row, column, display_value) => {
     if (column.field === "role") {
@@ -259,10 +267,6 @@ const Accounts: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Account Management</title>
-      </Head>
-
       <div className="rounded-3xl drop-shadow-lg">
         <Table
           // per_page={3}
