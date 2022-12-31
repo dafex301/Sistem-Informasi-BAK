@@ -439,8 +439,9 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
                 <div className={role === "Mahasiswa" ? "space-y-5" : "hidden"}>
                   <Select
                     id="fakultas"
-                    value={updatedFakultas}
+                    value={updatedFakultas ?? ""}
                     label="Fakultas"
+                    onChange={(e) => setUpdatedFakultas(e!.toString())}
                   >
                     {fakultasData.map((fakultas: IFakultas) => (
                       <Option key={fakultas.kode} value={fakultas.name}>
@@ -448,7 +449,11 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
                       </Option>
                     ))}
                   </Select>
-                  <Select value={updatedJurusan} label="Jurusan">
+                  <Select
+                    value={updatedJurusan ?? ""}
+                    label="Jurusan"
+                    onChange={(e) => setUpdatedJurusan(e!.toString())}
+                  >
                     {jurusan.map((j: IJurusan, i: number) => (
                       <Option key={i} value={j.name}>
                         {j.name}
