@@ -15,6 +15,7 @@ const handler: NextApiHandler = async (
     if (role === "Admin") {
       claims = {
         is_admin: true,
+        is_staff: true,
       };
     } else if (role === "Staff") {
       claims = {

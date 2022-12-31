@@ -9,6 +9,8 @@ interface UpdateData {
   fakultas: string;
   jurusan: string;
   phone: string;
+  role: string;
+  jabatan: string;
 }
 
 export default async function handler(
@@ -38,14 +40,24 @@ export default async function handler(
           .get();
 
         userRef.forEach((doc) => {
-          doc.ref.update({
-            no_induk: reqBody.no_induk,
-            name: reqBody.name,
-            fakultas: reqBody.fakultas,
-            jurusan: reqBody.jurusan,
-            phone: reqBody.phone,
-            modified_at: admin.firestore.FieldValue.serverTimestamp(),
-          });
+          if (reqBody.role === "Staff") {
+            doc.ref.update({
+              no_induk: reqBody.no_induk,
+              name: reqBody.name,
+              jabatan: reqBody.jabatan,
+              phone: reqBody.phone,
+              modified_at: admin.firestore.FieldValue.serverTimestamp(),
+            });
+          } else {
+            doc.ref.update({
+              no_induk: reqBody.no_induk,
+              name: reqBody.name,
+              fakultas: reqBody.fakultas,
+              jurusan: reqBody.jurusan,
+              phone: reqBody.phone,
+              modified_at: admin.firestore.FieldValue.serverTimestamp(),
+            });
+          }
         });
 
         // Update data in firebase auth

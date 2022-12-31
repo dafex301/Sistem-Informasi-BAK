@@ -1,6 +1,5 @@
 // Next
 import type { NextPage } from "next";
-import Head from "next/head";
 import { useEffect, useState } from "react";
 import "react-tailwind-table/dist/index.css";
 
@@ -10,6 +9,7 @@ import {
   DocumentData,
   getDocs,
   orderBy,
+  Query,
   query,
   where,
 } from "firebase/firestore";
@@ -56,6 +56,9 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
   const [updatedFakultas, setUpdatedFakultas] = useState<string>("");
   const [updatedJurusan, setUpdatedJurusan] = useState<string>("");
   const [updatedPhone, setUpdatedPhone] = useState<string>("");
+  const [updatedJabatan, setUpdatedJabatan] = useState<string>("");
+  const [updatedStatus, setUpdatedStatus] = useState<string>("");
+
   const [jurusan, setJurusan] = useState<IJurusan[]>([]);
 
   // =============== Data =================
@@ -63,26 +66,36 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
   const jurusanData = require("../../../data/jurusan.json");
 
   // =============== Firebase Query ===============
-  const q = query(
-    collection(db, "users"),
-    where("role", "==", role),
-    orderBy("name", "asc")
-  );
+  let q: Query<DocumentData>;
+  if (role === "Mahasiswa") {
+    q = query(
+      collection(db, "users"),
+      where("role", "==", "Mahasiswa"),
+      orderBy("name", "asc")
+    );
+  } else {
+    q = query(
+      collection(db, "users"),
+      where("role", "!=", "Mahasiswa"),
+      orderBy("role", "asc"),
+      orderBy("name", "asc")
+    );
+  }
   // =============== Table Row ===============
   const rowcheck: Irender_row = (row, column, display_value) => {
-    if (column.field === "role") {
+    if (column.field === "status") {
       return (
         <>
-          <Dropdown className="" inline color="light" label={row.role}>
-            {["Mahasiswa", "Staff", "Admin"].map((role) => {
-              if (role !== row.role) {
+          <Dropdown className="" inline color="light" label={row.status}>
+            {["Aktif", "Nonaktif"].map((status) => {
+              if (status !== row.status) {
                 return (
                   <Dropdown.Item
                     className=""
-                    key={role}
-                    onClick={() => handleRoleChange(row.email, role)}
+                    key={status}
+                    onClick={() => handleStatusChange(row.email, status)}
                   >
-                    {role}
+                    {status}
                   </Dropdown.Item>
                 );
               }
@@ -117,27 +130,30 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
   };
 
   // =============== Handler ===============
-  const handleRoleChange = (email: string, role: string) => {
+  const handleStatusChange = (email: string, status: string) => {
     // Request to /api/auth/roles/${role} with email as body
-    fetch(`/api/auth/roles/${role}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-      });
+    if (user) {
+      fetch(`/api/auth/staff/status`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: user.token,
+        },
+        body: JSON.stringify({ email, status }),
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          console.log(result);
+        });
 
-    let tempData = data.map((row) => {
-      if (row.email === email) {
-        row.role = role;
-      }
-      return row;
-    });
-    setData(tempData);
+      let tempData = data.map((row) => {
+        if (row.email === email) {
+          row.role = role;
+        }
+        return row;
+      });
+      setData(tempData);
+    }
   };
 
   const handleDeleteButton = (user: any) => {
@@ -177,6 +193,7 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
     setUpdatedFakultas(user.fakultas ?? "");
     setUpdatedJurusan(user.jurusan ?? "");
     setUpdatedPhone(user.phone ?? "");
+    setUpdatedJabatan(user.jabatan ?? "");
 
     setModal("update");
   };
@@ -198,6 +215,9 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
           fakultas: updatedFakultas,
           jurusan: updatedJurusan,
           phone: updatedPhone,
+          jabatan: updatedJabatan,
+          status: updatedStatus,
+          role: role,
         }),
       })
         .then((res) => res.json())
@@ -212,6 +232,8 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
           row.fakultas = updatedFakultas;
           row.jurusan = updatedJurusan;
           row.phone = updatedPhone;
+          row.jabatan = updatedJabatan;
+          row.status = updatedStatus;
         }
         return row;
       });
@@ -265,6 +287,95 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
     }
   }, [jurusanData, updatedFakultas]);
 
+  // Table Custom Styling based on Role
+  let columnNoInduk: string;
+  let columns;
+  switch (role) {
+    case "Mahasiswa":
+      columnNoInduk = "NIM";
+      columns = [
+        {
+          field: "no_induk",
+          use: columnNoInduk,
+        },
+        {
+          // use_in_display: false,
+          field: "name", //Object destructure
+          use: "Name",
+        },
+
+        {
+          field: "fakultas",
+          use: "Fakultas",
+        },
+        {
+          field: "jurusan",
+          use: "Jurusan",
+        },
+        {
+          field: "actions",
+          use: "Actions",
+          // use_in_search:false
+        },
+      ];
+      break;
+    case "Staff":
+      columnNoInduk = "NIP";
+      columns = [
+        {
+          field: "no_induk",
+          use: columnNoInduk,
+        },
+        {
+          // use_in_display: false,
+          field: "name", //Object destructure
+          use: "Name",
+        },
+
+        {
+          field: "jabatan",
+          use: "Jabatan",
+          // use_in_search:false
+        },
+        {
+          field: "status",
+          use: "Status",
+          // use_in_search:false
+        },
+        {
+          field: "actions",
+          use: "Actions",
+          // use_in_search:false
+        },
+      ];
+      break;
+    default:
+      columnNoInduk = "No Induk";
+      columns = [
+        {
+          field: "no_induk",
+          use: columnNoInduk,
+        },
+        {
+          // use_in_display: false,
+          field: "name", //Object destructure
+          use: "Name",
+        },
+
+        {
+          field: "role",
+          use: "Role",
+          // use_in_search:false
+        },
+        {
+          field: "actions",
+          use: "Actions",
+          // use_in_search:false
+        },
+      ];
+      break;
+  }
+
   return (
     <>
       <div className="rounded-3xl drop-shadow-lg">
@@ -272,28 +383,7 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
           // per_page={3}
           row_render={rowcheck}
           styling={tableStyling}
-          columns={[
-            {
-              field: "no_induk",
-              use: "NIM/NIP",
-            },
-            {
-              // use_in_display: false,
-              field: "name", //Object destructure
-              use: "Name",
-            },
-
-            {
-              field: "role",
-              use: "Role",
-              // use_in_search:false
-            },
-            {
-              field: "actions",
-              use: "Actions",
-              // use_in_search:false
-            },
-          ]}
+          columns={columns}
           rows={data}
         ></Table>
       </div>
@@ -373,41 +463,56 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
                     onChange={(e) => setUpdatedPhone(e.target.value)}
                   />
                 </div>
-                <div id="fakultas">
-                  <div className="mb-1 block">
-                    <Label htmlFor="fakultas" value="Fakultas" />
+                <div className={role === "Mahasiswa" ? "space-y-2" : "hidden"}>
+                  <div id="fakultas">
+                    <div className="mb-1 block">
+                      <Label htmlFor="fakultas" value="Fakultas" />
+                    </div>
+                    <Select
+                      name="fakultas"
+                      id="fakultas"
+                      onChange={(e) => setUpdatedFakultas(e.target.value)}
+                      value={updatedFakultas}
+                    >
+                      <option value="">Pilih Fakultas</option>
+                      {fakultasData.map((fakultas: IFakultas) => (
+                        <option key={fakultas.kode} value={fakultas.name}>
+                          {fakultas.name}
+                        </option>
+                      ))}
+                    </Select>
                   </div>
-                  <Select
-                    name="fakultas"
-                    id="fakultas"
-                    onChange={(e) => setUpdatedFakultas(e.target.value)}
-                    value={updatedFakultas}
-                  >
-                    <option value="">Pilih Fakultas</option>
-                    {fakultasData.map((fakultas: IFakultas) => (
-                      <option key={fakultas.kode} value={fakultas.name}>
-                        {fakultas.name}
-                      </option>
-                    ))}
-                  </Select>
+                  <div id="jurusan">
+                    <div className="mb-1 block">
+                      <Label htmlFor="jurusan" value="Jurusan" />
+                    </div>
+                    <Select
+                      name="jurusan"
+                      id="jurusan"
+                      onChange={(e) => setUpdatedJurusan(e.target.value)}
+                      value={updatedJurusan}
+                    >
+                      <option value="">Pilih Jurusan</option>
+                      {jurusan.map((j: IJurusan, i: number) => (
+                        <option key={i} value={j.name}>
+                          {j.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
                 </div>
-                <div id="jurusan">
-                  <div className="mb-1 block">
-                    <Label htmlFor="jurusan" value="Jurusan" />
+                <div className={role === "Staff" ? "space-y-2" : "hidden"}>
+                  <div id="jabatan-container">
+                    <div className="mb-1 block">
+                      <Label htmlFor="jabatan" value="Jabatan" />
+                    </div>
+                    <TextInput
+                      name="jabatan"
+                      id="jabatan"
+                      onChange={(e) => setUpdatedJabatan(e.target.value)}
+                      value={updatedJabatan}
+                    />
                   </div>
-                  <Select
-                    name="jurusan"
-                    id="jurusan"
-                    onChange={(e) => setUpdatedJurusan(e.target.value)}
-                    value={updatedJurusan}
-                  >
-                    <option value="">Pilih Jurusan</option>
-                    {jurusan.map((j: IJurusan, i: number) => (
-                      <option key={i} value={j.name}>
-                        {j.name}
-                      </option>
-                    ))}
-                  </Select>
                 </div>
               </div>
               <div className="flex justify-center gap-4">
