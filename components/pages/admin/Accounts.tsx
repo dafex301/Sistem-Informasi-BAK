@@ -265,15 +265,13 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
     }
   });
 
-  // useEffect to get jurusan based on fakultas
-  useEffect(() => {
-    if (updatedFakultas) {
-      const jurusan = jurusanData.filter(
-        (jurusan: IJurusan) => jurusan.faculty === updatedFakultas
-      );
-      setJurusan(jurusan);
-    }
-  }, [jurusanData, updatedFakultas]);
+  const handleUpdateFakultas = (fakultas: string) => {
+    setUpdatedFakultas(fakultas);
+    const jurusan = jurusanData.filter(
+      (row: IJurusan) => row.faculty === fakultas
+    );
+    setUpdatedJurusan(jurusan[0].name);
+  };
 
   // Table Custom Styling based on Role
   let columnNoInduk: string;
@@ -439,9 +437,9 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
                 <div className={role === "Mahasiswa" ? "space-y-5" : "hidden"}>
                   <Select
                     id="fakultas"
-                    value={updatedFakultas ?? ""}
+                    value={updatedFakultas}
                     label="Fakultas"
-                    onChange={(e) => setUpdatedFakultas(e!.toString())}
+                    onChange={(e) => handleUpdateFakultas(e!.toString())}
                   >
                     {fakultasData.map((fakultas: IFakultas) => (
                       <Option key={fakultas.kode} value={fakultas.name}>
@@ -450,12 +448,20 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
                     ))}
                   </Select>
                   <Select
-                    value={updatedJurusan ?? ""}
+                    id="jurusan"
+                    value={updatedJurusan}
                     label="Jurusan"
                     onChange={(e) => setUpdatedJurusan(e!.toString())}
                   >
-                    {jurusan.map((j: IJurusan, i: number) => (
-                      <Option key={i} value={j.name}>
+                    {/* get data from jurusanData, filter where jurusan.faculty == updatedFakultas.kode */}
+                    {jurusanData.map((j: IJurusan) => (
+                      <Option
+                        key={`${j.name}-${j.faculty}`}
+                        value={j.name}
+                        className={
+                          j.faculty === updatedFakultas ? "" : "hidden"
+                        }
+                      >
                         {j.name}
                       </Option>
                     ))}
