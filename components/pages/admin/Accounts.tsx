@@ -17,7 +17,6 @@ import { db } from "../../../lib/firebaseConfig/init";
 
 // Components
 import Table from "react-tailwind-table";
-import { Label, Modal } from "flowbite-react";
 import {
   PencilIcon,
   TrashIcon,
@@ -31,7 +30,16 @@ import { IFakultas } from "../../../interface/fakultas";
 import { IJurusan } from "../../../interface/jurusan";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Select, Button, Chip, Input, Option } from "@material-tailwind/react";
+import {
+  Select,
+  Button,
+  Chip,
+  Input,
+  Option,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+} from "@material-tailwind/react";
 
 interface AccountsProps {
   role: string;
@@ -374,17 +382,10 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
         ></Table>
       </div>
 
-      <Modal
-        show={Boolean(modal)}
-        size="md"
-        popup={true}
-        onClose={() => setModal(null)}
-      >
-        <Modal.Header />
-
+      <Dialog open={Boolean(modal)} handler={() => setModal(null)}>
         {/* Delete */}
         {modal === "delete" && (
-          <Modal.Body>
+          <DialogBody className="flex items-center justify-center">
             <div className="text-center">
               <ExclamationCircleIcon className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
               <p className="text-md font-normal text-gray-500 dark:text-gray-400">
@@ -402,93 +403,100 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
                 </Button>
               </div>
             </div>
-          </Modal.Body>
+          </DialogBody>
         )}
 
         {/* Update */}
         {modal === "update" && (
-          <Modal.Body>
-            <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
+          <>
+            <DialogHeader>
               <h3 className="text-xl font-medium text-gray-900 dark:text-white">
                 Update Akun
               </h3>
-              <div className="space-y-5">
-                <Input
-                  label={role === "Mahasiswa" ? "NIM" : "NIP"}
-                  id="no_induk"
-                  required={true}
-                  value={updatedNoInduk}
-                  onChange={(e) => setUpdatedNoInduk(e.target.value)}
-                />
-                <Input
-                  label="Nama"
-                  id="name"
-                  required={true}
-                  value={updatedName}
-                  onChange={(e) => setUpdatedName(e.target.value)}
-                />
-                <Input
-                  id="no-hp"
-                  label="No HP"
-                  required={true}
-                  value={updatedPhone}
-                  onChange={(e) => setUpdatedPhone(e.target.value)}
-                />
-                <div className={role === "Mahasiswa" ? "space-y-5" : "hidden"}>
-                  <Select
-                    id="fakultas"
-                    value={updatedFakultas}
-                    label="Fakultas"
-                    onChange={(e) => handleUpdateFakultas(e!.toString())}
+            </DialogHeader>
+            <DialogBody divider className="flex items-center justify-center">
+              <div className="w-9/12 space-y-6 px-6 pb-4 sm:pb-6 lg:px-3 xl:pb-8 xl:pt-8">
+                <div className="space-y-5">
+                  <Input
+                    label={role === "Mahasiswa" ? "NIM" : "NIP"}
+                    id="no_induk"
+                    required={true}
+                    value={updatedNoInduk}
+                    onChange={(e) => setUpdatedNoInduk(e.target.value)}
+                  />
+                  <Input
+                    label="Nama"
+                    id="name"
+                    required={true}
+                    value={updatedName}
+                    onChange={(e) => setUpdatedName(e.target.value)}
+                  />
+                  <Input
+                    id="no-hp"
+                    label="No HP"
+                    required={true}
+                    value={updatedPhone}
+                    onChange={(e) => setUpdatedPhone(e.target.value)}
+                  />
+                  <div
+                    className={role === "Mahasiswa" ? "space-y-5" : "hidden"}
                   >
-                    {fakultasData.map((fakultas: IFakultas) => (
-                      <Option key={fakultas.kode} value={fakultas.name}>
-                        {fakultas.name}
-                      </Option>
-                    ))}
-                  </Select>
-                  <Select
-                    id="jurusan"
-                    value={updatedJurusan}
-                    label="Jurusan"
-                    onChange={(e) => setUpdatedJurusan(e!.toString())}
-                  >
-                    {/* get data from jurusanData, filter where jurusan.faculty == updatedFakultas.kode */}
-                    {jurusanData.map((j: IJurusan) => (
-                      <Option
-                        key={`${j.name}-${j.faculty}`}
-                        value={j.name}
-                        className={
-                          j.faculty === updatedFakultas ? "" : "hidden"
-                        }
-                      >
-                        {j.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </div>
-                <div className={role === "Staff" ? "space-y-2" : "hidden"}>
-                  <div id="jabatan-container">
-                    <Input
-                      name="jabatan"
-                      id="jabatan"
-                      onChange={(e) => setUpdatedJabatan(e.target.value)}
-                      label="Jabatan"
-                      value={updatedJabatan}
-                    />
+                    <Select
+                      id="fakultas"
+                      value={updatedFakultas}
+                      label="Fakultas"
+                      onChange={(e) => handleUpdateFakultas(e!.toString())}
+                    >
+                      {fakultasData.map((fakultas: IFakultas) => (
+                        <Option key={fakultas.kode} value={fakultas.name}>
+                          {fakultas.name}
+                        </Option>
+                      ))}
+                    </Select>
+                    <Select
+                      id="jurusan"
+                      value={updatedJurusan}
+                      label="Jurusan"
+                      onChange={(e) => setUpdatedJurusan(e!.toString())}
+                      className="absolute z-10"
+                    >
+                      {/* get data from jurusanData, filter where jurusan.faculty == updatedFakultas.kode */}
+                      {jurusanData.map((j: IJurusan) => (
+                        <Option
+                          key={`${j.name}-${j.faculty}`}
+                          value={j.name}
+                          className={
+                            j.faculty === updatedFakultas ? "" : "hidden"
+                          }
+                        >
+                          {j.name}
+                        </Option>
+                      ))}
+                    </Select>
+                  </div>
+                  <div className={role === "Staff" ? "space-y-2" : "hidden"}>
+                    <div id="jabatan-container">
+                      <Input
+                        name="jabatan"
+                        id="jabatan"
+                        onChange={(e) => setUpdatedJabatan(e.target.value)}
+                        label="Jabatan"
+                        value={updatedJabatan}
+                      />
+                    </div>
                   </div>
                 </div>
+                <div className="flex justify-center gap-4">
+                  <Button onClick={handleUpdate}>Update Data</Button>
+                  <Button color="gray" onClick={() => setModal(null)}>
+                    Batal
+                  </Button>
+                </div>
               </div>
-              <div className="flex justify-center gap-4">
-                <Button onClick={handleUpdate}>Update Data</Button>
-                <Button color="gray" onClick={() => setModal(null)}>
-                  Batal
-                </Button>
-              </div>
-            </div>
-          </Modal.Body>
+            </DialogBody>
+          </>
         )}
-      </Modal>
+      </Dialog>
 
       <ToastContainer
         position="top-right"
