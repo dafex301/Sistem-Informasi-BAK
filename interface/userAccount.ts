@@ -5,4 +5,8 @@ export interface userAccount {
   role: "Admin" | "Mahasiswa" | "Staff";
   created_at: Date;
   modified_at: Date;
+  status?: string;
+  fakultas?: string;
+  jurusan?: string;
+  jabatan?: string;
 }

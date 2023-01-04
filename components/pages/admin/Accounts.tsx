@@ -37,6 +37,7 @@ import {
   Dialog,
   DialogHeader,
   DialogBody,
+  Switch,
 } from "@material-tailwind/react";
 import Select from "../../forms/Select";
 
@@ -59,10 +60,6 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
   const [updatedPhone, setUpdatedPhone] = useState<string>("");
   const [updatedJabatan, setUpdatedJabatan] = useState<string>("");
   const [updatedStatus, setUpdatedStatus] = useState<string>("");
-
-  const [jurusan, setJurusan] = useState<IJurusan[]>([]);
-
-  console.log(updatedFakultas);
 
   // =============== Data =================
   const fakultasData = require("../../../data/fakultas.json");
@@ -129,6 +126,12 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
   };
 
   // =============== Handler ===============
+  const handleStatusSwitch = () => {
+    if (selectedUser) {
+      setUpdatedStatus(updatedStatus === "Aktif" ? "Nonaktif" : "Aktif");
+    }
+  };
+
   const handleStatusChange = (email: string, status: string) => {
     // Request to /api/auth/roles/${role} with email as body
     if (user) {
@@ -194,6 +197,7 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
     setUpdatedJurusan(user.jurusan ?? "");
     setUpdatedPhone(user.phone ?? "");
     setUpdatedJabatan(user.jabatan ?? "");
+    setUpdatedStatus(user.status ?? "");
 
     setModal("update");
   };
@@ -202,26 +206,47 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
     if (user && selectedUser) {
       const { email } = selectedUser;
       // Request to /api/auth/update with email as body
-      fetch(`/api/auth/update`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: user.token,
-        },
-        body: JSON.stringify({
-          email: email,
-          name: updatedName,
-          no_induk: updatedNoInduk,
-          fakultas: updatedFakultas,
-          jurusan: updatedJurusan,
-          phone: updatedPhone,
-          jabatan: updatedJabatan,
-        }),
-      })
-        .then((res) => res.json())
-        .then((result) => {
-          console.log(result);
-        });
+      if (role === "Mahasiswa") {
+        fetch(`/api/auth/mahasiswa/update`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: user.token,
+          },
+          body: JSON.stringify({
+            email: email,
+            name: updatedName,
+            no_induk: updatedNoInduk,
+            fakultas: updatedFakultas,
+            jurusan: updatedJurusan,
+            phone: updatedPhone,
+          }),
+        })
+          .then((res) => res.json())
+          .then((result) => {
+            console.log(result);
+          });
+      } else if (role === "Staff") {
+        fetch(`/api/auth/staff/update`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: user.token,
+          },
+          body: JSON.stringify({
+            email: email,
+            name: updatedName,
+            no_induk: updatedNoInduk,
+            fakultas: updatedFakultas,
+            jurusan: updatedJurusan,
+            phone: updatedPhone,
+          }),
+        })
+          .then((res) => res.json())
+          .then((result) => {
+            console.log(result);
+          });
+      }
 
       let tempData = data.map((row) => {
         if (row.email === email) {
@@ -273,16 +298,6 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
       });
     }
   });
-
-  // useEffect(() => {
-  //   if (updatedFakultas) {
-  //     const jurusan = jurusanData.filter(
-  //       (row: IJurusan) => row.faculty === updatedFakultas
-  //     );
-  //     setJurusan(jurusan);
-  //     setUpdatedJurusan(jurusan[0]);
-  //   }
-  // }, [updatedFakultas, jurusanData])
 
   const handleUpdateFakultas = (fakultas: string) => {
     setUpdatedFakultas(fakultas);
@@ -450,6 +465,25 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
                       value={updatedPhone}
                       onChange={(e) => setUpdatedPhone(e.target.value)}
                     />
+                    <div
+                      className={
+                        role === "Staff" ? "flex flex-col gap-5" : "hidden"
+                      }
+                    >
+                      <Input
+                        name="jabatan"
+                        id="jabatan"
+                        onChange={(e) => setUpdatedJabatan(e.target.value)}
+                        label="Jabatan"
+                        value={updatedJabatan}
+                      />
+                      <Switch
+                        defaultChecked={updatedStatus === "Aktif"}
+                        onClick={handleStatusSwitch}
+                        label="Aktif"
+                      />
+                      <Switch defaultChecked label="Admin" />
+                    </div>
                   </div>
                   <div className={role === "Mahasiswa" ? "" : "hidden"}>
                     <Select
@@ -483,17 +517,6 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
                           </option>
                         ))}
                     </Select>
-                  </div>
-                  <div className={role === "Staff" ? "space-y-2" : "hidden"}>
-                    <div id="jabatan-container">
-                      <Input
-                        name="jabatan"
-                        id="jabatan"
-                        onChange={(e) => setUpdatedJabatan(e.target.value)}
-                        label="Jabatan"
-                        value={updatedJabatan}
-                      />
-                    </div>
                   </div>
                 </div>
                 <div className="flex justify-center gap-4">
