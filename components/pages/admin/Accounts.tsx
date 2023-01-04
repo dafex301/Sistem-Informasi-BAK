@@ -31,15 +31,14 @@ import { IJurusan } from "../../../interface/jurusan";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
-  Select,
   Button,
   Chip,
   Input,
-  Option,
   Dialog,
   DialogHeader,
   DialogBody,
 } from "@material-tailwind/react";
+import Select from "../../forms/Select";
 
 interface AccountsProps {
   role: string;
@@ -62,6 +61,8 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
   const [updatedStatus, setUpdatedStatus] = useState<string>("");
 
   const [jurusan, setJurusan] = useState<IJurusan[]>([]);
+
+  console.log(updatedFakultas);
 
   // =============== Data =================
   const fakultasData = require("../../../data/fakultas.json");
@@ -273,6 +274,16 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
     }
   });
 
+  // useEffect(() => {
+  //   if (updatedFakultas) {
+  //     const jurusan = jurusanData.filter(
+  //       (row: IJurusan) => row.faculty === updatedFakultas
+  //     );
+  //     setJurusan(jurusan);
+  //     setUpdatedJurusan(jurusan[0]);
+  //   }
+  // }, [updatedFakultas, jurusanData])
+
   const handleUpdateFakultas = (fakultas: string) => {
     setUpdatedFakultas(fakultas);
     const jurusan = jurusanData.filter(
@@ -416,62 +427,61 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
             </DialogHeader>
             <DialogBody divider className="flex items-center justify-center">
               <div className="w-9/12 space-y-6 px-6 pb-4 sm:pb-6 lg:px-3 xl:pb-8 xl:pt-8">
-                <div className="space-y-5">
-                  <Input
-                    label={role === "Mahasiswa" ? "NIM" : "NIP"}
-                    id="no_induk"
-                    required={true}
-                    value={updatedNoInduk}
-                    onChange={(e) => setUpdatedNoInduk(e.target.value)}
-                  />
-                  <Input
-                    label="Nama"
-                    id="name"
-                    required={true}
-                    value={updatedName}
-                    onChange={(e) => setUpdatedName(e.target.value)}
-                  />
-                  <Input
-                    id="no-hp"
-                    label="No HP"
-                    required={true}
-                    value={updatedPhone}
-                    onChange={(e) => setUpdatedPhone(e.target.value)}
-                  />
-                  <div
-                    className={role === "Mahasiswa" ? "space-y-5" : "hidden"}
-                  >
+                <div className="">
+                  <div className="flex flex-col gap-5">
+                    <Input
+                      label={role === "Mahasiswa" ? "NIM" : "NIP"}
+                      id="no_induk"
+                      required={true}
+                      value={updatedNoInduk}
+                      onChange={(e) => setUpdatedNoInduk(e.target.value)}
+                    />
+                    <Input
+                      label="Nama"
+                      id="name"
+                      required={true}
+                      value={updatedName}
+                      onChange={(e) => setUpdatedName(e.target.value)}
+                    />
+                    <Input
+                      id="no-hp"
+                      label="No HP"
+                      required={true}
+                      value={updatedPhone}
+                      onChange={(e) => setUpdatedPhone(e.target.value)}
+                    />
+                  </div>
+                  <div className={role === "Mahasiswa" ? "" : "hidden"}>
                     <Select
-                      id="fakultas"
-                      value={updatedFakultas}
                       label="Fakultas"
-                      onChange={(e) => handleUpdateFakultas(e!.toString())}
+                      value={updatedFakultas}
+                      onChange={(e) => setUpdatedFakultas(e.target.value)}
                     >
                       {fakultasData.map((fakultas: IFakultas) => (
-                        <Option key={fakultas.kode} value={fakultas.name}>
+                        <option key={fakultas.kode} value={fakultas.name}>
                           {fakultas.name}
-                        </Option>
+                        </option>
                       ))}
                     </Select>
                     <Select
-                      id="jurusan"
-                      value={updatedJurusan}
                       label="Jurusan"
-                      onChange={(e) => setUpdatedJurusan(e!.toString())}
-                      className="absolute z-10"
+                      onChange={(e) => setUpdatedJurusan(e.target.value)}
+                      value={updatedJurusan}
                     >
-                      {/* get data from jurusanData, filter where jurusan.faculty == updatedFakultas.kode */}
-                      {jurusanData.map((j: IJurusan) => (
-                        <Option
-                          key={`${j.name}-${j.faculty}`}
-                          value={j.name}
-                          className={
-                            j.faculty === updatedFakultas ? "" : "hidden"
-                          }
-                        >
-                          {j.name}
-                        </Option>
-                      ))}
+                      {jurusanData
+                        .filter(
+                          (jurusan: IJurusan) =>
+                            jurusan.faculty === updatedFakultas
+                        )
+                        .map((jurusan: IJurusan) => (
+                          <option
+                            className=""
+                            key={jurusan.name}
+                            value={jurusan.name}
+                          >
+                            {jurusan.name}
+                          </option>
+                        ))}
                     </Select>
                   </div>
                   <div className={role === "Staff" ? "space-y-2" : "hidden"}>
