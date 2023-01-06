@@ -21,6 +21,7 @@ import {
   PencilIcon,
   TrashIcon,
   ExclamationCircleIcon,
+  CheckBadgeIcon,
 } from "@heroicons/react/24/solid";
 import { Irender_row } from "../../../interface/table";
 import { tableStyling } from "../../table/tableStyling";
@@ -60,6 +61,7 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
   const [updatedPhone, setUpdatedPhone] = useState<string>("");
   const [updatedJabatan, setUpdatedJabatan] = useState<string>("");
   const [updatedStatus, setUpdatedStatus] = useState<string>("");
+  const [updatedRole, setUpdatedRole] = useState<string>("");
 
   // =============== Data =================
   const fakultasData = require("../../../data/fakultas.json");
@@ -99,7 +101,14 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
     }
 
     if (column.field === "name") {
-      return <p className="font-semibold">{display_value}</p>;
+      return (
+        <div className="flex items-center gap-2">
+          <p className="font-semibold">{display_value}</p>
+          {row.role === "Admin" && (
+            <CheckBadgeIcon className="text-blue-500 w-4" />
+          )}
+        </div>
+      );
     }
 
     if (column.field === "actions") {
@@ -128,7 +137,18 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
   // =============== Handler ===============
   const handleStatusSwitch = () => {
     if (selectedUser) {
-      setUpdatedStatus(updatedStatus === "Aktif" ? "Nonaktif" : "Aktif");
+      if (updatedStatus === "Aktif") {
+        setUpdatedStatus("Nonaktif");
+        setUpdatedRole("Staff");
+      } else {
+        setUpdatedStatus("Aktif");
+      }
+    }
+  };
+
+  const handleRoleSwitch = () => {
+    if (selectedUser && updatedStatus === "Aktif") {
+      setUpdatedRole(updatedRole === "Admin" ? "Staff" : "Admin");
     }
   };
 
@@ -198,6 +218,7 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
     setUpdatedPhone(user.phone ?? "");
     setUpdatedJabatan(user.jabatan ?? "");
     setUpdatedStatus(user.status ?? "");
+    setUpdatedRole(user.role ?? "");
 
     setModal("update");
   };
@@ -478,11 +499,34 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
                         value={updatedJabatan}
                       />
                       <Switch
+                        id="status-switch"
                         defaultChecked={updatedStatus === "Aktif"}
                         onClick={handleStatusSwitch}
                         label="Aktif"
                       />
-                      <Switch defaultChecked label="Admin" />
+                      <Switch
+                        containerProps={
+                          updatedStatus === "Nonaktif"
+                            ? { className: "cursor-not-allowed" }
+                            : {}
+                        }
+                        labelProps={
+                          updatedStatus === "Nonaktif"
+                            ? { className: "cursor-not-allowed" }
+                            : {}
+                        }
+                        circleProps={
+                          updatedStatus === "Nonaktif"
+                            ? { className: "cursor-not-allowed" }
+                            : {}
+                        }
+                        disabled={updatedStatus === "Nonaktif" ? true : false}
+                        checked={updatedRole === "Admin"}
+                        className="cursor-not-allowed"
+                        id="role-switch"
+                        onClick={handleRoleSwitch}
+                        label="Admin"
+                      />
                     </div>
                   </div>
                   <div className={role === "Mahasiswa" ? "" : "hidden"}>
