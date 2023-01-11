@@ -14,9 +14,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
       <ThemeProvider>
         <FirebaseProvider>
-          <AuthLayout>
-            <Component {...pageProps} />
-          </AuthLayout>
+          {/* <AuthLayout> */}
+          <Component {...pageProps} />
+          {/* </AuthLayout> */}
         </FirebaseProvider>
       </ThemeProvider>
     );
