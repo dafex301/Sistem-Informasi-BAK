@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../lib/authContext";
 import { loginAccount, loginWithProvider } from "../../firebase/account";
 
@@ -13,10 +13,31 @@ import facebookIcon from "../../public/icons/facebook.svg";
 import githubIcon from "../../public/icons/github.svg";
 import microsoftIcon from "../../public/icons/microsoft.svg";
 
+// Image
+import loginImage1 from "../../public/login/login1.jpg";
+import loginImage2 from "../../public/login/login2.jpg";
+import loginImage3 from "../../public/login/login3.jpg";
+import loginImage4 from "../../public/login/login4.jpg";
+import loginImage5 from "../../public/login/login5.jpg";
+
 const Login: NextPage = () => {
   const [identifier, setIdentifier] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
+
+  const [image, setImage] = useState<StaticImageData>(loginImage1);
+
+  useEffect(() => {
+    const images = [
+      loginImage1,
+      loginImage2,
+      loginImage3,
+      loginImage4,
+      loginImage5,
+    ];
+    const random = Math.floor(Math.random() * images.length);
+    setImage(images[random]);
+  }, []);
 
   const { user, userData, loading } = useAuth();
 
@@ -46,14 +67,15 @@ const Login: NextPage = () => {
         </Head>
         <section className="flex flex-col md:flex-row h-screen items-center">
           <div className="bg-indigo-600 hidden md:block w-full md:w-1/2 xl:w-2/3 h-screen">
-            <img
-              src="https://source.unsplash.com/random"
-              alt=""
-              className="w-full h-full object-cover"
-            />
+            <Image
+              className="h-full"
+              alt={""}
+              // Random src from login1 to login5
+              src={image}
+            ></Image>
           </div>
           <div
-            className="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:mx-0 md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12
+            className="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12
   flex items-center justify-center"
           >
             <div className="w-full h-100">
@@ -62,15 +84,11 @@ const Login: NextPage = () => {
               </h1>
               <form className="mt-6" action="#" method="POST">
                 <div>
-                  <label className="block text-gray-700">Email Address</label>
+                  <label className="block text-gray-700">Username</label>
                   <input
-                    type="email"
-                    name
-                    id
-                    placeholder="Enter Email Address"
+                    type="text"
+                    placeholder="Enter Username"
                     className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
-                    autofocus
-                    autoComplete
                     required
                   />
                 </div>
@@ -78,8 +96,6 @@ const Login: NextPage = () => {
                   <label className="block text-gray-700">Password</label>
                   <input
                     type="password"
-                    name
-                    id
                     placeholder="Enter Password"
                     minLength={6}
                     className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500
@@ -103,60 +119,6 @@ const Login: NextPage = () => {
                   Log In
                 </button>
               </form>
-              <hr className="my-6 border-gray-300 w-full" />
-              <button
-                type="button"
-                className="w-full block bg-white hover:bg-gray-100 focus:bg-gray-100 text-gray-900 font-semibold rounded-lg px-4 py-3 border border-gray-300"
-              >
-                <div className="flex items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                    className="w-6 h-6"
-                    viewBox="0 0 48 48"
-                  >
-                    <defs>
-                      <path
-                        id="a"
-                        d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"
-                      />
-                    </defs>
-                    <clipPath id="b">
-                      <use xlinkHref="#a" overflow="visible" />
-                    </clipPath>
-                    <path
-                      clipPath="url(#b)"
-                      fill="#FBBC05"
-                      d="M0 37V11l17 13z"
-                    />
-                    <path
-                      clipPath="url(#b)"
-                      fill="#EA4335"
-                      d="M0 11l17 13 7-6.1L48 14V0H0z"
-                    />
-                    <path
-                      clipPath="url(#b)"
-                      fill="#34A853"
-                      d="M0 37l30-23 7.9 1L48 0v48H0z"
-                    />
-                    <path
-                      clipPath="url(#b)"
-                      fill="#4285F4"
-                      d="M48 48L17 24l-4-3 35-10z"
-                    />
-                  </svg>
-                  <span className="ml-4">Log in with Google</span>
-                </div>
-              </button>
-              <p className="mt-8">
-                Need an account?{" "}
-                <a
-                  href="#"
-                  className="text-blue-500 hover:text-blue-700 font-semibold"
-                >
-                  Create an account
-                </a>
-              </p>
             </div>
           </div>
         </section>
