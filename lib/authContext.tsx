@@ -33,11 +33,6 @@ export type TIdFirebase = {
   user_id: string;
 };
 
-export type UserData = {
-  name: string;
-  no_induk: string;
-  role: string;
-};
 
 type Props = {
   children: React.ReactNode;
@@ -45,21 +40,16 @@ type Props = {
 
 type UserContext = {
   user: TIdTokenResult | null;
-  userData: UserData | null;
   loading: boolean;
-  setUserData: Function;
 };
 
 const authContext = createContext<UserContext>({
   user: null,
-  userData: null,
   loading: true,
-  setUserData: Function,
 });
 
 export default function AuthContextProvider({ children }: Props) {
   const [user, setUser] = useState<TIdTokenResult | null>(null);
-  const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -75,41 +65,19 @@ export default function AuthContextProvider({ children }: Props) {
           })
         );
 
-        // Get user data from firestore
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const userDataObj: UserData = {
-            name: docSnap.data()?.name,
-            no_induk: docSnap.data()?.no_induk,
-            role: docSnap.data()?.role,
-          };
-
-          const jwt = await createToken(userDataObj);
-
-          setCookie(null, "user", jwt, {
-            maxAge: 30 * 24 * 60 * 60,
-            path: "/",
-          });
-
-          setUserData(userDataObj);
-        }
-
         // Save decoded token on the state
         user.getIdTokenResult().then((result) => setUser(result));
       }
 
       if (!user) {
         setUser(null);
-        setUserData(null);
       }
       setLoading(false);
     });
   }, []);
 
   return (
-    <authContext.Provider value={{ user, userData, loading, setUserData }}>
+    <authContext.Provider value={{ user, loading }}>
       {children}
     </authContext.Provider>
   );

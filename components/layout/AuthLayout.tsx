@@ -6,14 +6,14 @@ import Loading from "../Loading";
 import { useRouter } from "next/router";
 
 export const AuthLayout = ({ children }: Props) => {
-  const { loading, user, userData } = useAuth();
+  const { loading, user } = useAuth();
   const route = useRouter();
 
-  if (!loading && user && userData) {
+  if (!loading && user) {
     route.push("/");
   }
 
-  if (!loading && !userData) {
+  if (!loading) {
     return (
       <div className="flex items-center justify-center h-screen">
         {/* Login Container */}

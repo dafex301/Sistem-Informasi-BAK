@@ -13,7 +13,7 @@ const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 const nimRegex = /^[0-9]+$/;
 
 const Forget: NextPage = (props: Props) => {
-  const { user, userData, loading } = useAuth();
+  const { user, loading } = useAuth();
   const route = useRouter();
 
   const [identifier, setIdentifier] = useState<string>("");

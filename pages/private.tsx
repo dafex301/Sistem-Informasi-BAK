@@ -4,7 +4,7 @@ import Head from "next/head";
 import { useAuth } from "../lib/authContext";
 
 const Home: NextPage = () => {
-  const { user, userData, loading } = useAuth();
+  const { user, loading } = useAuth();
 
   if (loading) return <h1>Loading...</h1>;
   if (!user) return <h1>U need to login</h1>;
@@ -15,7 +15,6 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
-        <h1>Name : {userData?.name}</h1>
         <h1>Email : {user?.claims.email}</h1>
         Private
       </main>

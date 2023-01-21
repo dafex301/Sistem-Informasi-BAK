@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useAuth } from "../lib/authContext";
 
 const Home: NextPage = () => {
-  const { user, userData, loading } = useAuth();
+  const { user, loading } = useAuth();
 
   return (
     <>

@@ -39,7 +39,7 @@ const Login: NextPage = () => {
     setImage(images[random]);
   }, []);
 
-  const { user, userData, loading } = useAuth();
+  const { user, loading } = useAuth();
 
   const route = useRouter();
 
@@ -67,12 +67,7 @@ const Login: NextPage = () => {
         </Head>
         <section className="flex flex-col md:flex-row h-screen items-center">
           <div className="bg-indigo-600 hidden md:block w-full md:w-1/2 xl:w-2/3 h-screen">
-            <Image
-              className="h-full"
-              alt={""}
-              // Random src from login1 to login5
-              src={image}
-            ></Image>
+            <Image className="h-full object-cover" alt={"Undip"} src={image} />
           </div>
           <div
             className="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12
@@ -126,8 +121,8 @@ const Login: NextPage = () => {
     );
   }
 
-  if (!loading && user && !userData) {
-    route.push("/auth/data");
+  if (!loading && user) {
+    route.push("/");
   }
 
   return <></>;

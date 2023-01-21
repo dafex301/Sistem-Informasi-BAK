@@ -6,18 +6,18 @@ import { useRouter } from "next/router";
 import { Props } from "../../interface/props";
 
 export default function Layout({ children }: Props) {
-  const { user, userData, loading } = useAuth();
+  const { user, loading } = useAuth();
   const route = useRouter();
 
   if (!loading && !user) {
     route.push("/auth/login");
   }
 
-  if (!loading && user && !userData) {
+  if (!loading && user) {
     route.push("/auth/data");
   }
 
-  if (!loading && user && userData) {
+  if (!loading && user) {
     return (
       <>
         <div

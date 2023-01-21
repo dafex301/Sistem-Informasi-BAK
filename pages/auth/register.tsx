@@ -18,7 +18,7 @@ const nameRegex = /^[a-zA-Z '-]+$/;
 const nimRegex = /^[0-9]+$/;
 
 const Register: NextPage = () => {
-  const { user, userData, loading } = useAuth();
+  const { user, loading } = useAuth();
 
   const [name, setName] = useState<string>("");
   const [nim, setNim] = useState<string>("");

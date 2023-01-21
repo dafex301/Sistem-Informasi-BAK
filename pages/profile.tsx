@@ -15,7 +15,7 @@ import microsoftIcon from "../public/icons/microsoft.svg";
 import ConnectButton from "../components/button/ConnectButton";
 
 const Profile: NextPage = () => {
-  const { user, userData, loading } = useAuth();
+  const { user, loading } = useAuth();
 
   const providers = user?.claims.firebase.identities;
 
@@ -27,7 +27,6 @@ const Profile: NextPage = () => {
 
       <main>
         <h1>Profile</h1>
-        <h1>Name : {userData?.name}</h1>
         <h1>Email : {user?.claims.email}</h1>
         <ConnectButton
           identities={providers["google.com"]}

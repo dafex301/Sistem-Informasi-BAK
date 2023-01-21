@@ -18,7 +18,7 @@ const Login: NextPage = () => {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
 
-  const { user, userData, loading } = useAuth();
+  const { user, loading } = useAuth();
 
   const route = useRouter();
 
@@ -117,8 +117,8 @@ const Login: NextPage = () => {
     );
   }
 
-  if (!loading && user && !userData) {
-    route.push("/auth/data");
+  if (!loading && user) {
+    route.push("/");
   }
 
   return <></>;
