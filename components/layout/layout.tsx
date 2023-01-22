@@ -9,26 +9,24 @@ export default function Layout({ children }: Props) {
   const { user, loading } = useAuth();
   const route = useRouter();
 
-  if (!loading && !user) {
-    route.push("/auth/login");
-  }
+  // if (!loading && !user) {
+  //   route.push("/auth/login");
+  // }
 
-  if (!loading && user) {
-    route.push("/auth/data");
-  }
-
-  if (!loading && user) {
+  if (!loading) {
     return (
       <>
-        <div
-          className="flex flex-col min-h-screen container mx-auto md:w-11/12  lg:w-4/5
-      divide-y divide-black-500"
-        >
-          <div className=" h-16 ">
-            <Header />
+        <div className="bg-gray-50">
+          <div
+            className="flex flex-col min-h-screen container mx-auto md:w-11/12  lg:w-4/5
+      divide-y divide-black-500 "
+          >
+            <div className=" h-16 ">
+              <Header />
+            </div>
+            <div className="flex-grow m-5">{children}</div>
+            <Footer />
           </div>
-          <div className="flex-grow m-5">{children}</div>
-          <Footer />
         </div>
       </>
     );

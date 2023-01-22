@@ -39,14 +39,12 @@ import {
   DialogHeader,
   DialogBody,
   Switch,
+  Option,
+  Select,
 } from "@material-tailwind/react";
-import Select from "../../forms/Select";
+// import Select from "../../forms/Select";
 
-interface AccountsProps {
-  role: string;
-}
-
-const Accounts: NextPage<AccountsProps> = ({ role }) => {
+const Accounts: NextPage = () => {
   // =============== State ===============
   const { user } = useAuth();
   const [data, setData] = useState<DocumentData[]>([]);
@@ -55,34 +53,20 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
 
   // =============== Update state ===============
   const [updatedName, setUpdatedName] = useState<string>("");
-  const [updatedNoInduk, setUpdatedNoInduk] = useState<string>("");
+  const [updatedIdentifier, setUpdatedIdentifier] = useState<string>("");
   const [updatedFakultas, setUpdatedFakultas] = useState<string>("");
   const [updatedJurusan, setUpdatedJurusan] = useState<string>("");
   const [updatedPhone, setUpdatedPhone] = useState<string>("");
   const [updatedJabatan, setUpdatedJabatan] = useState<string>("");
   const [updatedStatus, setUpdatedStatus] = useState<string>("");
-  const [updatedRole, setUpdatedRole] = useState<string>("");
+  const [updatedRole, setUpdatedRole] = useState<string | undefined>("UKM");
 
   // =============== Data =================
   const fakultasData = require("../../../data/fakultas.json");
   const jurusanData = require("../../../data/jurusan.json");
 
   // =============== Firebase Query ===============
-  let q: Query<DocumentData>;
-  if (role === "Mahasiswa") {
-    q = query(
-      collection(db, "users"),
-      where("role", "==", "Mahasiswa"),
-      orderBy("name", "asc")
-    );
-  } else {
-    q = query(
-      collection(db, "users"),
-      where("role", "!=", "Mahasiswa"),
-      orderBy("role", "asc"),
-      orderBy("name", "asc")
-    );
-  }
+
   // =============== Table Row ===============
   const rowcheck: Irender_row = (row, column, display_value) => {
     if (column.field === "status") {
@@ -212,7 +196,6 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
   const handleUpdateButton = (user: any) => {
     setSelectedUser(user);
     setUpdatedName(user.name);
-    setUpdatedNoInduk(user.no_induk);
     setUpdatedFakultas(user.fakultas ?? "");
     setUpdatedJurusan(user.jurusan ?? "");
     setUpdatedPhone(user.phone ?? "");
@@ -223,67 +206,27 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
     setModal("update");
   };
 
-  const handleUpdate = () => {
-    if (user && selectedUser) {
-      const { email } = selectedUser;
-      // Request to /api/auth/update with email as body
-      if (role === "Mahasiswa") {
-        fetch(`/api/auth/mahasiswa/update`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: user.token,
-          },
-          body: JSON.stringify({
-            email: email,
-            name: updatedName,
-            no_induk: updatedNoInduk,
-            fakultas: updatedFakultas,
-            jurusan: updatedJurusan,
-            phone: updatedPhone,
-          }),
-        })
-          .then((res) => res.json())
-          .then((result) => {
-            console.log(result);
-          });
-      } else if (role === "Staff") {
-        fetch(`/api/auth/staff/update`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: user.token,
-          },
-          body: JSON.stringify({
-            email: email,
-            name: updatedName,
-            no_induk: updatedNoInduk,
-            fakultas: updatedFakultas,
-            jurusan: updatedJurusan,
-            phone: updatedPhone,
-          }),
-        })
-          .then((res) => res.json())
-          .then((result) => {
-            console.log(result);
-          });
-      }
+  const handleUpdate = () => {};
 
-      let tempData = data.map((row) => {
-        if (row.email === email) {
-          row.name = updatedName;
-          row.no_induk = updatedNoInduk;
-          row.fakultas = updatedFakultas;
-          row.jurusan = updatedJurusan;
-          row.phone = updatedPhone;
-          row.jabatan = updatedJabatan;
-        }
-        return row;
+  const handleCreate = () => {
+    // Post to /api/auth/create with identifier, name, and role
+    fetch("/api/auth/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization token
+        // Authorization: user.token,
+      },
+      body: JSON.stringify({
+        identifier: updatedIdentifier,
+        name: updatedName,
+        role: updatedRole,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result);
       });
-      setData(tempData);
-      setModal(null);
-      handleToast("Update");
-    }
   };
 
   // ================== Toast ==================
@@ -301,125 +244,61 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
   };
 
   // =============== UseEffect ===============
-  useEffect(() => {
-    if (data.length === 0) {
-      let tempData: DocumentData[] = [];
-      const querySnapshot = getDocs(q);
-      querySnapshot.then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          tempData.push(doc.data());
-        });
+  // useEffect(() => {
+  //   if (data.length === 0) {
+  //     let tempData: DocumentData[] = [];
+  //     const querySnapshot = getDocs(q);
+  //     querySnapshot.then((querySnapshot) => {
+  //       querySnapshot.forEach((doc) => {
+  //         tempData.push(doc.data());
+  //       });
 
-        // Filter data to only show data that is not the current user
-        if (user) {
-          tempData = tempData.filter((row) => row.email !== user.claims.email);
-        }
+  //       // Filter data to only show data that is not the current user
+  //       if (user) {
+  //         tempData = tempData.filter((row) => row.email !== user.claims.email);
+  //       }
 
-        setData(tempData);
-      });
-    }
-  });
-
-  const handleUpdateFakultas = (fakultas: string) => {
-    setUpdatedFakultas(fakultas);
-    const jurusan = jurusanData.filter(
-      (row: IJurusan) => row.faculty === fakultas
-    );
-    setUpdatedJurusan(jurusan[0].name);
-  };
+  //       setData(tempData);
+  //     });
+  //   }
+  // });
 
   // Table Custom Styling based on Role
-  let columnNoInduk: string;
-  let columns;
-  switch (role) {
-    case "Mahasiswa":
-      columnNoInduk = "NIM";
-      columns = [
-        {
-          field: "no_induk",
-          use: columnNoInduk,
-        },
-        {
-          // use_in_display: false,
-          field: "name", //Object destructure
-          use: "Nama",
-        },
+  let columns = [
+    {
+      field: "identifier",
+      use: "Identifier",
+    },
+    {
+      // use_in_display: false,
+      field: "name", //Object destructure
+      use: "Nama",
+    },
 
-        {
-          field: "fakultas",
-          use: "Fakultas",
-        },
-        {
-          field: "jurusan",
-          use: "Jurusan",
-        },
-        {
-          field: "actions",
-          use: "Actions",
-          // use_in_search:false
-        },
-      ];
-      break;
-    case "Staff":
-      columnNoInduk = "NIP";
-      columns = [
-        {
-          field: "no_induk",
-          use: columnNoInduk,
-        },
-        {
-          // use_in_display: false,
-          field: "name", //Object destructure
-          use: "Nama",
-        },
-
-        {
-          field: "jabatan",
-          use: "Jabatan",
-          // use_in_search:false
-        },
-        {
-          field: "status",
-          use: "Status",
-          // use_in_search:false
-        },
-        {
-          field: "actions",
-          use: "Actions",
-          // use_in_search:false
-        },
-      ];
-      break;
-    default:
-      columnNoInduk = "No Induk";
-      columns = [
-        {
-          field: "no_induk",
-          use: columnNoInduk,
-        },
-        {
-          // use_in_display: false,
-          field: "name", //Object destructure
-          use: "Nama",
-        },
-
-        {
-          field: "role",
-          use: "Role",
-          // use_in_search:false
-        },
-        {
-          field: "actions",
-          use: "Actions",
-          // use_in_search:false
-        },
-      ];
-      break;
-  }
+    {
+      field: "role",
+      use: "Role",
+      // use_in_search:false
+    },
+    {
+      field: "actions",
+      use: "Actions",
+      // use_in_search:false
+    },
+  ];
 
   return (
     <>
-      <div className="rounded-3xl drop-shadow-lg">
+      <div className="rounded-sm bg-white p-5">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-semibold">Accounts</h1>
+          <button
+            className="bg-blue-500 p-3 text-white rounded-lg hover:bg-blue-700 mb-3 outline-none hover:outline-none text-sm font-semibold "
+            onClick={() => setModal("create")}
+          >
+            Create Account
+          </button>
+        </div>
         <Table
           // per_page={3}
           row_render={rowcheck}
@@ -429,7 +308,67 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
         ></Table>
       </div>
 
-      <Dialog open={Boolean(modal)} handler={() => setModal(null)}>
+      <Dialog
+        className="w-96 max-w-6xl"
+        open={Boolean(modal)}
+        handler={() => setModal(null)}
+      >
+        {/* Create */}
+        {(modal === "create" || modal === "update") && (
+          <>
+            <DialogHeader>
+              <h3 className="text-xl font-medium text-gray-900 dark:text-white">
+                Create Account
+              </h3>
+            </DialogHeader>
+            <DialogBody divider className="flex items-center justify-center">
+              <div className="w-9/12 space-y-6 px-6 pb-4 sm:pb-6 lg:px-3 xl:pb-8 xl:pt-8">
+                <div className="flex flex-col gap-5">
+                  <Input
+                    label={"Identifier/Username/NIP"}
+                    id="identifier"
+                    required={true}
+                    value={updatedIdentifier}
+                    onChange={(e) => setUpdatedIdentifier(e.target.value)}
+                  />
+                  <Input
+                    label="Nama"
+                    id="name"
+                    required={true}
+                    value={updatedName}
+                    onChange={(e) => setUpdatedName(e.target.value)}
+                  />
+                  <Select
+                    variant="outlined"
+                    label="Role"
+                    value={updatedRole}
+                    onChange={(e) => setUpdatedRole(e?.toString())}
+                  >
+                    <Option value="UKM">Unit Kegiatan Mahasiswa</Option>
+                    <Option value="KBAK">
+                      Kepala Biro Akademik dan Kemahasiswaan
+                    </Option>
+                    <Option value="MK">Manager Kemahasiswaan</Option>
+                    <Option value="SM">Supervisor Minarpresma</Option>
+                    <Option value="TBAK">Tim BAK</Option>
+                  </Select>
+                </div>
+
+                <div className="flex justify-center gap-4">
+                  {modal === "create" ? (
+                    <Button onClick={handleCreate}>Create Account</Button>
+                  ) : (
+                    <Button onClick={handleUpdate}>Update Account</Button>
+                  )}
+                  <Button color="gray" onClick={() => setModal(null)}>
+                    Batal
+                  </Button>
+                </div>
+              </div>
+            </DialogBody>
+          </>
+        )}
+
         {/* Delete */}
         {modal === "delete" && (
           <DialogBody className="flex items-center justify-center">
@@ -451,127 +390,6 @@ const Accounts: NextPage<AccountsProps> = ({ role }) => {
               </div>
             </div>
           </DialogBody>
-        )}
-
-        {/* Update */}
-        {modal === "update" && (
-          <>
-            <DialogHeader>
-              <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-                Update Akun
-              </h3>
-            </DialogHeader>
-            <DialogBody divider className="flex items-center justify-center">
-              <div className="w-9/12 space-y-6 px-6 pb-4 sm:pb-6 lg:px-3 xl:pb-8 xl:pt-8">
-                <div className="">
-                  <div className="flex flex-col gap-5">
-                    <Input
-                      label={role === "Mahasiswa" ? "NIM" : "NIP"}
-                      id="no_induk"
-                      required={true}
-                      value={updatedNoInduk}
-                      onChange={(e) => setUpdatedNoInduk(e.target.value)}
-                    />
-                    <Input
-                      label="Nama"
-                      id="name"
-                      required={true}
-                      value={updatedName}
-                      onChange={(e) => setUpdatedName(e.target.value)}
-                    />
-                    <Input
-                      id="no-hp"
-                      label="No HP"
-                      required={true}
-                      value={updatedPhone}
-                      onChange={(e) => setUpdatedPhone(e.target.value)}
-                    />
-                    <div
-                      className={
-                        role === "Staff" ? "flex flex-col gap-5" : "hidden"
-                      }
-                    >
-                      <Input
-                        name="jabatan"
-                        id="jabatan"
-                        onChange={(e) => setUpdatedJabatan(e.target.value)}
-                        label="Jabatan"
-                        value={updatedJabatan}
-                      />
-                      <Switch
-                        id="status-switch"
-                        defaultChecked={updatedStatus === "Aktif"}
-                        onClick={handleStatusSwitch}
-                        label="Aktif"
-                      />
-                      <Switch
-                        containerProps={
-                          updatedStatus === "Nonaktif"
-                            ? { className: "cursor-not-allowed" }
-                            : {}
-                        }
-                        labelProps={
-                          updatedStatus === "Nonaktif"
-                            ? { className: "cursor-not-allowed" }
-                            : {}
-                        }
-                        circleProps={
-                          updatedStatus === "Nonaktif"
-                            ? { className: "cursor-not-allowed" }
-                            : {}
-                        }
-                        disabled={updatedStatus === "Nonaktif" ? true : false}
-                        checked={updatedRole === "Admin"}
-                        className="cursor-not-allowed"
-                        id="role-switch"
-                        onClick={handleRoleSwitch}
-                        label="Admin"
-                      />
-                    </div>
-                  </div>
-                  <div className={role === "Mahasiswa" ? "" : "hidden"}>
-                    <Select
-                      label="Fakultas"
-                      value={updatedFakultas}
-                      onChange={(e) => setUpdatedFakultas(e.target.value)}
-                    >
-                      {fakultasData.map((fakultas: IFakultas) => (
-                        <option key={fakultas.kode} value={fakultas.name}>
-                          {fakultas.name}
-                        </option>
-                      ))}
-                    </Select>
-                    <Select
-                      label="Jurusan"
-                      onChange={(e) => setUpdatedJurusan(e.target.value)}
-                      value={updatedJurusan}
-                    >
-                      {jurusanData
-                        .filter(
-                          (jurusan: IJurusan) =>
-                            jurusan.faculty === updatedFakultas
-                        )
-                        .map((jurusan: IJurusan) => (
-                          <option
-                            className=""
-                            key={jurusan.name}
-                            value={jurusan.name}
-                          >
-                            {jurusan.name}
-                          </option>
-                        ))}
-                    </Select>
-                  </div>
-                </div>
-                <div className="flex justify-center gap-4">
-                  <Button onClick={handleUpdate}>Update Data</Button>
-                  <Button color="gray" onClick={() => setModal(null)}>
-                    Batal
-                  </Button>
-                </div>
-              </div>
-            </DialogBody>
-          </>
         )}
       </Dialog>
 

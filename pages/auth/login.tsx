@@ -7,12 +7,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../lib/authContext";
 import { loginAccount, loginWithProvider } from "../../firebase/account";
 
-// Icon
-import googleIcon from "../../public/icons/google.svg";
-import facebookIcon from "../../public/icons/facebook.svg";
-import githubIcon from "../../public/icons/github.svg";
-import microsoftIcon from "../../public/icons/microsoft.svg";
-
 // Image
 import loginImage1 from "../../public/login/login1.jpg";
 import loginImage2 from "../../public/login/login2.jpg";
@@ -21,7 +15,7 @@ import loginImage4 from "../../public/login/login4.jpg";
 import loginImage5 from "../../public/login/login5.jpg";
 
 const Login: NextPage = () => {
-  const [identifier, setIdentifier] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
 
@@ -44,18 +38,8 @@ const Login: NextPage = () => {
   const route = useRouter();
 
   function handleLogin() {
-    loginAccount(identifier, password).catch((error) => {
-      setError("Login gagal. Email dan/atau password salah.");
-    });
-  }
-
-  function handleLoginWithProvider(provider: string) {
-    loginWithProvider(provider).catch((error) => {
-      if (error.code == "auth/account-exists-with-different-credential") {
-        setError(
-          "Login gagal. Email sudah digunakan untuk login dengan cara lain."
-        );
-      }
+    loginAccount(username, password).catch((error) => {
+      setError("Login gagal. Username dan/atau password salah.");
     });
   }
 
@@ -77,7 +61,12 @@ const Login: NextPage = () => {
               <h1 className="text-xl md:text-2xl font-bold leading-tight mt-12">
                 Log in to your account
               </h1>
-              <form className="mt-6" action="#" method="POST">
+              <form
+                className="mt-6"
+                action="#"
+                method="POST"
+                onSubmit={handleLogin}
+              >
                 <div>
                   <label className="block text-gray-700">Username</label>
                   <input
@@ -85,6 +74,8 @@ const Login: NextPage = () => {
                     placeholder="Enter Username"
                     className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
                     required
+                    onChange={(e) => setUsername(e.target.value)}
+                    value={username}
                   />
                 </div>
                 <div className="mt-4">
@@ -96,6 +87,8 @@ const Login: NextPage = () => {
                     className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500
           focus:bg-white focus:outline-none"
                     required
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
                   />
                 </div>
                 <div className="text-right mt-2">

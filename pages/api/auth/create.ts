@@ -8,46 +8,55 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     // Check the header for the tokenId firebase
-    const tokenId = req.headers.authorization;
+    // const tokenId = req.headers.authorization;
 
     // Check if token is valid
-    if (tokenId) {
-      // Verify token
-      const decodedToken = await admin.auth().verifyIdToken(tokenId);
+    // if (tokenId) {
+    // Verify token
+    // const decodedToken = await admin.auth().verifyIdToken(tokenId);
 
-      // Check if the user is admin
-      if (decodedToken.is_admin) {
-        // Get the email from the body
-        const { username, role } = req.body;
+    // Check if the user is admin
+    // if (decodedToken.is_admin) {
+    // Get the email from the body
+    const { identifier, name, role } = req.body;
 
-        // Generate email based on username
-        const email = `${
-          username.split(" ").join("").toLowerCase() + "@gmail.com"
-        }`;
+    // Generate email based on username
+    const email = `${name.split(" ").join("").toLowerCase() + "@gmail.com"}`;
 
-        // Create user in firebase auth
-        const user = await admin.auth().createUser({
-          email: username,
-          emailVerified: false,
-          password: "password",
-          displayName: username,
-          disabled: false,
-        });
+    // Create user in firebase auth
+    const user = await admin.auth().createUser({
+      email: email,
+      emailVerified: false,
+      password: identifier,
+      displayName: name,
+      disabled: false,
+    });
 
-        // Create user in firestore
-        await admin.firestore().collection("users").doc(user.uid).set({
-          email: email,
-          username: username,
-          role: role,
-        });
+    // Create role custom claims
+    await admin.auth().setCustomUserClaims(user.uid, {
+      role,
+    });
 
-        res.status(200).json({ message: "Success" });
-      } else {
-        res.status(401).json({ message: "Unauthorized" });
-      }
-    } else {
-      res.status(401).json({ message: "Unauthorized" });
-    }
+    // Firestore timestamp
+    let createdAt = admin.firestore.Timestamp.fromDate(new Date());
+
+    // Create user in firestore
+    await admin.firestore().collection("users").doc(user.uid).set({
+      email,
+      name,
+      identifier,
+      role,
+      createdAt,
+      modifiedAt: createdAt,
+    });
+
+    res.status(200).json({ message: "Success" });
+    // } else {
+    //   res.status(401).json({ message: "Unauthorized" });
+    // }
+    // } else {
+    //   res.status(401).json({ message: "Unauthorized" });
+    // }
   } else {
     res.status(405).json({ message: "Method Not Allowed" });
   }
