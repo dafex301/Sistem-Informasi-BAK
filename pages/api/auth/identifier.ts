@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import admin from "../../../../lib/firebaseConfig/init-admin";
+import admin from "../../../lib/firebaseConfig/init-admin";
 
 type Message = {
   message: string;
@@ -11,15 +11,15 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Message>
 ) {
-  // Finding User Email by no_induk
+  // Finding User Email by identifier
   // Use admin to query on the database
-  const no_induk = req.query.no_induk;
+  const { identifier } = req.body;
 
   try {
     const user = await admin
       .firestore()
       .collection("users")
-      .where("no_induk", "==", no_induk)
+      .where("identifier", "==", identifier)
       .get();
 
     // Check if user exists

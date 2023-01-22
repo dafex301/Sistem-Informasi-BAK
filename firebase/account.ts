@@ -66,45 +66,29 @@ export const loginAccount = async (
   identifier: string,
   password: string
 ): Promise<void> => {
-  // Check if identifier is an email or nim
-  const isEmail = identifier.includes("@");
-  const isNoInduk = !isEmail;
-
-  // Login with email
-  if (isEmail) {
-    try {
-      await signInWithEmailAndPassword(auth, identifier, password).then(
-        async (userCredential) => {
-          const user = userCredential.user;
-          setCookie(null, "idToken", await user.getIdToken(), {
-            maxAge: 30 * 24 * 60 * 60,
-            path: "/",
-          });
-        }
-      );
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  if (isNoInduk) {
-    try {
-      // Get email by requesting to /api/auth/email/[no_induk]
-      const email = await fetch(`/api/auth/email/${identifier}`)
-        .then((res) => res.json())
-        .then((data) => data.email);
-      await signInWithEmailAndPassword(auth, email, password).then(
-        async (userCredential) => {
-          const user = userCredential.user;
-          setCookie(null, "idToken", await user.getIdToken(), {
-            maxAge: 30 * 24 * 60 * 60,
-            path: "/",
-          });
-        }
-      );
-    } catch (error) {
-      throw error;
-    }
+  try {
+    // Get email by requesting to /api/auth/identifier
+    // POST the identifier
+    const email = await fetch("/api/auth/identifier", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ identifier }),
+    })
+      .then((res) => res.json())
+      .then((data) => data.email);
+    await signInWithEmailAndPassword(auth, email, password).then(
+      async (userCredential) => {
+        const user = userCredential.user;
+        setCookie(null, "idToken", await user.getIdToken(), {
+          maxAge: 30 * 24 * 60 * 60,
+          path: "/",
+        });
+      }
+    );
+  } catch (error) {
+    throw error;
   }
 };
 

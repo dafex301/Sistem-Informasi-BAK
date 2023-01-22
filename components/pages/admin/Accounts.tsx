@@ -54,18 +54,32 @@ const Accounts: NextPage = () => {
   // =============== Update state ===============
   const [updatedName, setUpdatedName] = useState<string>("");
   const [updatedIdentifier, setUpdatedIdentifier] = useState<string>("");
-  const [updatedFakultas, setUpdatedFakultas] = useState<string>("");
-  const [updatedJurusan, setUpdatedJurusan] = useState<string>("");
-  const [updatedPhone, setUpdatedPhone] = useState<string>("");
-  const [updatedJabatan, setUpdatedJabatan] = useState<string>("");
   const [updatedStatus, setUpdatedStatus] = useState<string>("");
   const [updatedRole, setUpdatedRole] = useState<string | undefined>("UKM");
 
-  // =============== Data =================
-  const fakultasData = require("../../../data/fakultas.json");
-  const jurusanData = require("../../../data/jurusan.json");
-
   // =============== Firebase Query ===============
+  // Get all accounts
+  const getAccounts = async () => {
+    const q: Query = query(
+      collection(db, "users"),
+      where("role", "!=", "admin"),
+      orderBy("role", "asc"),
+      orderBy("name", "asc")
+    );
+
+    const querySnapshot = await getDocs(q);
+    const data: DocumentData[] = [];
+
+    querySnapshot.forEach((doc) => {
+      data.push({ id: doc.id, ...doc.data() });
+    });
+
+    setData(data);
+  };
+
+  useEffect(() => {
+    getAccounts();
+  }, []);
 
   // =============== Table Row ===============
   const rowcheck: Irender_row = (row, column, display_value) => {
@@ -222,11 +236,11 @@ const Accounts: NextPage = () => {
         name: updatedName,
         role: updatedRole,
       }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-      });
+    }).then((result) => {
+      setModal(null);
+      handleToast("Create");
+      getAccounts();
+    });
   };
 
   // ================== Toast ==================

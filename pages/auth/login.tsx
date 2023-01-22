@@ -15,7 +15,7 @@ import loginImage4 from "../../public/login/login4.jpg";
 import loginImage5 from "../../public/login/login5.jpg";
 
 const Login: NextPage = () => {
-  const [username, setUsername] = useState<string>("");
+  const [identifier, setIdentifier] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
 
@@ -38,8 +38,9 @@ const Login: NextPage = () => {
   const route = useRouter();
 
   function handleLogin() {
-    loginAccount(username, password).catch((error) => {
-      setError("Login gagal. Username dan/atau password salah.");
+    loginAccount(identifier, password).catch((error) => {
+      console.log(error);
+      setError("Login gagal. username dan/atau password salah.");
     });
   }
 
@@ -61,21 +62,16 @@ const Login: NextPage = () => {
               <h1 className="text-xl md:text-2xl font-bold leading-tight mt-12">
                 Log in to your account
               </h1>
-              <form
-                className="mt-6"
-                action="#"
-                method="POST"
-                onSubmit={handleLogin}
-              >
+              <form className="mt-6" action="#">
                 <div>
-                  <label className="block text-gray-700">Username</label>
+                  <label className="block text-gray-700">Username/NIP</label>
                   <input
                     type="text"
-                    placeholder="Enter Username"
+                    placeholder="Enter Username/NIP"
                     className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
                     required
-                    onChange={(e) => setUsername(e.target.value)}
-                    value={username}
+                    onChange={(e) => setIdentifier(e.target.value)}
+                    value={identifier}
                   />
                 </div>
                 <div className="mt-4">
@@ -100,9 +96,10 @@ const Login: NextPage = () => {
                   </a>
                 </div>
                 <button
-                  type="submit"
+                  type="button"
                   className="w-full block bg-indigo-500 hover:bg-indigo-400 focus:bg-indigo-400 text-white font-semibold rounded-lg
         px-4 py-3 mt-6"
+                  onClick={handleLogin}
                 >
                   Log In
                 </button>
