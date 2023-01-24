@@ -1,6 +1,6 @@
 export const tableStyling = {
-  base_bg_color: "bg-gray-900",
-  // base_text_color: "text-green-600",
+  base_bg_color: "text-black bg-gray-900",
+  base_text_color: "text-black",
   top: {
     // title:"text-red-700"
     elements: {
@@ -10,7 +10,8 @@ export const tableStyling = {
         // main: "bg-green-700 text-white",
         // button:"bg-yellow-700 text-black px-5 "
       },
-      // export:"text-yellow-800"
+      export:
+        "bg-gray-900 hover:bg-gray-700 text-white rounded-md px-5 py-1 text-sm",
     },
   },
   table_head: {

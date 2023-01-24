@@ -1,8 +1,12 @@
-import { useAuth } from "../../lib/authContext";
+import Image from "next/image";
 import Link from "next/link";
+import { useAuth } from "../../lib/authContext";
 import { signOut } from "../../firebase/account";
 import { useRouter } from "next/router";
 import { destroyCookie } from "nookies";
+
+// Image
+import avatar from "../../public/images/avatar.png";
 
 export default function Header(props: any) {
   const { user, loading } = useAuth();
@@ -13,27 +17,12 @@ export default function Header(props: any) {
   };
 
   return (
-    <div className="flex h-full justify-end ">
+    <div className="flex justify-end">
       <div className="">
-        {!user && !loading ? (
-          <>
-            <Link passHref href="/auth/register">
-              <button className="m-auto"> Register</button>
-            </Link>
-
-            <Link passHref href="/auth/login">
-              <button className="m-auto"> Login</button>
-            </Link>
-          </>
-        ) : null}
         {user ? (
           <>
             <Link href="/profile">
               <button> Profile</button>
-            </Link>
-
-            <Link href="/private">
-              <button> Private</button>
             </Link>
 
             <button onClick={handleLogout}> Signout</button>

@@ -112,11 +112,9 @@ export default function Layout({ children }: Props) {
           </div>
           {/* End of Sidebar */}
           <div className="w-full">
-            <div className="flex flex-col min-h-screen mx-8">
-              <div className=" h-16 ">
-                <Header />
-              </div>
-              <div className="flex-grow m-5">{children}</div>
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <div className="">{children}</div>
               <Footer />
             </div>
           </div>
