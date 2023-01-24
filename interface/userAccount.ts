@@ -1,12 +1,9 @@
 export interface userAccount {
+  id: string;
   email: string;
   name: string;
-  no_induk: string;
-  role: "Admin" | "Mahasiswa" | "Staff";
+  identifier: string;
+  role: "admin" | "UKM" | "TBAK" | "KBAK" | "MK" | "SM";
   created_at: Date;
   modified_at: Date;
-  status?: string;
-  fakultas?: string;
-  jurusan?: string;
-  jabatan?: string;
 }

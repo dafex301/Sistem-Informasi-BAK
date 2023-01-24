@@ -38,7 +38,6 @@ import {
   Dialog,
   DialogHeader,
   DialogBody,
-  Switch,
   Option,
   Select,
 } from "@material-tailwind/react";
@@ -54,8 +53,9 @@ const Accounts: NextPage = () => {
   // =============== Update state ===============
   const [updatedName, setUpdatedName] = useState<string>("");
   const [updatedIdentifier, setUpdatedIdentifier] = useState<string>("");
-  const [updatedStatus, setUpdatedStatus] = useState<string>("");
   const [updatedRole, setUpdatedRole] = useState<string | undefined>("UKM");
+  const [errorIdentifier, setErrorIdentifier] = useState<string>("");
+  const [errorName, setErrorName] = useState<string>("");
 
   // =============== Firebase Query ===============
   // Get all accounts
@@ -81,6 +81,14 @@ const Accounts: NextPage = () => {
     getAccounts();
   }, []);
 
+  useEffect(() => {
+    // Set error to empty string when modal is closed
+    if (modal === null) {
+      setErrorIdentifier("");
+      setErrorName("");
+    }
+  }, [modal]);
+
   // =============== Table Row ===============
   const rowcheck: Irender_row = (row, column, display_value) => {
     if (column.field === "status") {
@@ -102,9 +110,6 @@ const Accounts: NextPage = () => {
       return (
         <div className="flex items-center gap-2">
           <p className="font-semibold">{display_value}</p>
-          {row.role === "Admin" && (
-            <CheckBadgeIcon className="text-blue-500 w-4" />
-          )}
         </div>
       );
     }
@@ -132,51 +137,6 @@ const Accounts: NextPage = () => {
     return display_value;
   };
 
-  // =============== Handler ===============
-  const handleStatusSwitch = () => {
-    if (selectedUser) {
-      if (updatedStatus === "Aktif") {
-        setUpdatedStatus("Nonaktif");
-        setUpdatedRole("Staff");
-      } else {
-        setUpdatedStatus("Aktif");
-      }
-    }
-  };
-
-  const handleRoleSwitch = () => {
-    if (selectedUser && updatedStatus === "Aktif") {
-      setUpdatedRole(updatedRole === "Admin" ? "Staff" : "Admin");
-    }
-  };
-
-  const handleStatusChange = (email: string, status: string) => {
-    // Request to /api/auth/roles/${role} with email as body
-    if (user) {
-      fetch(`/api/auth/staff/status`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: user.token,
-        },
-        body: JSON.stringify({ email, status }),
-      })
-        .then((res) => res.json())
-        .then((result) => {
-          console.log(result);
-        });
-
-      let tempData = data.map((row) => {
-        if (row.email === email) {
-          row.status = status;
-        }
-        return row;
-      });
-      setData(tempData);
-      toast.success("Status berhasil diubah");
-    }
-  };
-
   const handleDeleteButton = (user: any) => {
     setSelectedUser(user);
     setModal("delete");
@@ -184,68 +144,134 @@ const Accounts: NextPage = () => {
 
   const handleDelete = () => {
     if (user && selectedUser) {
-      const { email } = selectedUser;
-      // Request to /api/auth/delete with email as body
-      fetch(`/api/auth/delete`, {
+      const { id } = selectedUser;
+      fetch(`/api/admin/accounts/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Authorization token
           Authorization: user.token,
         },
-        body: JSON.stringify({ email: email }),
+        body: JSON.stringify({ id: id }),
       })
         .then((res) => res.json())
         .then((result) => {
           console.log(result);
         });
 
-      let tempData = data.filter((row) => row.email !== email);
+      let tempData = data.filter((row) => row.id !== id);
       setData(tempData);
       setModal(null);
       handleToast("Delete");
     }
   };
 
+  const handleCreateButton = () => {
+    setUpdatedName("");
+    setUpdatedIdentifier("");
+    setUpdatedRole("UKM");
+    setModal("create");
+  };
+
   const handleUpdateButton = (user: any) => {
     setSelectedUser(user);
     setUpdatedName(user.name);
-    setUpdatedFakultas(user.fakultas ?? "");
-    setUpdatedJurusan(user.jurusan ?? "");
-    setUpdatedPhone(user.phone ?? "");
-    setUpdatedJabatan(user.jabatan ?? "");
-    setUpdatedStatus(user.status ?? "");
+    setUpdatedIdentifier(user.identifier);
     setUpdatedRole(user.role ?? "");
 
     setModal("update");
   };
 
-  const handleUpdate = () => {};
+  const handleUpdate = () => {
+    if (updatedIdentifier.length < 6) {
+      setErrorIdentifier("Username minimal 6 karakter");
+      return;
+    } else {
+      setErrorIdentifier("");
+    }
 
-  const handleCreate = () => {
-    // Post to /api/auth/create with identifier, name, and role
-    fetch("/api/auth/create", {
+    // Check if name is valid
+    if (updatedName.length < 1) {
+      setErrorName("Nama wajib diisi!");
+      return;
+    } else {
+      setErrorName("");
+    }
+
+    fetch("/api/admin/accounts/update", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         // Authorization token
-        // Authorization: user.token,
+        Authorization: user!.token,
+      },
+      body: JSON.stringify({
+        id: selectedUser?.id,
+        identifier: updatedIdentifier,
+        name: updatedName,
+        role: updatedRole,
+      }),
+    });
+    setModal(null);
+    handleToast("Update");
+
+    let tempData = data.map((row) => {
+      if (row.id === selectedUser?.id) {
+        return {
+          ...row,
+          identifier: updatedIdentifier,
+          name: updatedName,
+          role: updatedRole,
+        };
+      }
+      return row;
+    });
+    setData(tempData);
+  };
+  const handleCreate = () => {
+    if (updatedIdentifier.length < 6) {
+      setErrorIdentifier("Username minimal 6 karakter");
+      return;
+    } else {
+      setErrorIdentifier("");
+    }
+
+    // Check if name is valid
+    if (updatedName.length < 1) {
+      setErrorName("Nama wajib diisi!");
+      return;
+    } else {
+      setErrorName("");
+    }
+
+    fetch("/api/admin/accounts/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization token
+        Authorization: user!.token,
       },
       body: JSON.stringify({
         identifier: updatedIdentifier,
         name: updatedName,
         role: updatedRole,
       }),
-    }).then((result) => {
-      setModal(null);
-      handleToast("Create");
-      getAccounts();
     });
+    setModal(null);
+    handleToast("Create");
+
+    setData([
+      ...data,
+      {
+        identifier: updatedIdentifier,
+        name: updatedName,
+        role: updatedRole,
+      },
+    ]);
   };
 
   // ================== Toast ==================
   const handleToast = (status: string) => {
-    toast.success(`${status} data berhasil`, {
+    toast.success(`${status} account berhasil`, {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -257,31 +283,11 @@ const Accounts: NextPage = () => {
     });
   };
 
-  // =============== UseEffect ===============
-  // useEffect(() => {
-  //   if (data.length === 0) {
-  //     let tempData: DocumentData[] = [];
-  //     const querySnapshot = getDocs(q);
-  //     querySnapshot.then((querySnapshot) => {
-  //       querySnapshot.forEach((doc) => {
-  //         tempData.push(doc.data());
-  //       });
-
-  //       // Filter data to only show data that is not the current user
-  //       if (user) {
-  //         tempData = tempData.filter((row) => row.email !== user.claims.email);
-  //       }
-
-  //       setData(tempData);
-  //     });
-  //   }
-  // });
-
   // Table Custom Styling based on Role
   let columns = [
     {
       field: "identifier",
-      use: "Identifier",
+      use: "Username/NIP",
     },
     {
       // use_in_display: false,
@@ -306,12 +312,7 @@ const Accounts: NextPage = () => {
       <div className="rounded-sm bg-white p-5">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-semibold">Accounts</h1>
-          <button
-            className="bg-blue-500 p-3 text-white rounded-lg hover:bg-blue-700 mb-3 outline-none hover:outline-none text-sm font-semibold "
-            onClick={() => setModal("create")}
-          >
-            Create Account
-          </button>
+          <Button onClick={handleCreateButton}>Create Account</Button>
         </div>
         <Table
           // per_page={3}
@@ -338,20 +339,34 @@ const Accounts: NextPage = () => {
             <DialogBody divider className="flex items-center justify-center">
               <div className="w-9/12 space-y-6 px-6 pb-4 sm:pb-6 lg:px-3 xl:pb-8 xl:pt-8">
                 <div className="flex flex-col gap-5">
-                  <Input
-                    label={"Identifier/Username/NIP"}
-                    id="identifier"
-                    required={true}
-                    value={updatedIdentifier}
-                    onChange={(e) => setUpdatedIdentifier(e.target.value)}
-                  />
-                  <Input
-                    label="Nama"
-                    id="name"
-                    required={true}
-                    value={updatedName}
-                    onChange={(e) => setUpdatedName(e.target.value)}
-                  />
+                  <div>
+                    <Input
+                      label={"Identifier/Username/NIP"}
+                      error={Boolean(errorIdentifier)}
+                      id="identifier"
+                      required={true}
+                      value={updatedIdentifier}
+                      onChange={(e) => setUpdatedIdentifier(e.target.value)}
+                    />
+                    {errorIdentifier && (
+                      <p className="text-red-500 text-xs">{errorIdentifier}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Input
+                      error={Boolean(errorName)}
+                      label="Nama"
+                      id="name"
+                      required={true}
+                      value={updatedName}
+                      onChange={(e) => setUpdatedName(e.target.value)}
+                    />
+                    {errorName && (
+                      <p className="text-red-500 text-xs">{errorName}</p>
+                    )}
+                  </div>
+
                   <Select
                     variant="outlined"
                     label="Role"
@@ -389,7 +404,7 @@ const Accounts: NextPage = () => {
             <div className="text-center">
               <ExclamationCircleIcon className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
               <p className="text-md font-normal text-gray-500 dark:text-gray-400">
-                {selectedUser?.no_induk} - {selectedUser?.name}
+                {selectedUser?.identifier} - {selectedUser?.name}
               </p>
               <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                 Apakah anda yakin menghapus akun ini?
