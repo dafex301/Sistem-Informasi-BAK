@@ -1,5 +1,5 @@
 export const tableStyling = {
-  base_bg_color: "bg-gray-500",
+  base_bg_color: "bg-gray-900",
   // base_text_color: "text-green-600",
   top: {
     // title:"text-red-700"
@@ -15,7 +15,7 @@ export const tableStyling = {
   },
   table_head: {
     table_row: "bg-red-500 text-red-500",
-    table_data: "text-white bg-gray-500",
+    table_data: "text-white bg-gray-900",
   },
   table_body: {
     // main: "bg-red-600",

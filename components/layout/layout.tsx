@@ -4,10 +4,36 @@ import { useAuth } from "../../lib/authContext";
 import Loading from "../Loading";
 import { useRouter } from "next/router";
 import { Props } from "../../interface/props";
+import Image from "next/image";
+
+// Image
+import undip from "../../public/undip.png";
+
+// Font
+import { Montserrat } from "@next/font/google";
+
+// Logo
+import {
+  BuildingOfficeIcon as BuildingOutline,
+  Squares2X2Icon as SquaresOutline,
+  BanknotesIcon as BankOutline,
+  UserIcon as UserOutline,
+} from "@heroicons/react/24/outline";
+import {
+  BuildingOfficeIcon as BuildingSolid,
+  Squares2X2Icon as SquaresSolid,
+  BanknotesIcon as BankSolid,
+  UserIcon as UserSolid,
+} from "@heroicons/react/24/solid";
+import Link from "next/link";
+import SidebarMenu from "../sidebar/SidebarMenu";
+
+const montserrat = Montserrat({ subsets: ["latin"] });
 
 export default function Layout({ children }: Props) {
   const { user, loading } = useAuth();
   const route = useRouter();
+  const role = user?.claims.role;
 
   // if (!loading && !user) {
   //   route.push("/auth/login");
@@ -16,16 +42,83 @@ export default function Layout({ children }: Props) {
   if (!loading) {
     return (
       <>
-        <div className="bg-gray-50">
-          <div
-            className="flex flex-col min-h-screen container mx-auto md:w-11/12  lg:w-4/5
-      divide-y divide-black-500 "
-          >
-            <div className=" h-16 ">
-              <Header />
+        <div className="flex">
+          {/* Sidebar */}
+          <div className=" min-w-max bg-gray-900 flex-col">
+            {/* Logo */}
+            <Link
+              href={"/"}
+              className="flex gap-3 items-center justify-center mt-5"
+            >
+              <Image src={undip} alt={"Undip"} className="w-10" />
+              <div className={montserrat.className}>
+                <h1 className="text-white text-xl font-bold">SI-BAK</h1>
+              </div>
+            </Link>
+            {/* End of Logo */}
+
+            {/* Menu */}
+            <div className="flex flex-col gap-8 mt-12 mx-2 text-gray-500">
+              {/* Main Menu */}
+              <div>
+                <p className="text-xs mx-3 mb-2 text-gray-600">Menu Utama</p>
+                <SidebarMenu
+                  href={"/"}
+                  solidIcon={<SquaresSolid />}
+                  outlineIcon={<SquaresOutline />}
+                  text={"Dashboard"}
+                />
+                <SidebarMenu
+                  href={"/peminjaman"}
+                  solidIcon={<BuildingSolid />}
+                  outlineIcon={<BuildingOutline />}
+                  text={"Permohonan Peminjaman"}
+                />
+                <SidebarMenu
+                  href={"/proposal"}
+                  solidIcon={<BankSolid />}
+                  outlineIcon={<BankOutline />}
+                  text={"Pengajuan Proposal & Dana"}
+                />
+              </div>
+              {/* End of Main Menu */}
+
+              {/* Admin Menu */}
+              {role === "admin" && (
+                <div>
+                  <p className="text-xs mx-3 mb-2 text-gray-600">Menu Admin</p>
+                  <SidebarMenu
+                    href={"/admin/accounts"}
+                    solidIcon={<UserSolid />}
+                    outlineIcon={<UserOutline />}
+                    text={"Manajemen Akun"}
+                  />
+                  <SidebarMenu
+                    href={"/admin/peminjaman"}
+                    solidIcon={<BuildingSolid />}
+                    outlineIcon={<BuildingOutline />}
+                    text={"Manajemen Peminjaman"}
+                  />
+                  <SidebarMenu
+                    href={"/admin/proposal"}
+                    solidIcon={<BankSolid />}
+                    outlineIcon={<BankOutline />}
+                    text={"Manajemen Proposal"}
+                  />
+                </div>
+              )}
+              {/* End of Admin Menu */}
             </div>
-            <div className="flex-grow m-5">{children}</div>
-            <Footer />
+          </div>
+          {/* End of Sidebar */}
+          <div className="w-full">
+            <div className="flex flex-col min-h-screen mx-8">
+              <div className=" h-16 ">
+                <Header />
+              </div>
+              <div className="flex-grow m-5">{children}</div>
+              <Footer />
+            </div>
           </div>
         </div>
       </>

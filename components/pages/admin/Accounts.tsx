@@ -21,14 +21,11 @@ import {
   PencilIcon,
   TrashIcon,
   ExclamationCircleIcon,
-  CheckBadgeIcon,
 } from "@heroicons/react/24/solid";
 import { Irender_row } from "../../../interface/table";
 import { tableStyling } from "../../table/tableStyling";
 import { useAuth } from "../../../lib/authContext";
 import { userAccount } from "../../../interface/userAccount";
-import { IFakultas } from "../../../interface/fakultas";
-import { IJurusan } from "../../../interface/jurusan";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {

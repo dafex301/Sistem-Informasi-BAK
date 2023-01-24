@@ -13,14 +13,8 @@ export default function Header(props: any) {
   };
 
   return (
-    <div className="flex h-full flex-row">
-      <div className="flex-1 my-auto">
-        <Link href="/">
-          <button>Home</button>
-        </Link>
-      </div>
-
-      <div className="m-auto space-x-2">
+    <div className="flex h-full justify-end ">
+      <div className="">
         {!user && !loading ? (
           <>
             <Link passHref href="/auth/register">
