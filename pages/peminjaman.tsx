@@ -15,7 +15,7 @@ const Peminjaman: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Peminjaman</title>
+        <title>Permohonan Peminjaman</title>
       </Head>
       <PageTitle title="Permohonan Peminjaman" />
       <main>
