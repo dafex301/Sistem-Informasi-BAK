@@ -18,12 +18,16 @@ import {
   Squares2X2Icon as SquaresOutline,
   BanknotesIcon as BankOutline,
   UserIcon as UserOutline,
+  BuildingOffice2Icon as Building2Outline,
+  CurrencyDollarIcon as DollarOutline,
 } from "@heroicons/react/24/outline";
 import {
   BuildingOfficeIcon as BuildingSolid,
   Squares2X2Icon as SquaresSolid,
   BanknotesIcon as BankSolid,
   UserIcon as UserSolid,
+  BuildingOffice2Icon as Building2Solid,
+  CurrencyDollarIcon as DollarSolid,
 } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import SidebarMenu from "../sidebar/SidebarMenu";
@@ -102,14 +106,14 @@ export default function Layout({ children }: Props) {
                   />
                   <SidebarMenu
                     href={"/admin/peminjaman"}
-                    solidIcon={<BuildingSolid />}
-                    outlineIcon={<BuildingOutline />}
+                    solidIcon={<Building2Solid />}
+                    outlineIcon={<Building2Outline />}
                     text={"Manajemen Peminjaman"}
                   />
                   <SidebarMenu
                     href={"/admin/proposal"}
-                    solidIcon={<BankSolid />}
-                    outlineIcon={<BankOutline />}
+                    solidIcon={<DollarSolid />}
+                    outlineIcon={<DollarOutline />}
                     text={"Manajemen Proposal"}
                   />
                 </div>

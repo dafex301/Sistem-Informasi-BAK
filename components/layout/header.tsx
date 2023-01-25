@@ -17,16 +17,13 @@ import { useState } from "react";
 
 export default function Header(props: any) {
   const { user, loading } = useAuth();
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState(true);
   const router = useRouter();
 
   const handleLogout = async () => {
     await signOut();
-  };
-
-  if (!loading && !user) {
     router.push("/auth/login");
-  }
+  };
 
   return (
     <div className="flex justify-end m-5">
@@ -42,7 +39,7 @@ export default function Header(props: any) {
                 alt={"Avatar"}
                 className="rounded-full w-9 h-9"
               />
-              <div className="text-sm">Monkey D. Luffy</div>
+              <div className="text-sm">{user.claims.name}</div>
               <ChevronDownIcon className="w-4 mt-1" />
             </div>
           </>
@@ -53,7 +50,7 @@ export default function Header(props: any) {
         {modal && (
           <div
             onMouseLeave={() => setModal(false)}
-            className="bg-white drop-shadow-md flex flex-col rounded-md text-sm absolute z-10 left-0 top-12 w-40"
+            className="bg-white drop-shadow-md flex flex-col rounded-md text-sm absolute z-10 left-0 top-12 min-w-full"
           >
             <Link
               href="/account/profile"
