@@ -8,6 +8,10 @@ import { useAuth } from "../lib/authContext";
 const Peminjaman: NextPage = () => {
   const { user, loading } = useAuth();
 
+  // State
+  const [kegiatan, setKegiatan] = useState<string>("");
+  const [errorKegiatan, setErrorKegiatan] = useState<string>("");
+
   return (
     <>
       <Head>
@@ -26,18 +30,22 @@ const Peminjaman: NextPage = () => {
                   Nama Kegiatan
                 </label>
                 <input
-                  className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  className={
+                    errorKegiatan
+                      ? "appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                      : "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  }
                   id="grid-password"
                   type="text"
                   placeholder="Nama Kegiatan"
                 />
-                <p className="text-gray-600 text-xs italic">
-                  Make it as long and as crazy as you like
+                <p className="text-red-600 text-xs">
+                  Nama kegiatan harus diisi!
                 </p>
               </div>
             </div>
           </div>
-          <div className="col-span-4 bg-blue-gray-100 p-5">
+          <div className="col-span-4 bg-blue-gray-100 p-5 text-gray-900">
             <p className="font-semibold text-center text-sm mb-4">
               RINCIAN PELAKSANAAN PELAYANAN ADMINISTRASI PEMINJAMAN RUANG PKM
               DAN SC UNDIP

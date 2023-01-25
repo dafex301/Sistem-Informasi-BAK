@@ -42,9 +42,9 @@ export default function Layout({ children }: Props) {
 
   const [showSidebar, setShowSidebar] = useState(true);
 
-  // if (!loading && !user) {
-  //   route.push("/auth/login");
-  // }
+  if (!loading && !user) {
+    route.push("/auth/login");
+  }
 
   if (!loading && user) {
     return (
