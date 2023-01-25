@@ -27,6 +27,7 @@ import {
 } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import SidebarMenu from "../sidebar/SidebarMenu";
+import { useState } from "react";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -34,6 +35,8 @@ export default function Layout({ children }: Props) {
   const { user, loading } = useAuth();
   const route = useRouter();
   const role = user?.claims.role;
+
+  const [showSidebar, setShowSidebar] = useState(true);
 
   // if (!loading && !user) {
   //   route.push("/auth/login");
@@ -44,7 +47,11 @@ export default function Layout({ children }: Props) {
       <>
         <div className="flex">
           {/* Sidebar */}
-          <div className=" min-w-max bg-gray-900 flex-col">
+          <div
+            className={
+              showSidebar ? "min-w-max bg-gray-900 flex-col" : "hidden"
+            }
+          >
             {/* Logo */}
             <Link
               href={"/"}
@@ -115,7 +122,7 @@ export default function Layout({ children }: Props) {
             <div className="flex flex-col min-h-screen">
               <Header />
               <div className="">{children}</div>
-              <Footer />
+              {/* <Footer /> */}
             </div>
           </div>
         </div>

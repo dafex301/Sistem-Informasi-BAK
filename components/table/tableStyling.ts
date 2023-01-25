@@ -11,7 +11,7 @@ export const tableStyling = {
         // button:"bg-yellow-700 text-black px-5 "
       },
       export:
-        "bg-gray-900 hover:bg-gray-700 text-white rounded-md px-5 py-1 text-sm",
+        "bg-gray-900 hover:bg-gray-700 text-white rounded-md px-5 py-1 text-sm hidden",
     },
   },
   table_head: {

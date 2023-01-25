@@ -306,10 +306,18 @@ const Accounts: NextPage = () => {
 
   return (
     <>
-      <div className="rounded-sm bg-white p-5">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-semibold">Accounts</h1>
-          <Button onClick={handleCreateButton}>Create Account</Button>
+      <h1 className="text-3xl font-bold -translate-y-14 mt-1 ml-5 w-0">
+        Accounts
+      </h1>
+      <div className="rounded-sm mx-5 -translate-y-20">
+        <div className="flex justify-end items-center">
+          <Button
+            onClick={handleCreateButton}
+            color="green"
+            className="translate-y-16"
+          >
+            Create Account
+          </Button>
         </div>
         <Table
           // per_page={3}
