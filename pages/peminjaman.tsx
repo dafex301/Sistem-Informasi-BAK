@@ -1,9 +1,13 @@
-import { Input } from "@material-tailwind/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import PageTitle from "../components/layout/PageTitle";
 import { useAuth } from "../lib/authContext";
+import { Button } from "@material-tailwind/react";
+
+import Input from "../components/forms/Input";
+import Select from "../components/forms/Select";
+import DateTimePicker from "../components/forms/DateTimePicker";
 
 const Peminjaman: NextPage = () => {
   const { user, loading } = useAuth();
@@ -11,6 +15,24 @@ const Peminjaman: NextPage = () => {
   // State
   const [kegiatan, setKegiatan] = useState<string>("");
   const [errorKegiatan, setErrorKegiatan] = useState<string>("");
+
+  const [jenisPinjaman, setJenisPinjaman] = useState<string>("");
+  const [errorJenisPinjaman, setErrorJenisPinjaman] = useState<string>("");
+
+  const [tanggalPinjam, setTanggalPinjam] = useState<string>("");
+  const [errorTanggalPinjam, setErrorTanggalPinjam] = useState<string>("");
+
+  const [waktuPinjam, setWaktuPinjam] = useState<string>("");
+  const [errorWaktuPinjam, setErrorWaktuPinjam] = useState<string>("");
+
+  const [tanggalKembali, setTanggalKembali] = useState<string>("");
+  const [errorTanggalKembali, setErrorTanggalKembali] = useState<string>("");
+
+  const [waktuKembali, setWaktuKembali] = useState<string>("");
+  const [errorWaktuKembali, setErrorWaktuKembali] = useState<string>("");
+
+  const [file, setFile] = useState<string>("");
+  const [errorFile, setErrorFile] = useState<string>("");
 
   return (
     <>
@@ -20,31 +42,96 @@ const Peminjaman: NextPage = () => {
       <PageTitle title="Permohonan Peminjaman" />
       <main>
         <div className="grid grid-cols-12 mx-5 gap-5">
-          <div className="flex flex-col col-span-8">
-            <div className="w-full">
-              <div className="w-full">
-                <label
-                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                  htmlFor="grid-password"
-                >
-                  Nama Kegiatan
-                </label>
-                <input
-                  className={
-                    errorKegiatan
-                      ? "appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                      : "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  }
-                  id="grid-password"
-                  type="text"
-                  placeholder="Nama Kegiatan"
+          {/* Input Section */}
+          <div className="flex flex-col col-span-8 gap-4">
+            <Input
+              value={kegiatan}
+              onChange={(e) => setKegiatan(e.target.value)}
+              error={errorKegiatan}
+              label="Nama Kegiatan"
+              id="nama-kegiatan"
+            />
+            <Select
+              value={jenisPinjaman}
+              onChange={(e) => setJenisPinjaman(e.target.value)}
+              error={errorJenisPinjaman}
+              label="Jenis Pinjaman"
+              id="jenis-pinjaman"
+            >
+              <option value="" disabled>
+                Pilih Jenis Pinjaman
+              </option>
+              <option value="Halaman Depan Diponegoro (Parkir)">
+                Halaman Depan Diponegoro (Parkir)
+              </option>
+              <option value="Belakang SC atau Gazebo (Barat)">
+                Belakang SC atau Gazebo (Barat)
+              </option>
+              <option value="Belakang SC atau Gazebo (Tengah)">
+                Belakang SC atau Gazebo (Tengah)
+              </option>
+              <option value="Belakang SC atau Gazebo (Timur)">
+                Belakang SC atau Gazebo (Timur)
+              </option>
+            </Select>
+            <div className="w-full grid grid-cols-12 gap-5">
+              <div className="col-span-6">
+                <DateTimePicker
+                  type="date"
+                  value={tanggalPinjam}
+                  onChange={(e) => setTanggalPinjam(e.target.value)}
+                  label="Tanggal Pinjam"
+                  id="tanggal-pinjam"
+                  error={errorTanggalPinjam}
                 />
-                <p className="text-red-600 text-xs">
-                  Nama kegiatan harus diisi!
-                </p>
+              </div>
+              <div className="col-span-6">
+                <DateTimePicker
+                  type="time"
+                  value={waktuPinjam}
+                  onChange={(e) => setWaktuPinjam(e.target.value)}
+                  label="Waktu Pinjam"
+                  id="waktu-pinjam"
+                  error={errorWaktuPinjam}
+                />
               </div>
             </div>
+            <div className="w-full grid grid-cols-12 gap-5">
+              <div className="col-span-6">
+                <DateTimePicker
+                  type="date"
+                  value={tanggalKembali}
+                  onChange={(e) => setTanggalKembali(e.target.value)}
+                  label="Tanggal Kembali"
+                  id="tanggal-kembali"
+                  error={errorTanggalKembali}
+                />
+              </div>
+              <div className="col-span-6">
+                <DateTimePicker
+                  type="time"
+                  value={waktuKembali}
+                  onChange={(e) => setWaktuKembali(e.target.value)}
+                  label="Waktu Kembali"
+                  id="waktu-kembali"
+                  error={errorWaktuKembali}
+                />
+              </div>
+            </div>
+            <Input
+              label="Link Scan Peminjaman"
+              value={file}
+              onChange={(e) => setFile(e.target.value)}
+              id="file"
+              error={errorFile}
+            />
+            <Button color="indigo" className="mt-5">
+              Submit
+            </Button>
           </div>
+          {/* End of Input Section */}
+
+          {/* Right Section */}
           <div className="col-span-4 bg-blue-gray-100 p-5 text-gray-900">
             <p className="font-semibold text-center text-sm mb-4">
               RINCIAN PELAKSANAAN PELAYANAN ADMINISTRASI PEMINJAMAN RUANG PKM
@@ -87,6 +174,7 @@ const Peminjaman: NextPage = () => {
               </li>
             </ol>
           </div>
+          {/* End of Right Section */}
         </div>
       </main>
     </>
