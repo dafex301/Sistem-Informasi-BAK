@@ -46,7 +46,7 @@ export default function Layout({ children }: Props) {
   //   route.push("/auth/login");
   // }
 
-  if (!loading) {
+  if (!loading && user) {
     return (
       <>
         <div className="flex">
@@ -59,7 +59,7 @@ export default function Layout({ children }: Props) {
             {/* Logo */}
             <Link
               href={"/"}
-              className="flex gap-3 items-center justify-center mt-5"
+              className="flex gap-3 items-center justify-center mt-5 px-14 mx-1"
             >
               <Image src={undip} alt={"Undip"} className="w-10" />
               <div className={montserrat.className}>
@@ -98,6 +98,12 @@ export default function Layout({ children }: Props) {
               {role === "admin" && (
                 <div>
                   <p className="text-xs mx-3 mb-2 text-gray-600">Menu Admin</p>
+                  <SidebarMenu
+                    href={"/admin"}
+                    solidIcon={<SquaresSolid />}
+                    outlineIcon={<SquaresOutline />}
+                    text={"Dashboard Admin"}
+                  />
                   <SidebarMenu
                     href={"/admin/accounts"}
                     solidIcon={<UserSolid />}

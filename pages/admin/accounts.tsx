@@ -4,15 +4,15 @@ import Head from "next/head";
 import "react-tailwind-table/dist/index.css";
 import Accounts from "../../components/pages/admin/Accounts";
 
-const Mahasiswa: NextPage = () => {
+const ManajemenAkun: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Akun Mahasiswa</title>
+        <title>Manajemen Akun</title>
       </Head>
       <Accounts />
     </>
   );
 };
 
-export default Mahasiswa;
+export default ManajemenAkun;

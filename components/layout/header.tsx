@@ -7,6 +7,7 @@ import { destroyCookie } from "nookies";
 
 import {
   ChevronDownIcon,
+  ChevronUpIcon,
   UserCircleIcon,
   ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
@@ -17,12 +18,12 @@ import { useState } from "react";
 
 export default function Header(props: any) {
   const { user, loading } = useAuth();
-  const [modal, setModal] = useState(true);
+  const [modal, setModal] = useState(false);
   const router = useRouter();
 
   const handleLogout = async () => {
-    await signOut();
     router.push("/auth/login");
+    await signOut();
   };
 
   return (
@@ -40,7 +41,11 @@ export default function Header(props: any) {
                 className="rounded-full w-9 h-9"
               />
               <div className="text-sm">{user.claims.name}</div>
-              <ChevronDownIcon className="w-4 mt-1" />
+              {modal ? (
+                <ChevronUpIcon className="w-4 mt-1" />
+              ) : (
+                <ChevronDownIcon className="w-4 mt-1" />
+              )}
             </div>
           </>
         ) : (
