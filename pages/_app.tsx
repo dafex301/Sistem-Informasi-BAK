@@ -7,6 +7,9 @@ import { useRouter } from "next/router";
 import { AuthLayout } from "../components/layout/AuthLayout";
 import { ThemeProvider } from "@material-tailwind/react";
 
+// Import style
+import "../components/forms/css/DragDropFile.css";
+
 function MyApp({ Component, pageProps }: AppProps) {
   const route = useRouter();
 

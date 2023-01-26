@@ -53,7 +53,9 @@ export default function Layout({ children }: Props) {
           {/* Sidebar */}
           <div
             className={
-              showSidebar ? "min-w-max bg-gray-900 flex-col" : "hidden"
+              showSidebar
+                ? "min-w-max h-screen bg-gray-900 flex-col sticky top-0"
+                : "hidden"
             }
           >
             {/* Logo */}
@@ -128,7 +130,7 @@ export default function Layout({ children }: Props) {
             </div>
           </div>
           {/* End of Sidebar */}
-          <div className="w-full">
+          <div className="w-full mb-5">
             <div className="flex flex-col min-h-screen">
               <Header />
               <div className="">{children}</div>

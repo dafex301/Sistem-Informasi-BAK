@@ -3,11 +3,13 @@ import Head from "next/head";
 import { useState } from "react";
 import PageTitle from "../components/layout/PageTitle";
 import { useAuth } from "../lib/authContext";
-import { Button } from "@material-tailwind/react";
 
 import Input from "../components/forms/Input";
 import Select from "../components/forms/Select";
 import DateTimePicker from "../components/forms/DateTimePicker";
+import DragDropFile from "../components/forms/DragDropFile";
+import { uploadFile } from "../firebase/file";
+import { writePeminjaman } from "../firebase/peminjaman";
 
 const Peminjaman: NextPage = () => {
   const { user, loading } = useAuth();
@@ -19,20 +21,66 @@ const Peminjaman: NextPage = () => {
   const [jenisPinjaman, setJenisPinjaman] = useState<string>("");
   const [errorJenisPinjaman, setErrorJenisPinjaman] = useState<string>("");
 
-  const [tanggalPinjam, setTanggalPinjam] = useState<string>("");
-  const [errorTanggalPinjam, setErrorTanggalPinjam] = useState<string>("");
-
   const [waktuPinjam, setWaktuPinjam] = useState<string>("");
-  const [errorWaktuPinjam, setErrorWaktuPinjam] = useState<string>("");
-
-  const [tanggalKembali, setTanggalKembali] = useState<string>("");
-  const [errorTanggalKembali, setErrorTanggalKembali] = useState<string>("");
+  const [errorWaktuPinjam, seterrorWaktuPinjam] = useState<string>("");
 
   const [waktuKembali, setWaktuKembali] = useState<string>("");
-  const [errorWaktuKembali, setErrorWaktuKembali] = useState<string>("");
+  const [errorWaktuKembali, seterrorWaktuKembali] = useState<string>("");
 
-  const [file, setFile] = useState<string>("");
+  const [file, setFile] = useState<File | null>(null);
   const [errorFile, setErrorFile] = useState<string>("");
+
+  const [fileUrl, setFileUrl] = useState<string>("");
+
+  const handleSubmit = async () => {
+    if (!kegiatan) {
+      setErrorKegiatan("Nama kegiatan tidak boleh kosong");
+    } else {
+      setErrorKegiatan("");
+    }
+
+    if (!jenisPinjaman) {
+      setErrorJenisPinjaman("Jenis pinjaman tidak boleh kosong");
+    } else {
+      setErrorJenisPinjaman("");
+    }
+
+    if (!waktuPinjam) {
+      seterrorWaktuPinjam("Waktu pinjam tidak boleh kosong");
+    } else {
+      seterrorWaktuPinjam("");
+    }
+
+    if (!waktuKembali) {
+      seterrorWaktuKembali("Waktu kembali tidak boleh kosong");
+    } else {
+      seterrorWaktuKembali("");
+    }
+
+    if (!file) {
+      setErrorFile("File tidak boleh kosong");
+    } else {
+      setErrorFile("");
+    }
+
+    if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali && file) {
+      try {
+        uploadFile("peminjaman", file, setFileUrl);
+        writePeminjaman({
+          jenis_pinjaman: jenisPinjaman,
+          kegiatan,
+          waktu_pinjam: new Date(waktuPinjam),
+          waktu_kembali: new Date(waktuKembali),
+          file: fileUrl,
+        }).then(() => {
+          alert("Data berhasil disimpan");
+          // TODO: Create success page
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <>
@@ -76,63 +124,50 @@ const Peminjaman: NextPage = () => {
             </Select>
             <div className="w-full grid grid-cols-12 gap-5">
               <div className="col-span-6">
-                <DateTimePicker
-                  type="date"
-                  value={tanggalPinjam}
-                  onChange={(e) => setTanggalPinjam(e.target.value)}
-                  label="Tanggal Pinjam"
-                  id="tanggal-pinjam"
-                  error={errorTanggalPinjam}
-                />
-              </div>
-              <div className="col-span-6">
-                <DateTimePicker
-                  type="time"
+                <Input
+                  type="datetime-local"
                   value={waktuPinjam}
                   onChange={(e) => setWaktuPinjam(e.target.value)}
                   label="Waktu Pinjam"
-                  id="waktu-pinjam"
+                  id="Waktu-pinjam"
                   error={errorWaktuPinjam}
                 />
               </div>
-            </div>
-            <div className="w-full grid grid-cols-12 gap-5">
               <div className="col-span-6">
-                <DateTimePicker
-                  type="date"
-                  value={tanggalKembali}
-                  onChange={(e) => setTanggalKembali(e.target.value)}
-                  label="Tanggal Kembali"
-                  id="tanggal-kembali"
-                  error={errorTanggalKembali}
-                />
-              </div>
-              <div className="col-span-6">
-                <DateTimePicker
-                  type="time"
+                <Input
+                  type="datetime-local"
                   value={waktuKembali}
                   onChange={(e) => setWaktuKembali(e.target.value)}
                   label="Waktu Kembali"
-                  id="waktu-kembali"
+                  id="Waktu-kembali"
                   error={errorWaktuKembali}
                 />
               </div>
             </div>
-            <Input
-              label="Link Scan Peminjaman"
-              value={file}
-              onChange={(e) => setFile(e.target.value)}
-              id="file"
+
+            <DragDropFile
+              setFile={setFile}
+              setErrorFile={setErrorFile}
+              label="Scan Permohonan Peminjaman"
+              filetype={[".pdf", ".jpeg"]}
+              maxSize={512000}
+              file={file}
               error={errorFile}
+              uploader={user?.claims.name}
+              name={kegiatan}
             />
-            <Button color="indigo" className="mt-5">
+
+            <button
+              onClick={handleSubmit}
+              className="bg-black text-white rounded py-3 px-4 mt-3 hover:bg-gray-900"
+            >
               Submit
-            </Button>
+            </button>
           </div>
           {/* End of Input Section */}
 
           {/* Right Section */}
-          <div className="col-span-4 bg-blue-gray-100 p-5 text-gray-900">
+          <div className="col-span-4 bg-blue-gray-100 p-5 text-gray-900 rounded">
             <p className="font-semibold text-center text-sm mb-4">
               RINCIAN PELAKSANAAN PELAYANAN ADMINISTRASI PEMINJAMAN RUANG PKM
               DAN SC UNDIP
