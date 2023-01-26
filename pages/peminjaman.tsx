@@ -32,7 +32,7 @@ const Peminjaman: NextPage = () => {
 
   const [fileUrl, setFileUrl] = useState<string>("");
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!kegiatan) {
       setErrorKegiatan("Nama kegiatan tidak boleh kosong");
     } else {
@@ -57,6 +57,18 @@ const Peminjaman: NextPage = () => {
       seterrorWaktuKembali("");
     }
 
+    if (waktuPinjam > waktuKembali) {
+      seterrorWaktuPinjam(
+        "Waktu kembali tidak boleh lebih dahulu dari waktu pinjam"
+      );
+      seterrorWaktuKembali(
+        "Waktu kembali tidak boleh lebih dahulu dari waktu pinjam"
+      );
+    } else {
+      seterrorWaktuPinjam("");
+      seterrorWaktuKembali("");
+    }
+
     if (!file) {
       setErrorFile("File tidak boleh kosong");
     } else {
@@ -72,9 +84,6 @@ const Peminjaman: NextPage = () => {
           waktu_pinjam: new Date(waktuPinjam),
           waktu_kembali: new Date(waktuKembali),
           file: fileUrl,
-        }).then(() => {
-          alert("Data berhasil disimpan");
-          // TODO: Create success page
         });
       } catch (error) {
         console.log(error);

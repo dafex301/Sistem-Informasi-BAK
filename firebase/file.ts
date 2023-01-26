@@ -1,7 +1,7 @@
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../lib/firebaseConfig/init";
 
-export const uploadFile = async (
+export const uploadFile = (
   path: string,
   file: File,
   setFileUrl: React.Dispatch<React.SetStateAction<string>>
