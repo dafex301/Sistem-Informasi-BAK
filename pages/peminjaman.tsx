@@ -77,7 +77,7 @@ const Peminjaman: NextPage = () => {
 
     if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali && file) {
       try {
-        uploadFile("peminjaman", file, setFileUrl);
+        uploadFile("permohonan_peminjaman", file, setFileUrl);
         writePeminjaman({
           jenis_pinjaman: jenisPinjaman,
           kegiatan,

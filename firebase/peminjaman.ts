@@ -5,6 +5,11 @@ import {
   collection,
   DocumentReference,
   DocumentData,
+  where,
+  setDoc,
+  getDoc,
+  getDocs,
+  query,
 } from "firebase/firestore";
 
 interface IPeminjaman {
@@ -64,3 +69,49 @@ export const writePeminjaman = async (peminjaman: IPeminjaman) => {
     console.log(e);
   }
 };
+
+export const verifyPeminjaman = async (permohonanPeminjamanId: string) => {
+  const userRef = doc(db, "users", auth.currentUser!.uid);
+  const userSnap = await getDoc(userRef);
+  const user = userSnap.data();
+  const role = user!.role;
+
+  const permohonanPeminjaman = doc(
+    db,
+    "permohonan_peminjaman",
+    permohonanPeminjamanId
+  );
+
+  try {
+    switch (role) {
+      case "KBK":
+        await setDoc(
+          permohonanPeminjaman,
+          { paraf_KBK: true },
+          { merge: true }
+        );
+        break;
+      case "MK":
+        await setDoc(permohonanPeminjaman, { paraf_MK: true }, { merge: true });
+        break;
+      case "SM":
+        await setDoc(permohonanPeminjaman, { paraf_SM: true }, { merge: true });
+        break;
+      default:
+        break;
+    }
+
+    const logPeminjaman: ILogPeminjaman = {
+      permohonan_peminjaman: permohonanPeminjaman,
+      user: userRef,
+      aksi: "approve",
+      waktu: new Date(),
+    };
+
+    await addDoc(collection(db, "log_permohonan_peminjaman"), logPeminjaman);
+  } catch (e: any) {
+    console.log(e);
+  }
+};
+
+export const rejectPeminjaman = async (permohonanPeminjamanId: string) => {};
