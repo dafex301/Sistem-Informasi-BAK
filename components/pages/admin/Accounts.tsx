@@ -38,6 +38,7 @@ import {
   Option,
   Select,
 } from "@material-tailwind/react";
+import PageTitle from "../../layout/PageTitle";
 // import Select from "../../forms/Select";
 
 const Accounts: NextPage = () => {
@@ -306,9 +307,7 @@ const Accounts: NextPage = () => {
 
   return (
     <>
-      <h1 className="text-3xl font-bold -translate-y-14 mt-1 ml-5 w-0">
-        Accounts
-      </h1>
+      <PageTitle>Manajemen Akun</PageTitle>
       <div className="rounded-sm mx-5 -translate-y-20">
         <div className="flex justify-end items-center">
           <Button

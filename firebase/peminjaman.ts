@@ -10,9 +10,10 @@ import {
   getDoc,
   getDocs,
   query,
+  orderBy,
 } from "firebase/firestore";
 
-interface IPeminjaman {
+export interface IPeminjaman {
   jenis_pinjaman: string;
   kegiatan: string;
   waktu_pinjam: Date;
@@ -20,8 +21,8 @@ interface IPeminjaman {
   file: string;
 }
 
-interface IPeminjamanRequest extends IPeminjaman {
-  pemohon: DocumentReference<DocumentData>;
+export interface IPeminjamanRequest extends IPeminjaman {
+  pemohon: DocumentReference<DocumentData> | string;
   paraf_KBK: boolean;
   paraf_MK: boolean;
   paraf_SM: boolean;
@@ -30,12 +31,41 @@ interface IPeminjamanRequest extends IPeminjaman {
   created_at: Date;
 }
 
-interface ILogPeminjaman {
+export interface IPeminjamanData {
+  id: string;
+  peminjaman: IPeminjamanRequest;
+}
+
+export interface ILogPeminjaman {
   permohonan_peminjaman: DocumentReference<DocumentData>;
   user: DocumentReference<DocumentData>;
   aksi: "create" | "approve" | "reject" | "delete";
   waktu: Date;
 }
+
+export const getAllPeminjamanData = async () => {
+  const q = query(
+    collection(db, "permohonan_peminjaman"),
+    orderBy("created_at", "desc")
+  );
+  const querySnapshot = await getDocs(q);
+  const peminjaman: IPeminjamanData[] = [];
+  querySnapshot.forEach((doc) => {
+    // get name for pemohon
+    const pemohon = doc.data().pemohon;
+    const pemohonDoc = getDoc(pemohon);
+    pemohonDoc.then((pemohonData) => {
+      peminjaman.push({
+        id: doc.id,
+        peminjaman: {
+          ...doc.data(),
+          pemohon: pemohonData.data().name,
+        },
+      });
+    });
+  });
+  return peminjaman;
+};
 
 export const writePeminjaman = async (peminjaman: IPeminjaman) => {
   const pemohon = doc(db, "users", auth.currentUser!.uid);

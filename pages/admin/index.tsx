@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import PageTitle from "../../components/layout/PageTitle";
 
 const Home: NextPage = () => {
   return (
@@ -8,7 +9,7 @@ const Home: NextPage = () => {
         <title>Dashboard Admin</title>
       </Head>
 
-      <main>Admin home</main>
+      <PageTitle>Dashboard Admin</PageTitle>
     </>
   );
 };

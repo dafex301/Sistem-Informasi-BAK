@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import PageTitle from "../../components/layout/PageTitle";
 
 const ManajemenProposal: NextPage = () => {
   return (
@@ -8,9 +9,7 @@ const ManajemenProposal: NextPage = () => {
         <title>Manajemen Proposal</title>
       </Head>
 
-      <h1 className="text-3xl font-bold -translate-y-14 mt-1 ml-5 w-0">
-        Accounts
-      </h1>
+      <PageTitle>Manajemen Proposal</PageTitle>
     </>
   );
 };
