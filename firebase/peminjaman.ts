@@ -11,7 +11,12 @@ import {
   getDocs,
   query,
   orderBy,
+  deleteDoc,
 } from "firebase/firestore";
+
+import { getStorage, ref, deleteObject } from "firebase/storage";
+
+const storage = getStorage();
 
 export interface IPeminjaman {
   jenis_pinjaman: string;
@@ -47,11 +52,11 @@ export interface IPeminjamanData {
 export interface ILogPeminjaman {
   permohonan_peminjaman: DocumentReference<DocumentData>;
   user: DocumentReference<DocumentData>;
-  aksi: "create" | "approve" | "reject" | "delete";
+  aksi: "create" | "approve" | "reject" | "delete" | "update";
   waktu: Date;
 }
 
-export const getAllPeminjamanData = async () => {
+export const getAllPeminjaman = async () => {
   const q = query(
     collection(db, "permohonan_peminjaman"),
     orderBy("created_at", "desc")
@@ -159,3 +164,38 @@ export const verifyPeminjaman = async (permohonanPeminjamanId: string) => {
 };
 
 export const rejectPeminjaman = async (permohonanPeminjamanId: string) => {};
+
+export const deletePeminjaman = async (permohonanPeminjamanId: string) => {
+  const permohonanPeminjaman = doc(
+    db,
+    "permohonan_peminjaman",
+    permohonanPeminjamanId
+  );
+
+  try {
+    // Delete file from storage by url
+    // const permohonanPeminjamanSnap = await getDoc(permohonanPeminjaman);
+    // const permohonanPeminjamanData = permohonanPeminjamanSnap.data();
+    // const fileUrl = permohonanPeminjamanData!.file;
+    // const fileRef = ref(storage, fileUrl);
+    // await deleteObject(fileRef);
+
+    // Delete all logs related to this document
+    const q = query(
+      collection(db, "log_permohonan_peminjaman"),
+      where("permohonan_peminjaman", "==", permohonanPeminjaman)
+    );
+    const querySnapshot = await getDocs(q);
+
+    await Promise.all(
+      querySnapshot.docs.map(async (doc) => {
+        await deleteDoc(doc.ref);
+      })
+    );
+
+    // Delete document from firestore
+    await deleteDoc(permohonanPeminjaman);
+  } catch (e: any) {
+    console.log(e);
+  }
+};
