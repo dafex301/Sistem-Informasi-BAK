@@ -22,13 +22,21 @@ export interface IPeminjaman {
 }
 
 export interface IPeminjamanRequest extends IPeminjaman {
-  pemohon: DocumentReference<DocumentData> | string;
+  pemohon: DocumentReference<DocumentData> | DocumentData | undefined;
   paraf_KBK: boolean;
   paraf_MK: boolean;
   paraf_SM: boolean;
   rejected: boolean;
   rejected_reason: string;
   created_at: Date;
+}
+
+export interface IUserData {
+  email: string;
+  name: string;
+  role: string;
+  created_at: Date;
+  modifiedAt: Date;
 }
 
 export interface IPeminjamanData {
@@ -49,21 +57,27 @@ export const getAllPeminjamanData = async () => {
     orderBy("created_at", "desc")
   );
   const querySnapshot = await getDocs(q);
-  const peminjaman: IPeminjamanData[] = [];
+  const peminjaman: any = [];
+
   querySnapshot.forEach((doc) => {
-    // get name for pemohon
-    const pemohon = doc.data().pemohon;
-    const pemohonDoc = getDoc(pemohon);
-    pemohonDoc.then((pemohonData) => {
-      peminjaman.push({
-        id: doc.id,
-        peminjaman: {
-          ...doc.data(),
-          pemohon: pemohonData.data().name,
-        },
-      });
+    peminjaman.push({
+      id: doc.id,
+      peminjaman: doc.data(),
     });
   });
+
+  // Foreach peminjaman, get pemohon data from user
+  // Edit peminjaman.pemohon to pemohon data
+
+  await Promise.all(
+    peminjaman.map(async (p: IPeminjamanData) => {
+      if (p.peminjaman.pemohon instanceof DocumentReference<DocumentData>) {
+        const pemohon = await getDoc(p.peminjaman.pemohon);
+        p.peminjaman.pemohon = pemohon.data();
+      }
+    })
+  );
+
   return peminjaman;
 };
 

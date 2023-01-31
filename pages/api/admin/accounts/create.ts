@@ -28,7 +28,7 @@ export default async function handler(
       });
 
       // Firestore timestamp
-      let createdAt = admin.firestore.Timestamp.fromDate(new Date());
+      let created_at = admin.firestore.Timestamp.fromDate(new Date());
 
       // Create user in firestore
       await admin.firestore().collection("users").doc(user.uid).set({
@@ -36,8 +36,8 @@ export default async function handler(
         name,
         identifier,
         role,
-        createdAt,
-        modifiedAt: createdAt,
+        created_at,
+        modifiedAt: created_at,
       });
 
       res.status(200).json({ message: "Success" });

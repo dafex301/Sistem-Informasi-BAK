@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageTitle from "../components/layout/PageTitle";
 import { useAuth } from "../lib/authContext";
 
@@ -78,18 +78,24 @@ const Peminjaman: NextPage = () => {
     if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali && file) {
       try {
         uploadFile("permohonan_peminjaman", file, setFileUrl);
-        writePeminjaman({
-          jenis_pinjaman: jenisPinjaman,
-          kegiatan,
-          waktu_pinjam: new Date(waktuPinjam),
-          waktu_kembali: new Date(waktuKembali),
-          file: fileUrl,
-        });
       } catch (error) {
         console.log(error);
       }
     }
   };
+
+  useEffect(() => {
+    if (fileUrl) {
+      writePeminjaman({
+        jenis_pinjaman: jenisPinjaman,
+        kegiatan,
+        waktu_pinjam: new Date(waktuPinjam),
+        waktu_kembali: new Date(waktuKembali),
+        file: fileUrl,
+      });
+    }
+    setFileUrl("");
+  }, [fileUrl, jenisPinjaman, kegiatan, waktuPinjam, waktuKembali]);
 
   return (
     <>
