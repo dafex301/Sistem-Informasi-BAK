@@ -174,11 +174,11 @@ export const deletePeminjaman = async (permohonanPeminjamanId: string) => {
 
   try {
     // Delete file from storage by url
-    // const permohonanPeminjamanSnap = await getDoc(permohonanPeminjaman);
-    // const permohonanPeminjamanData = permohonanPeminjamanSnap.data();
-    // const fileUrl = permohonanPeminjamanData!.file;
-    // const fileRef = ref(storage, fileUrl);
-    // await deleteObject(fileRef);
+    const permohonanPeminjamanSnap = await getDoc(permohonanPeminjaman);
+    const permohonanPeminjamanData = permohonanPeminjamanSnap.data();
+    const fileUrl = permohonanPeminjamanData!.file;
+    const fileRef = ref(storage, fileUrl);
+    await deleteObject(fileRef);
 
     // Delete all logs related to this document
     const q = query(
