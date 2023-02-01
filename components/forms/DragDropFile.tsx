@@ -22,7 +22,7 @@ export default function DragDropFile(props: DragDropFileProps) {
   const inputRef = React.useRef(null);
 
   // handle drag events
-  const handleDrag = function (e) {
+  const handleDrag = function (e: any) {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === "dragenter" || e.type === "dragover") {
@@ -33,7 +33,7 @@ export default function DragDropFile(props: DragDropFileProps) {
   };
 
   // triggers when file is dropped
-  const handleDrop = function (e) {
+  const handleDrop = function (e: any) {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
@@ -45,18 +45,13 @@ export default function DragDropFile(props: DragDropFileProps) {
   };
 
   // triggers when file is selected with click
-  const handleChange = function (e) {
+  const handleChange = function (e: any) {
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
       //   console.log(e.target.files[0]);
       //   props.setFile(e.target.files[0]);
       handleUpload(e.target.files[0]);
     }
-  };
-
-  // triggers the input when the button is clicked
-  const onButtonClick = () => {
-    inputRef.current.click();
   };
 
   const handleUpload = (file: File) => {
