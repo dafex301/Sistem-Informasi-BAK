@@ -1,5 +1,4 @@
-import Header from "./Header";
-import Footer from "./Footer";
+import Header from "./header";
 import { useAuth } from "../../lib/authContext";
 import Loading from "../Loading";
 import { useRouter } from "next/router";
