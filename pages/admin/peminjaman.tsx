@@ -2,20 +2,25 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 
 // Components
 import PageTitle from "../../components/layout/PageTitle";
 import Table from "react-tailwind-table";
+import { Irow } from "react-tailwind-table";
 import { tableStyling } from "../../components/table/tableStyling";
 import { useEffect, useState } from "react";
+import { Irender_row } from "../../interface/table";
+import PageBody from "../../components/layout/PageBody";
+import { Dialog } from "@material-tailwind/react";
+import { useForm } from "react-hook-form";
+
+// Data
 import {
   getAllPeminjaman,
   deletePeminjaman,
   IPeminjamanData,
 } from "../../firebase/peminjaman";
-import { Irender_row } from "../../interface/table";
-import PageBody from "../../components/layout/PageBody";
-import { Dialog } from "@material-tailwind/react";
 
 const PDFViewer = dynamic(() => import("../../components/PDFViewer"), {
   ssr: false,
@@ -47,7 +52,7 @@ const columns = [
     // use_in_search:false
   },
   {
-    field: "peminjaman.file",
+    field: "aksi",
     use: "Aksi",
     use_in_search: false,
   },
@@ -61,8 +66,9 @@ const columns = [
 const ManajemenPeminjaman: NextPage = () => {
   // State
   const [data, setData] = useState<IPeminjamanData[]>([]);
-  const [file, setFile] = useState<string>("");
-  const [selected, setSelected] = useState<IPeminjamanData | null>(null);
+  const [selected, setSelected] = useState<
+    [string, Irow | IPeminjamanData | undefined]
+  >(["", undefined]);
 
   // Get Data
   useEffect(() => {
@@ -75,9 +81,11 @@ const ManajemenPeminjaman: NextPage = () => {
   }, [data.length]);
 
   // Handler
-  const handleDelete = async (id: string) => {
-    await deletePeminjaman(id);
-    setData([]);
+  const handleDelete = async () => {
+    await deletePeminjaman(selected[1]?.id).then(() => {
+      setData([]);
+      setSelected(["", undefined]);
+    });
   };
 
   const rowcheck: Irender_row = (row, column, display_value) => {
@@ -115,13 +123,13 @@ const ManajemenPeminjaman: NextPage = () => {
       }
     }
 
-    if (column.field === "peminjaman.file") {
+    if (column.field === "aksi") {
       return (
         <div className="flex items-center gap-1">
           {/* File Button */}
           <button
             className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700"
-            onClick={() => setFile(row.peminjaman.file)}
+            onClick={() => setSelected(["file", row])}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -138,7 +146,7 @@ const ManajemenPeminjaman: NextPage = () => {
 
           <button
             className="bg-cyan-500 text-white p-2 rounded-md hover:bg-cyan-700"
-            onClick={() => {}}
+            onClick={() => setSelected(["update", row])}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -153,7 +161,7 @@ const ManajemenPeminjaman: NextPage = () => {
           {/* Delete Button */}
           <button
             className="bg-red-500 text-white p-2 rounded-md hover:bg-red-700"
-            onClick={() => handleDelete(row.id)}
+            onClick={() => setSelected(["delete", row])}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -193,11 +201,47 @@ const ManajemenPeminjaman: NextPage = () => {
       </PageBody>
 
       <Dialog
-        open={Boolean(file)}
-        handler={() => setFile("")}
-        className="overflow-scroll h-5/6 min-w-min"
+        open={Boolean(selected[0])}
+        handler={() => setSelected(["", undefined])}
+        className="overflow-auto min-w-min w-auto"
       >
-        <PDFViewer file={file} />
+        {selected[0] === "file" && (
+          <div className="h-[36rem]">
+            <PDFViewer file={selected[1]?.peminjaman.file} />
+          </div>
+        )}
+
+        {selected[0] === "delete" && (
+          <div className="w-96 flex flex-col gap-4 justify-center items-center text-center px-5 py-10">
+            <Image
+              src={"/assets/delete-document.png"}
+              width={512}
+              height={512}
+              alt={"Document"}
+              className="w-24 h-24"
+            />
+            <h2 className="text-xl font-semibold text-gray-800">
+              Apakah anda yakin untuk menghapus permohonan peminjaman ini?
+            </h2>
+            <p className="text-gray-800">{selected[1]?.peminjaman.kegiatan}</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setSelected(["", undefined])}
+                className="border border-gray-400 px-8 py-1 rounded-md text-gray-800 focus:outline-none hover:bg-gray-50 shadow-sm font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="border border-red-400 px-8 py-1 rounded-md text-white focus:outline-none bg-red-600 hover:bg-red-700 shadow-sm font-medium"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        )}
+
+        {selected[0] === "update" && <p>Update</p>}
       </Dialog>
     </>
   );

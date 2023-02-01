@@ -1,7 +1,7 @@
 // Next
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
-import "react-tailwind-table/dist/index.css";
+// import "react-tailwind-table/dist/index.css";
 
 // Firebase
 import {
@@ -27,7 +27,6 @@ import { tableStyling } from "../../table/tableStyling";
 import { useAuth } from "../../../lib/authContext";
 import { userAccount } from "../../../interface/userAccount";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
   Chip,
@@ -39,6 +38,7 @@ import {
   Select,
 } from "@material-tailwind/react";
 import PageTitle from "../../layout/PageTitle";
+import { titleCase } from "../../../lib/functions";
 // import Select from "../../forms/Select";
 
 const Accounts: NextPage = () => {
@@ -337,7 +337,7 @@ const Accounts: NextPage = () => {
           <>
             <DialogHeader>
               <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-                Create Account
+                {`${titleCase(modal)} Account`}
               </h3>
             </DialogHeader>
             <DialogBody divider className="flex items-center justify-center">

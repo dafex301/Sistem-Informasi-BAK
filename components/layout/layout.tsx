@@ -72,14 +72,14 @@ export default function Layout({ children }: Props) {
             {/* Menu */}
             <div className="flex flex-col gap-8 mt-12 mx-2 text-gray-500">
               {/* Main Menu */}
+              <SidebarMenu
+                href={"/"}
+                solidIcon={<SquaresSolid />}
+                outlineIcon={<SquaresOutline />}
+                text={"Dashboard"}
+              />
               <div>
                 <p className="text-xs mx-3 mb-2 text-gray-600">Menu Utama</p>
-                <SidebarMenu
-                  href={"/"}
-                  solidIcon={<SquaresSolid />}
-                  outlineIcon={<SquaresOutline />}
-                  text={"Dashboard"}
-                />
                 <SidebarMenu
                   href={"/peminjaman"}
                   solidIcon={<BuildingSolid />}
