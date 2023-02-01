@@ -22,10 +22,10 @@ const Peminjaman: NextPage = () => {
   const [errorJenisPinjaman, setErrorJenisPinjaman] = useState<string>("");
 
   const [waktuPinjam, setWaktuPinjam] = useState<string>("");
-  const [errorWaktuPinjam, seterrorWaktuPinjam] = useState<string>("");
+  const [errorWaktuPinjam, setErrorWaktuPinjam] = useState<string>("");
 
   const [waktuKembali, setWaktuKembali] = useState<string>("");
-  const [errorWaktuKembali, seterrorWaktuKembali] = useState<string>("");
+  const [errorWaktuKembali, setErrorWaktuKembali] = useState<string>("");
 
   const [file, setFile] = useState<File | null>(null);
   const [errorFile, setErrorFile] = useState<string>("");
@@ -46,27 +46,29 @@ const Peminjaman: NextPage = () => {
     }
 
     if (!waktuPinjam) {
-      seterrorWaktuPinjam("Waktu pinjam tidak boleh kosong");
+      setErrorWaktuPinjam("Waktu pinjam tidak boleh kosong");
     } else {
-      seterrorWaktuPinjam("");
+      setErrorWaktuPinjam("");
     }
 
     if (!waktuKembali) {
-      seterrorWaktuKembali("Waktu kembali tidak boleh kosong");
+      setErrorWaktuKembali("Waktu kembali tidak boleh kosong");
     } else {
-      seterrorWaktuKembali("");
+      setErrorWaktuKembali("");
     }
 
-    if (waktuPinjam > waktuKembali) {
-      seterrorWaktuPinjam(
-        "Waktu kembali tidak boleh lebih dahulu dari waktu pinjam"
-      );
-      seterrorWaktuKembali(
-        "Waktu kembali tidak boleh lebih dahulu dari waktu pinjam"
-      );
-    } else {
-      seterrorWaktuPinjam("");
-      seterrorWaktuKembali("");
+    if (waktuPinjam && waktuKembali) {
+      if (waktuPinjam > waktuKembali) {
+        setErrorWaktuPinjam(
+          "Waktu kembali tidak boleh lebih dahulu dari waktu pinjam"
+        );
+        setErrorWaktuKembali(
+          "Waktu kembali tidak boleh lebih dahulu dari waktu pinjam"
+        );
+      } else {
+        setErrorWaktuPinjam("");
+        setErrorWaktuKembali("");
+      }
     }
 
     if (!file) {
@@ -164,7 +166,7 @@ const Peminjaman: NextPage = () => {
               setFile={setFile}
               setErrorFile={setErrorFile}
               label="Scan Permohonan Peminjaman"
-              filetype={[".pdf", ".jpeg"]}
+              filetype={[".pdf"]}
               maxSize={512000}
               file={file}
               error={errorFile}

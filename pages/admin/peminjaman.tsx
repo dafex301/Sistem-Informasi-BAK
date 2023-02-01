@@ -12,8 +12,8 @@ import { tableStyling } from "../../components/table/tableStyling";
 import { useEffect, useState } from "react";
 import { Irender_row } from "../../interface/table";
 import PageBody from "../../components/layout/PageBody";
-import { Dialog } from "@material-tailwind/react";
-import { useForm } from "react-hook-form";
+import { Dialog, Input, Option, Select } from "@material-tailwind/react";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 // Data
 import {
@@ -63,6 +63,14 @@ const columns = [
   // },
 ];
 
+// Input Type
+interface IPeminjamanUpdate {
+  kegiatan: string;
+  jenis_pinjaman: string;
+  waktu_pinjam: string;
+  waktu_kembali: string;
+}
+
 const ManajemenPeminjaman: NextPage = () => {
   // State
   const [data, setData] = useState<IPeminjamanData[]>([]);
@@ -88,6 +96,7 @@ const ManajemenPeminjaman: NextPage = () => {
     });
   };
 
+  // Table
   const rowcheck: Irender_row = (row, column, display_value) => {
     if (column.field === "peminjaman.kegiatan") {
       return (
@@ -241,7 +250,44 @@ const ManajemenPeminjaman: NextPage = () => {
           </div>
         )}
 
-        {selected[0] === "update" && <p>Update</p>}
+        {selected[0] === "update" && (
+          <div className="flex flex-col p-5 h-96 w-[36rem] gap-5">
+            <div className="">
+              <h2 className="font-semibold text-lg text-gray-900">
+                Update Permohonan Peminjaman
+              </h2>
+            </div>
+            <div className="flex flex-col gap-4">
+              <label htmlFor="name" className="text-sm">
+                Nama Kegiatan
+              </label>
+              <input id="name" />
+              <Select>
+                <Option value="Halaman Depan Diponegoro (Parkir)">
+                  Halaman Depan Diponegoro (Parkir)
+                </Option>
+                <Option value="Belakang SC atau Gazebo (Barat)">
+                  Belakang SC atau Gazebo (Barat)
+                </Option>
+                <Option value="Belakang SC atau Gazebo (Tengah)">
+                  Belakang SC atau Gazebo (Tengah)
+                </Option>
+                <Option value="Belakang SC atau Gazebo (Timur)">
+                  Belakang SC atau Gazebo (Timur)
+                </Option>
+              </Select>
+              <div className="grid grid-cols-2 gap-3">
+                <Input label="Waktu Pinjam" required type="datetime-local" />
+                <Input label="Waktu Kembali" required type="datetime-local" />
+              </div>
+            </div>
+
+            <div>
+              <button>Cancel</button>
+              <button className="bg-blue-500 text-white">Save</button>
+            </div>
+          </div>
+        )}
       </Dialog>
     </>
   );

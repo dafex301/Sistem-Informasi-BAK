@@ -372,7 +372,6 @@ const Accounts: NextPage = () => {
                   </div>
 
                   <Select
-                    variant="outlined"
                     label="Role"
                     value={updatedRole}
                     onChange={(e) => setUpdatedRole(e?.toString())}
