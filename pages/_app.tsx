@@ -1,10 +1,9 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import Layout from "../components/layout/Layout";
+import Layout from "../components/layout/layout";
 import FirebaseProvider from "../lib/authContext";
 import "../lib/firebaseConfig/init";
 import { useRouter } from "next/router";
-import { AuthLayout } from "../components/layout/AuthLayout";
 import { ThemeProvider } from "@material-tailwind/react";
 
 // Import style
@@ -17,9 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
       <ThemeProvider>
         <FirebaseProvider>
-          {/* <AuthLayout> */}
           <Component {...pageProps} />
-          {/* </AuthLayout> */}
         </FirebaseProvider>
       </ThemeProvider>
     );
