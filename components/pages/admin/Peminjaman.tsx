@@ -30,6 +30,7 @@ import {
   EditButton,
   FileButton,
   RejectButton,
+  RevisionButton,
   VerifyButton,
 } from "../../button/ActionButton";
 
@@ -302,12 +303,17 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
             </>
           )}
 
-          {props.role === "UKM" &&
+          {(props.role === "UKM" &&
             row.peminjaman.status === "Diproses KBAK" && (
               <>
                 <EditButton row={row} setSelected={setSelected} />
               </>
-            )}
+            )) ||
+            (row.peminjaman.status === "Ditolak" && (
+              <>
+                <RevisionButton row={row} setSelected={setSelected} />
+              </>
+            ))}
 
           {props.type === "verify" && (
             <>
