@@ -91,7 +91,7 @@ export default function DragDropFile(props: DragDropFileProps) {
   return (
     <>
       <label
-        className="block uppercase tracking-wide text-gray-700 text-xs font-bold"
+        className="block tracking-wide text-gray-700 text-sm font-bold"
         htmlFor="input-file-upload"
       >
         {props.label}
@@ -114,8 +114,8 @@ export default function DragDropFile(props: DragDropFileProps) {
           htmlFor="input-file-upload"
           className={
             props.error
-              ? "flex flex-col items-center justify-center w-full h-64 border-2 border-red-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-red-600 dark:hover:border-red-500 dark:hover:bg-gray-600"
-              : "flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+              ? "flex flex-col items-center justify-center w-full h-64 border-2 border-red-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-200 dark:border-red-600 dark:hover:border-red-500 dark:hover:bg-gray-600"
+              : "flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-200 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
           }
         >
           {fileNameLegacy ? (

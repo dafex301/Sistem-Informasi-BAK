@@ -9,11 +9,12 @@ import PageTitle from "../../components/layout/PageTitle";
 import Table from "react-tailwind-table";
 import { Irow } from "react-tailwind-table";
 import { tableStyling } from "../../components/table/tableStyling";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Irender_row } from "../../interface/table";
 import PageBody from "../../components/layout/PageBody";
-import { Dialog, Input, Option, Select } from "@material-tailwind/react";
+import { Dialog } from "@material-tailwind/react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import Input from "../../components/forms/Input";
 
 // Data
 import {
@@ -21,6 +22,7 @@ import {
   deletePeminjaman,
   IPeminjamanData,
 } from "../../firebase/peminjaman";
+import Select from "../../components/forms/Select";
 
 const PDFViewer = dynamic(() => import("../../components/PDFViewer"), {
   ssr: false,
@@ -251,40 +253,81 @@ const ManajemenPeminjaman: NextPage = () => {
         )}
 
         {selected[0] === "update" && (
-          <div className="flex flex-col p-5 h-96 w-[36rem] gap-5">
+          <div className="flex flex-col p-5 h-auto w-[36rem] gap-5">
             <div className="">
               <h2 className="font-semibold text-lg text-gray-900">
                 Update Permohonan Peminjaman
               </h2>
             </div>
             <div className="flex flex-col gap-4">
-              <label htmlFor="name" className="text-sm">
-                Nama Kegiatan
-              </label>
-              <input id="name" />
-              <Select>
-                <Option value="Halaman Depan Diponegoro (Parkir)">
+              <Input
+                label="Nama Kegiatan"
+                error={""}
+                onChange={function (e: ChangeEvent<HTMLInputElement>): void {
+                  throw new Error("Function not implemented.");
+                }}
+                id={"nama-kegiatan"}
+                value={""}
+                style="light"
+                required
+              />
+              <Select
+                label={"Jenis Pinjaman"}
+                required
+                value={""}
+                onChange={function (e: ChangeEvent<HTMLSelectElement>): void {
+                  throw new Error("Function not implemented.");
+                }}
+                error={""}
+                id={"jenis-pinjaman"}
+                style="light"
+              >
+                <option value="Halaman Depan Diponegoro (Parkir)">
                   Halaman Depan Diponegoro (Parkir)
-                </Option>
-                <Option value="Belakang SC atau Gazebo (Barat)">
+                </option>
+                <option value="Belakang SC atau Gazebo (Barat)">
                   Belakang SC atau Gazebo (Barat)
-                </Option>
-                <Option value="Belakang SC atau Gazebo (Tengah)">
+                </option>
+                <option value="Belakang SC atau Gazebo (Tengah)">
                   Belakang SC atau Gazebo (Tengah)
-                </Option>
-                <Option value="Belakang SC atau Gazebo (Timur)">
+                </option>
+                <option value="Belakang SC atau Gazebo (Timur)">
                   Belakang SC atau Gazebo (Timur)
-                </Option>
+                </option>
               </Select>
               <div className="grid grid-cols-2 gap-3">
-                <Input label="Waktu Pinjam" required type="datetime-local" />
-                <Input label="Waktu Kembali" required type="datetime-local" />
+                <Input
+                  label="Waktu Pinjam"
+                  type="datetime-local"
+                  error={""}
+                  onChange={function (e: ChangeEvent<HTMLInputElement>): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                  id={""}
+                  value={""}
+                  style="light"
+                />
+                <Input
+                  label="Waktu Kembali"
+                  type="datetime-local"
+                  error={""}
+                  onChange={function (e: ChangeEvent<HTMLInputElement>): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                  id={""}
+                  value={""}
+                  style="light"
+                />
               </div>
             </div>
 
-            <div>
-              <button>Cancel</button>
-              <button className="bg-blue-500 text-white">Save</button>
+            <div className="w-full grid grid-cols-2 gap-3 font-medium">
+              <button className="border border-gray-300 text-gray-800 p-2 rounded-md hover:bg-gray-100">
+                Cancel
+              </button>
+              <button className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">
+                Save
+              </button>
             </div>
           </div>
         )}
