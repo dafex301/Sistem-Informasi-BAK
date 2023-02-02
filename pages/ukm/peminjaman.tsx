@@ -2,16 +2,18 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import PageTitle from "../../components/layout/PageTitle";
 import ManajemenPeminjaman from "../../components/pages/admin/Peminjaman";
+import { useAuth } from "../../lib/authContext";
 
 const ManajemenPeminjamanPage: NextPage = () => {
+  const { user, loading } = useAuth();
   return (
     <>
       <Head>
-        <title>Manajemen Peminjaman</title>
+        <title>Data Permohonan Peminjaman</title>
       </Head>
 
-      <PageTitle>Manajemen Peminjaman</PageTitle>
-      <ManajemenPeminjaman role="admin" />
+      <PageTitle>Data Permohonan Peminjaman</PageTitle>
+      <ManajemenPeminjaman role={user?.claims.role} />
     </>
   );
 };

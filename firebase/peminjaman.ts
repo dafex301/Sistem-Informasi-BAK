@@ -36,6 +36,7 @@ export interface IPeminjamanRequest extends IPeminjaman {
   rejected: boolean;
   rejected_reason: string;
   created_at: Date;
+  status?: string;
 }
 
 export interface IUserData {
@@ -58,11 +59,53 @@ export interface ILogPeminjaman {
   waktu: Date;
 }
 
-export const getAllPeminjaman = async () => {
-  const q = query(
-    collection(db, "permohonan_peminjaman"),
-    orderBy("created_at", "desc")
-  );
+export const getAllPeminjaman = async (
+  role?: "admin" | "KBAK" | "MK" | "SM" | "UKM"
+) => {
+  const userRef = doc(db, "users", auth.currentUser!.uid);
+
+  let q;
+
+  if (role === "KBAK") {
+    q = query(
+      collection(db, "permohonan_peminjaman"),
+      orderBy("created_at", "desc"),
+      where("paraf_KBK", "==", false),
+      where("paraf_MK", "==", false),
+      where("paraf_SM", "==", false),
+      where("rejected", "==", false)
+    );
+  } else if (role === "MK") {
+    q = query(
+      collection(db, "permohonan_peminjaman"),
+      orderBy("created_at", "desc"),
+      where("paraf_KBK", "==", true),
+      where("paraf_MK", "==", false),
+      where("paraf_SM", "==", false),
+      where("rejected", "==", false)
+    );
+  } else if (role === "SM") {
+    q = query(
+      collection(db, "permohonan_peminjaman"),
+      orderBy("created_at", "desc"),
+      where("paraf_KBK", "==", true),
+      where("paraf_MK", "==", true),
+      where("paraf_SM", "==", false),
+      where("rejected", "==", false)
+    );
+  } else if (role === "UKM") {
+    q = query(
+      collection(db, "permohonan_peminjaman"),
+      orderBy("created_at", "desc"),
+      where("pemohon", "==", userRef)
+    );
+  } else {
+    q = query(
+      collection(db, "permohonan_peminjaman"),
+      orderBy("created_at", "desc")
+    );
+  }
+
   const querySnapshot = await getDocs(q);
   const peminjaman: any = [];
 
@@ -81,6 +124,19 @@ export const getAllPeminjaman = async () => {
       if (p.peminjaman.pemohon instanceof DocumentReference<DocumentData>) {
         const pemohon = await getDoc(p.peminjaman.pemohon);
         p.peminjaman.pemohon = pemohon.data();
+
+        // Set status peminjaman from boolean to string
+        if (p.peminjaman.rejected) {
+          p.peminjaman.status = "Ditolak";
+        } else if (p.peminjaman.paraf_SM) {
+          p.peminjaman.status = "Disetujui";
+        } else if (p.peminjaman.paraf_MK) {
+          p.peminjaman.status = "Diproses SM";
+        } else if (p.peminjaman.paraf_KBK) {
+          p.peminjaman.status = "Diproses MK";
+        } else {
+          p.peminjaman.status = "Diproses KBAK";
+        }
       }
     })
   );
@@ -121,21 +177,17 @@ export const writePeminjaman = async (peminjaman: IPeminjaman) => {
   }
 };
 
-export const verifyPeminjaman = async (permohonanPeminjamanId: string) => {
+export const approvePeminjaman = async (id: string) => {
   const userRef = doc(db, "users", auth.currentUser!.uid);
   const userSnap = await getDoc(userRef);
   const user = userSnap.data();
   const role = user!.role;
 
-  const permohonanPeminjaman = doc(
-    db,
-    "permohonan_peminjaman",
-    permohonanPeminjamanId
-  );
+  const permohonanPeminjaman = doc(db, "permohonan_peminjaman", id);
 
   try {
     switch (role) {
-      case "KBK":
+      case "KBAK":
         await setDoc(
           permohonanPeminjaman,
           { paraf_KBK: true },
@@ -165,7 +217,37 @@ export const verifyPeminjaman = async (permohonanPeminjamanId: string) => {
   }
 };
 
-export const rejectPeminjaman = async (permohonanPeminjamanId: string) => {};
+export const rejectPeminjaman = async (id: string, reason: string) => {
+  const userRef = doc(db, "users", auth.currentUser!.uid);
+
+  const permohonanPeminjaman = doc(db, "permohonan_peminjaman", id);
+
+  try {
+    await setDoc(
+      permohonanPeminjaman,
+      {
+        paraf_KBK: false,
+        paraf_MK: false,
+        paraf_SM: false,
+
+        rejected: true,
+        rejected_reason: reason,
+      },
+      { merge: true }
+    );
+
+    const logPeminjaman: ILogPeminjaman = {
+      permohonan_peminjaman: permohonanPeminjaman,
+      user: userRef,
+      aksi: "reject",
+      waktu: new Date(),
+    };
+
+    await addDoc(collection(db, "log_permohonan_peminjaman"), logPeminjaman);
+  } catch (e: any) {
+    console.log(e);
+  }
+};
 
 export const updatePeminjaman = async (
   id: string,
@@ -217,8 +299,8 @@ export const deletePeminjaman = async (permohonanPeminjamanId: string) => {
       })
     );
 
-    // Delete document from firestore
     await deleteDoc(permohonanPeminjaman);
+    // Delete document from firestore
   } catch (e: any) {
     console.log(e);
   }

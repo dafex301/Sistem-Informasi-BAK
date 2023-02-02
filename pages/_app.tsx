@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import Layout from "../components/layout/layout";
+import Layout from "../components/layout/Layout";
 import FirebaseProvider from "../lib/authContext";
 import "../lib/firebaseConfig/init";
 import { useRouter } from "next/router";

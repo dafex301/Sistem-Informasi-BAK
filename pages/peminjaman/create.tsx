@@ -1,15 +1,15 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import PageTitle from "../components/layout/PageTitle";
-import { useAuth } from "../lib/authContext";
+import PageTitle from "../../components/layout/PageTitle";
+import { useAuth } from "../../lib/authContext";
 
-import Input from "../components/forms/Input";
-import Select from "../components/forms/Select";
-import DateTimePicker from "../components/forms/DateTimePicker";
-import DragDropFile from "../components/forms/DragDropFile";
-import { uploadFile } from "../firebase/file";
-import { writePeminjaman } from "../firebase/peminjaman";
+import Input from "../../components/forms/Input";
+import Select from "../../components/forms/Select";
+import DateTimePicker from "../../components/forms/DateTimePicker";
+import DragDropFile from "../../components/forms/DragDropFile";
+import { uploadFile } from "../../firebase/file";
+import { writePeminjaman } from "../../firebase/peminjaman";
 
 const Peminjaman: NextPage = () => {
   const { user, loading } = useAuth();
