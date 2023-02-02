@@ -37,7 +37,7 @@ export default async function handler(
         identifier,
         role,
         created_at,
-        modifiedAt: created_at,
+        modified_at: created_at,
       });
 
       res.status(200).json({ message: "Success" });

@@ -6,9 +6,7 @@ import Image from "next/image";
 
 // Components
 import PageTitle from "../../components/layout/PageTitle";
-import Table from "react-tailwind-table";
 import { Irow } from "react-tailwind-table";
-import { tableStyling } from "../../components/table/tableStyling";
 import { useEffect, useState } from "react";
 import { Irender_row } from "../../interface/table";
 import PageBody from "../../components/layout/PageBody";
@@ -24,6 +22,7 @@ import {
   updatePeminjaman,
 } from "../../firebase/peminjaman";
 import Select from "../../components/forms/Select";
+import DataTable from "../../components/table/Table";
 
 const PDFViewer = dynamic(() => import("../../components/PDFViewer"), {
   ssr: false,
@@ -293,10 +292,9 @@ const ManajemenPeminjaman: NextPage = () => {
 
       <PageTitle>Manajemen Peminjaman</PageTitle>
       <PageBody>
-        <Table
+        <DataTable
           // per_page={3}
           row_render={rowcheck}
-          styling={tableStyling}
           columns={columns}
           rows={data}
         />

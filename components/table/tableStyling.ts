@@ -16,7 +16,7 @@ export const tableStyling = {
   },
   table_head: {
     table_row: "bg-red-500 text-red-500",
-    table_data: " bg-gray-900 text-white",
+    table_data: " bg-gray-900 text-white text-center",
   },
   table_body: {
     // main: "bg-red-600",

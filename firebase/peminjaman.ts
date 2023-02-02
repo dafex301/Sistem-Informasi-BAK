@@ -43,7 +43,7 @@ export interface IUserData {
   name: string;
   role: string;
   created_at: Date;
-  modifiedAt: Date;
+  modified_at: Date;
 }
 
 export interface IPeminjamanData {

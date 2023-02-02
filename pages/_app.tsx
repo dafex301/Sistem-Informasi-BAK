@@ -8,7 +8,7 @@ import { ThemeProvider } from "@material-tailwind/react";
 // Import style
 import "../styles/globals.css";
 import "../components/forms/css/DragDropFile.css";
-import "react-tailwind-table/dist/index.css";
+// import "react-tailwind-table/dist/index.css";
 import "react-toastify/dist/ReactToastify.css";
 
 function MyApp({ Component, pageProps }: AppProps) {

@@ -39,6 +39,7 @@ import {
 } from "@material-tailwind/react";
 import PageTitle from "../../layout/PageTitle";
 import { titleCase } from "../../../lib/functions";
+import DataTable from "../../table/Table";
 // import Select from "../../forms/Select";
 
 const Accounts: NextPage = () => {
@@ -318,13 +319,12 @@ const Accounts: NextPage = () => {
             Create Account
           </Button>
         </div>
-        <Table
+        <DataTable
           // per_page={3}
           row_render={rowcheck}
-          styling={tableStyling}
           columns={columns}
           rows={data}
-        ></Table>
+        ></DataTable>
       </div>
 
       <Dialog

@@ -21,14 +21,14 @@ export default async function handler(
       });
 
       // Firestore timestamp
-      let modifiedAt = admin.firestore.Timestamp.fromDate(new Date());
+      let modified_at = admin.firestore.Timestamp.fromDate(new Date());
 
       // Update user in firestore
       await admin.firestore().collection("users").doc(id).update({
         name,
         identifier,
         role,
-        modifiedAt,
+        modified_at,
       });
 
       res.status(200).json({ message: "Success" });
