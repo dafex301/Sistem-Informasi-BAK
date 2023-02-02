@@ -9,18 +9,19 @@ import PageTitle from "../../components/layout/PageTitle";
 import Table from "react-tailwind-table";
 import { Irow } from "react-tailwind-table";
 import { tableStyling } from "../../components/table/tableStyling";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Irender_row } from "../../interface/table";
 import PageBody from "../../components/layout/PageBody";
 import { Dialog } from "@material-tailwind/react";
-import { useForm, SubmitHandler } from "react-hook-form";
 import Input from "../../components/forms/Input";
+import { ToastContainer, toast } from "react-toastify";
 
 // Data
 import {
   getAllPeminjaman,
   deletePeminjaman,
   IPeminjamanData,
+  updatePeminjaman,
 } from "../../firebase/peminjaman";
 import Select from "../../components/forms/Select";
 
@@ -38,6 +39,10 @@ const columns = [
     // use_in_display: false,
     field: "peminjaman.pemohon.name",
     use: "Pemohon",
+  },
+  {
+    field: "peminjaman.jenis_pinjaman",
+    use: "Jenis Pinjaman",
   },
   {
     field: "peminjaman.waktu_pinjam",
@@ -65,20 +70,25 @@ const columns = [
   // },
 ];
 
-// Input Type
-interface IPeminjamanUpdate {
-  kegiatan: string;
-  jenis_pinjaman: string;
-  waktu_pinjam: string;
-  waktu_kembali: string;
-}
-
 const ManajemenPeminjaman: NextPage = () => {
-  // State
+  // Data State
   const [data, setData] = useState<IPeminjamanData[]>([]);
   const [selected, setSelected] = useState<
     [string, Irow | IPeminjamanData | undefined]
   >(["", undefined]);
+
+  // Input State
+  const [kegiatan, setKegiatan] = useState("");
+  const [errorKegiatan, setErrorKegiatan] = useState("");
+
+  const [jenisPinjaman, setJenisPinjaman] = useState("");
+  const [errorJenisPinjaman, setErrorJenisPinjaman] = useState("");
+
+  const [waktuPinjam, setWaktuPinjam] = useState("");
+  const [errorWaktuPinjam, setErrorWaktuPinjam] = useState("");
+
+  const [waktuKembali, setWaktuKembali] = useState("");
+  const [errorWaktuKembali, setErrorWaktuKembali] = useState("");
 
   // Get Data
   useEffect(() => {
@@ -90,12 +100,93 @@ const ManajemenPeminjaman: NextPage = () => {
     }
   }, [data.length]);
 
+  // Update state value when selected change
+  useEffect(() => {
+    if (selected[1]) {
+      setKegiatan(selected[1].peminjaman.kegiatan);
+      setJenisPinjaman(selected[1].peminjaman.jenis_pinjaman);
+      setWaktuPinjam(
+        selected[1].peminjaman.waktu_pinjam.toDate().toISOString().slice(0, 16)
+      );
+      setWaktuKembali(
+        selected[1].peminjaman.waktu_kembali.toDate().toISOString().slice(0, 16)
+      );
+    }
+  }, [selected]);
+
   // Handler
   const handleDelete = async () => {
     await deletePeminjaman(selected[1]?.id).then(() => {
       setData([]);
       setSelected(["", undefined]);
+      toast.success("Delete success", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     });
+  };
+
+  const handleUpdate = async () => {
+    if (kegiatan === "") {
+      setErrorKegiatan("Nama kegiatan tidak boleh kosong");
+    } else {
+      setErrorKegiatan("");
+    }
+
+    if (jenisPinjaman === "") {
+      setErrorJenisPinjaman("Jenis pinjaman tidak boleh kosong");
+    } else {
+      setErrorJenisPinjaman("");
+    }
+
+    if (waktuPinjam && waktuKembali) {
+      if (waktuPinjam > waktuKembali) {
+        setErrorWaktuKembali(
+          "Waktu kembali tidak boleh kurang dari waktu pinjam"
+        );
+        setErrorWaktuKembali(
+          "Waktu kembali tidak boleh kurang dari waktu pinjam"
+        );
+        return;
+      } else {
+        setErrorWaktuPinjam("");
+        setErrorWaktuKembali("");
+      }
+    } else {
+      setErrorWaktuKembali("Waktu kembali tidak boleh kosong");
+      setErrorWaktuPinjam("Waktu pinjam tidak boleh kosong");
+    }
+
+    if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali) {
+      console.log("updating");
+      await updatePeminjaman(
+        selected[1]?.id,
+        kegiatan,
+        jenisPinjaman,
+        new Date(waktuPinjam),
+        new Date(waktuKembali)
+      ).then(() => {
+        setData([]);
+        setSelected(["", undefined]);
+
+        toast.success("Update success", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      });
+    }
   };
 
   // Table
@@ -259,26 +350,22 @@ const ManajemenPeminjaman: NextPage = () => {
                 Update Permohonan Peminjaman
               </h2>
             </div>
-            <div className="flex flex-col gap-4">
+            <form className="flex flex-col gap-4">
               <Input
                 label="Nama Kegiatan"
-                error={""}
-                onChange={function (e: ChangeEvent<HTMLInputElement>): void {
-                  throw new Error("Function not implemented.");
-                }}
+                error={errorKegiatan}
+                onChange={(e) => setKegiatan(e.target.value)}
                 id={"nama-kegiatan"}
-                value={""}
+                value={kegiatan}
                 style="light"
                 required
               />
               <Select
                 label={"Jenis Pinjaman"}
                 required
-                value={""}
-                onChange={function (e: ChangeEvent<HTMLSelectElement>): void {
-                  throw new Error("Function not implemented.");
-                }}
-                error={""}
+                value={jenisPinjaman}
+                onChange={(e) => setJenisPinjaman(e.target.value)}
+                error={errorJenisPinjaman}
                 id={"jenis-pinjaman"}
                 style="light"
               >
@@ -299,39 +386,45 @@ const ManajemenPeminjaman: NextPage = () => {
                 <Input
                   label="Waktu Pinjam"
                   type="datetime-local"
-                  error={""}
-                  onChange={function (e: ChangeEvent<HTMLInputElement>): void {
-                    throw new Error("Function not implemented.");
-                  }}
-                  id={""}
-                  value={""}
+                  error={errorWaktuPinjam}
+                  onChange={(e) => setWaktuPinjam(e.target.value)}
+                  id={"waktu-pinjam"}
+                  value={waktuPinjam}
                   style="light"
+                  required
                 />
                 <Input
                   label="Waktu Kembali"
                   type="datetime-local"
-                  error={""}
-                  onChange={function (e: ChangeEvent<HTMLInputElement>): void {
-                    throw new Error("Function not implemented.");
-                  }}
-                  id={""}
-                  value={""}
+                  error={errorWaktuKembali}
+                  onChange={(e) => setWaktuKembali(e.target.value)}
+                  id={"waktu-kembali"}
+                  value={waktuKembali}
                   style="light"
+                  required
                 />
               </div>
-            </div>
+            </form>
 
             <div className="w-full grid grid-cols-2 gap-3 font-medium">
-              <button className="border border-gray-300 text-gray-800 p-2 rounded-md hover:bg-gray-100">
+              <button
+                onClick={() => setSelected(["", undefined])}
+                className="border border-gray-300 text-gray-800 p-2 rounded-md hover:bg-gray-100"
+              >
                 Cancel
               </button>
-              <button className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">
+              <button
+                className="bg-gray-900 text-white p-2 rounded-md hover:bg-gray-800"
+                onClick={handleUpdate}
+              >
                 Save
               </button>
             </div>
           </div>
         )}
       </Dialog>
+
+      <ToastContainer />
     </>
   );
 };

@@ -57,6 +57,12 @@ const Peminjaman: NextPage = () => {
       setErrorWaktuKembali("");
     }
 
+    if (!file) {
+      setErrorFile("File tidak boleh kosong");
+    } else {
+      setErrorFile("");
+    }
+
     if (waktuPinjam && waktuKembali) {
       if (waktuPinjam > waktuKembali) {
         setErrorWaktuPinjam(
@@ -65,16 +71,11 @@ const Peminjaman: NextPage = () => {
         setErrorWaktuKembali(
           "Waktu kembali tidak boleh lebih dahulu dari waktu pinjam"
         );
+        return;
       } else {
         setErrorWaktuPinjam("");
         setErrorWaktuKembali("");
       }
-    }
-
-    if (!file) {
-      setErrorFile("File tidak boleh kosong");
-    } else {
-      setErrorFile("");
     }
 
     if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali && file) {

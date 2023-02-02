@@ -12,6 +12,8 @@ import {
   query,
   orderBy,
   deleteDoc,
+  updateDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 
 import { getStorage, ref, deleteObject } from "firebase/storage";
@@ -164,6 +166,28 @@ export const verifyPeminjaman = async (permohonanPeminjamanId: string) => {
 };
 
 export const rejectPeminjaman = async (permohonanPeminjamanId: string) => {};
+
+export const updatePeminjaman = async (
+  id: string,
+  kegiatan: string,
+  jenis_pinjaman: string,
+  waktu_pinjam: Date,
+  waktu_kembali: Date
+) => {
+  const permohonan_peminjamanRef = doc(db, "permohonan_peminjaman", id);
+
+  try {
+    await updateDoc(permohonan_peminjamanRef, {
+      kegiatan,
+      jenis_pinjaman,
+      waktu_pinjam,
+      waktu_kembali,
+      updated_at: serverTimestamp(),
+    });
+  } catch (e: any) {
+    console.log(e);
+  }
+};
 
 export const deletePeminjaman = async (permohonanPeminjamanId: string) => {
   const permohonanPeminjaman = doc(
