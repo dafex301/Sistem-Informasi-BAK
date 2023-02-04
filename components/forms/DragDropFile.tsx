@@ -89,12 +89,6 @@ export default function DragDropFile(props: DragDropFileProps) {
     props.setFile(newFile);
   };
 
-  useEffect(() => {
-    if (props.file?.name) {
-      setFileNameLegacy(props.file.name);
-    }
-  }, [props.file?.name]);
-
   return (
     <>
       <label

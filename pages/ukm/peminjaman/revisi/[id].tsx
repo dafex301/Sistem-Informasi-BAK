@@ -44,7 +44,7 @@ const RevisiPeminjamanPage: NextPage = () => {
       ) : (
         <>
           <PageTitle>Revisi Permohonan Peminjaman</PageTitle>
-          <CreatePeminjaman type="revision" data={data} />
+          <CreatePeminjaman type="revision" data={data} id={id as string} />
         </>
       )}
     </>

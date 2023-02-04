@@ -34,7 +34,7 @@ const EditPeminjamanPage: NextPage = () => {
 
       <PageTitle>Edit Permohonan Peminjaman</PageTitle>
       <PageBody>
-        <CreatePeminjaman type="edit" data={data} />
+        <CreatePeminjaman type="update" data={data} id={id as string} />
       </PageBody>
     </>
   );

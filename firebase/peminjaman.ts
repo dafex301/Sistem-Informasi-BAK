@@ -25,7 +25,7 @@ export interface IPeminjaman {
   kegiatan: string;
   waktu_pinjam: Date;
   waktu_kembali: Date;
-  file: string;
+  file?: string;
 }
 
 export interface IPeminjamanRequest extends IPeminjaman {
@@ -55,7 +55,7 @@ export interface IPeminjamanData {
 export interface ILogPeminjaman {
   permohonan_peminjaman: DocumentReference<DocumentData>;
   user: DocumentReference<DocumentData>;
-  aksi: "create" | "approve" | "reject" | "delete" | "update";
+  aksi: "create" | "approve" | "reject" | "update" | "revision";
   waktu: Date;
 }
 
@@ -280,6 +280,80 @@ export const updatePeminjaman = async (
       waktu_kembali,
       updated_at: serverTimestamp(),
     });
+  } catch (e: any) {
+    console.log(e);
+  }
+};
+
+type IEditPeminjaman = {
+  kegiatan: string;
+  jenis_pinjaman: string;
+  waktu_pinjam: Date;
+  waktu_kembali: Date;
+  file?: string;
+  paraf_KBK: boolean;
+  paraf_MK: boolean;
+  paraf_SM: boolean;
+  rejected: boolean;
+  rejected_reason: string;
+  updated_at: Date;
+};
+
+export const editPeminjaman = async (
+  type: "update" | "revision",
+  id: string,
+  kegiatan: string,
+  jenis_pinjaman: string,
+  waktu_pinjam: Date,
+  waktu_kembali: Date,
+  file?: string
+) => {
+  try {
+    const userRef = doc(db, "users", auth.currentUser!.uid);
+    const permohonan_peminjamanRef = doc(db, "permohonan_peminjaman", id);
+
+    let updatedData: IEditPeminjaman = {
+      kegiatan,
+      jenis_pinjaman,
+      waktu_pinjam,
+      waktu_kembali,
+      updated_at: new Date(),
+      paraf_KBK: false,
+      paraf_MK: false,
+      paraf_SM: false,
+      rejected: false,
+      rejected_reason: "",
+    };
+
+    // If file is not null, delete the old file from storage
+    if (file) {
+      const permohonanPeminjamanSnap = await getDoc(permohonan_peminjamanRef);
+      const permohonanPeminjaman = permohonanPeminjamanSnap.data();
+      const oldFile = permohonanPeminjaman!.file;
+
+      if (oldFile) {
+        const storageRef = ref(storage, oldFile);
+        await deleteObject(storageRef);
+      }
+
+      updatedData = {
+        ...updatedData,
+        file,
+      };
+    }
+
+    await updateDoc(permohonan_peminjamanRef, updatedData).then(() => {
+      const logPeminjaman: ILogPeminjaman = {
+        permohonan_peminjaman: permohonan_peminjamanRef,
+        user: userRef,
+        aksi: type,
+        waktu: new Date(),
+      };
+
+      addDoc(collection(db, "log_permohonan_peminjaman"), logPeminjaman);
+    });
+
+    console.log("done update");
   } catch (e: any) {
     console.log(e);
   }

@@ -6,12 +6,13 @@ import Input from "../../forms/Input";
 import Select from "../../forms/Select";
 import DragDropFile from "../../forms/DragDropFile";
 import { getFileName, uploadFile } from "../../../firebase/file";
-import { writePeminjaman } from "../../../firebase/peminjaman";
+import { editPeminjaman, writePeminjaman } from "../../../firebase/peminjaman";
 import { DocumentData } from "firebase/firestore";
 
 interface IPeminjamanProposalProps {
-  type?: "new" | "edit" | "revision";
+  type?: "new" | "update" | "revision";
   data?: DocumentData | null;
+  id?: string;
 }
 
 const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
@@ -36,13 +37,6 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
   const [fileUrl, setFileUrl] = useState<string>("");
 
   const handleSubmit = (type: IPeminjamanProposalProps["type"]) => {
-    if (type === "new") {
-      console.log("new");
-    } else if (type === "edit") {
-      console.log("edit");
-    } else if (type === "revision") {
-      console.log("revision");
-    }
     if (!kegiatan) {
       setErrorKegiatan("Nama kegiatan tidak boleh kosong");
     } else {
@@ -67,10 +61,12 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
       setErrorWaktuKembali("");
     }
 
-    if (!file) {
-      setErrorFile("File tidak boleh kosong");
-    } else {
-      setErrorFile("");
+    if (props.type === "new") {
+      if (!file) {
+        setErrorFile("File tidak boleh kosong");
+      } else {
+        setErrorFile("");
+      }
     }
 
     if (waktuPinjam && waktuKembali) {
@@ -88,20 +84,40 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
       }
     }
 
-    if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali && file) {
-      try {
-        uploadFile("permohonan_peminjaman", file, setFileUrl);
-      } catch (error) {
-        console.log(error);
+    if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali) {
+      if (file) {
+        try {
+          uploadFile("permohonan_peminjaman", file, setFileUrl);
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        editPeminjaman(
+          props.type == "revision" ? "revision" : "update",
+          props.id!,
+          kegiatan,
+          jenisPinjaman,
+          new Date(waktuPinjam),
+          new Date(waktuKembali)
+        );
       }
     }
   };
 
   useEffect(() => {
-    // If Update or Revision
-    if (props.data?.kegiatan) {
-    } else {
-      if (fileUrl) {
+    if (fileUrl) {
+      // Update or revision with file
+      if (props.data?.kegiatan) {
+        editPeminjaman(
+          props.type == "revision" ? "revision" : "update",
+          props.id!,
+          kegiatan,
+          jenisPinjaman,
+          new Date(waktuPinjam),
+          new Date(waktuKembali),
+          fileUrl
+        );
+      } else {
         writePeminjaman({
           jenis_pinjaman: jenisPinjaman,
           kegiatan,
@@ -119,8 +135,11 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
     waktuPinjam,
     waktuKembali,
     props.data?.kegiatan,
+    props.id,
+    props.type,
   ]);
 
+  // If update or revision, set state from props
   useEffect(() => {
     if (props.data?.kegiatan) {
       setKegiatan(props.data?.kegiatan);
