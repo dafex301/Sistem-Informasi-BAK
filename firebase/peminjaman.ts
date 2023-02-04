@@ -352,8 +352,6 @@ export const editPeminjaman = async (
 
       addDoc(collection(db, "log_permohonan_peminjaman"), logPeminjaman);
     });
-
-    console.log("done update");
   } catch (e: any) {
     console.log(e);
   }

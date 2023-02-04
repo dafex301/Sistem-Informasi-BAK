@@ -34,6 +34,7 @@ import {
   UpdateButton,
   VerifyButton,
 } from "../../button/ActionButton";
+import { useRouter } from "next/router";
 
 const PDFViewer = dynamic(() => import("../../PDFViewer"), {
   ssr: false,
@@ -134,6 +135,8 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
 
   const [waktuKembali, setWaktuKembali] = useState("");
   const [errorWaktuKembali, setErrorWaktuKembali] = useState("");
+
+  const router = useRouter();
 
   // Get Data
   useEffect(() => {
@@ -335,6 +338,24 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
 
     return display_value;
   };
+
+  // Toaster trigger when route.query.success is filled
+  let show = 0;
+  useEffect(() => {
+    if (router.query.success && show < 1) {
+      toast.success(router.query.success, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      show++;
+    }
+  }, [router.query.success, show]);
 
   return (
     <>

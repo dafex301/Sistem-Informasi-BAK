@@ -8,6 +8,7 @@ import DragDropFile from "../../forms/DragDropFile";
 import { getFileName, uploadFile } from "../../../firebase/file";
 import { editPeminjaman, writePeminjaman } from "../../../firebase/peminjaman";
 import { DocumentData } from "firebase/firestore";
+import { useRouter } from "next/router";
 
 interface IPeminjamanProposalProps {
   type?: "new" | "update" | "revision";
@@ -17,6 +18,7 @@ interface IPeminjamanProposalProps {
 
 const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
   const { user, loading } = useAuth();
+  const route = useRouter();
 
   // State
   const [kegiatan, setKegiatan] = useState<string>("");
@@ -85,21 +87,28 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
     }
 
     if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali) {
-      if (file) {
-        try {
+      try {
+        if (file) {
           uploadFile("permohonan_peminjaman", file, setFileUrl);
-        } catch (error) {
-          console.log(error);
+        } else {
+          editPeminjaman(
+            props.type == "revision" ? "revision" : "update",
+            props.id!,
+            kegiatan,
+            jenisPinjaman,
+            new Date(waktuPinjam),
+            new Date(waktuKembali)
+          );
+          route.push(
+            {
+              pathname: "/ukm/peminjaman",
+              query: { success: "Berhasil mengubah permohonan peminjaman" },
+            },
+            "/ukm/peminjaman"
+          );
         }
-      } else {
-        editPeminjaman(
-          props.type == "revision" ? "revision" : "update",
-          props.id!,
-          kegiatan,
-          jenisPinjaman,
-          new Date(waktuPinjam),
-          new Date(waktuKembali)
-        );
+      } catch (error) {
+        console.log(error);
       }
     }
   };
@@ -117,6 +126,13 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
           new Date(waktuKembali),
           fileUrl
         );
+        route.push(
+          {
+            pathname: "/ukm/peminjaman",
+            query: { success: "Berhasil mengubah permohonan peminjaman" },
+          },
+          "/ukm/peminjaman"
+        );
       } else {
         writePeminjaman({
           jenis_pinjaman: jenisPinjaman,
@@ -125,6 +141,13 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
           waktu_kembali: new Date(waktuKembali),
           file: fileUrl,
         });
+        route.push(
+          {
+            pathname: "/ukm/peminjaman",
+            query: { success: "Berhasil membuat permohonan peminjaman" },
+          },
+          "/ukm/peminjaman"
+        );
       }
     }
     setFileUrl("");
@@ -137,6 +160,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
     props.data?.kegiatan,
     props.id,
     props.type,
+    route,
   ]);
 
   // If update or revision, set state from props
@@ -150,7 +174,6 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
       setWaktuKembali(
         props.data?.waktu_kembali.toDate().toISOString().slice(0, 16)
       );
-      const fileName = getFileName(props.data?.file);
     }
   }, [props.data]);
 
