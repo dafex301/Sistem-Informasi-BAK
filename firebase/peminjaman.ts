@@ -144,6 +144,20 @@ export const getAllPeminjaman = async (
   return peminjaman;
 };
 
+export const getPeminjamanById = async (id: string) => {
+  const peminjamanRef = doc(db, "permohonan_peminjaman", id);
+  const peminjaman = await getDoc(peminjamanRef);
+
+  if (peminjaman.exists()) {
+    const pemohon = await getDoc(peminjaman.data()!.pemohon);
+    peminjaman.data()!.pemohon = pemohon.data();
+
+    return peminjaman.data();
+  } else {
+    return null;
+  }
+};
+
 export const writePeminjaman = async (peminjaman: IPeminjaman) => {
   const pemohon = doc(db, "users", auth.currentUser!.uid);
 

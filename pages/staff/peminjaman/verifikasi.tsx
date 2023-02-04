@@ -4,7 +4,7 @@ import Head from "next/head";
 
 // Component
 import PageTitle from "../../../components/layout/PageTitle";
-import ManajemenPeminjaman from "../../../components/pages/admin/Peminjaman";
+import ManajemenPeminjaman from "../../../components/pages/data/Peminjaman";
 import { useAuth } from "../../../lib/authContext";
 
 const ManajemenPeminjamanPage: NextPage = () => {

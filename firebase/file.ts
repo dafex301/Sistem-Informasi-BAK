@@ -1,4 +1,9 @@
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import {
+  ref,
+  getDownloadURL,
+  uploadBytesResumable,
+  deleteObject,
+} from "firebase/storage";
 import { storage } from "../lib/firebaseConfig/init";
 
 export const uploadFile = (
@@ -23,4 +28,14 @@ export const uploadFile = (
       });
     }
   );
+};
+
+export const deleteFile = (url: string) => {
+  const storageRef = ref(storage, url);
+  deleteObject(storageRef);
+};
+
+export const getFileName = (url: string) => {
+  const storageRef = ref(storage, url);
+  return storageRef.name;
 };

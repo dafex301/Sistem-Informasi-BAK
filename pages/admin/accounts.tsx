@@ -1,7 +1,7 @@
 // Next
 import type { NextPage } from "next";
 import Head from "next/head";
-import Accounts from "../../components/pages/admin/Accounts";
+import Accounts from "../../components/pages/data/Accounts";
 
 const ManajemenAkun: NextPage = () => {
   return (

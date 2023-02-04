@@ -1,18 +1,19 @@
+import Link from "next/link";
 import { Irow } from "react-tailwind-table";
 import { IPeminjamanData } from "../../firebase/peminjaman";
 
-interface IButtonProps {
+interface IGeneralButtonProps {
+  row: Irow;
+}
+
+interface IButtonWithHandler extends IGeneralButtonProps {
   row: Irow;
   setSelected: React.Dispatch<
     React.SetStateAction<[string, Irow | IPeminjamanData | undefined]>
   >;
 }
 
-interface IRevisionButtonProps extends Omit<IButtonProps, "setSelected"> {
-  setSelected: any;
-}
-
-export const DeleteButton = (props: IButtonProps) => {
+export const DeleteButton = (props: IButtonWithHandler) => {
   return (
     <button
       className="bg-red-500 text-white p-2 rounded-md hover:bg-red-700"
@@ -34,11 +35,11 @@ export const DeleteButton = (props: IButtonProps) => {
   );
 };
 
-export const EditButton = (props: IButtonProps) => {
+export const EditButton = (props: IButtonWithHandler) => {
   return (
-    <button
+    <Link
       className="bg-cyan-500 text-white p-2 rounded-md hover:bg-cyan-700"
-      onClick={() => props.setSelected(["update", props.row])}
+      href={""}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -48,11 +49,11 @@ export const EditButton = (props: IButtonProps) => {
       >
         <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z" />
       </svg>
-    </button>
+    </Link>
   );
 };
 
-export const FileButton = (props: IButtonProps) => {
+export const FileButton = (props: IButtonWithHandler) => {
   return (
     <button
       className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700"
@@ -71,7 +72,7 @@ export const FileButton = (props: IButtonProps) => {
   );
 };
 
-export const VerifyButton = (props: IButtonProps) => {
+export const VerifyButton = (props: IButtonWithHandler) => {
   return (
     <button
       className="bg-green-500 text-white p-2 rounded-md hover:bg-green-700"
@@ -93,7 +94,7 @@ export const VerifyButton = (props: IButtonProps) => {
   );
 };
 
-export const RejectButton = (props: IButtonProps) => {
+export const RejectButton = (props: IButtonWithHandler) => {
   return (
     <button
       className="bg-red-500 text-white p-2 rounded-md hover:bg-red-700"
@@ -115,12 +116,11 @@ export const RejectButton = (props: IButtonProps) => {
   );
 };
 
-export const RevisionButton = (props: IRevisionButtonProps) => {
+export const RevisionButton = (props: IGeneralButtonProps) => {
   return (
-    <button
+    <Link
       className="bg-yellow-800 text-white p-2 rounded-md hover:bg-yellow-900"
-      //   TODO : Redirect to revision page
-      onClick={() => props.setSelected(["update", props.row])}
+      href={`/ukm/peminjaman/revisi/${props.row.id}`}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -134,6 +134,30 @@ export const RevisionButton = (props: IRevisionButtonProps) => {
           clipRule="evenodd"
         />
       </svg>
-    </button>
+    </Link>
+  );
+};
+
+export const UpdateButton = (props: IGeneralButtonProps) => {
+  return (
+    <Link
+      className="bg-teal-600 text-white p-2 rounded-md hover:bg-teal-800"
+      href={`/ukm/peminjaman/edit/${props.row.id}`}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className="w-4 h-4"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+        />
+      </svg>
+    </Link>
   );
 };

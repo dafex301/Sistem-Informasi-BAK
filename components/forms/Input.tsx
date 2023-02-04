@@ -8,6 +8,7 @@ interface InputProps {
   type?: "text" | "date" | "time" | "datetime-local" | "number";
   style?: "dark" | "light";
   required?: boolean;
+  defaultValue?: string;
 }
 
 export default function Input(props: InputProps) {
@@ -35,6 +36,7 @@ export default function Input(props: InputProps) {
               type={props.type ?? "text"}
               placeholder={props.placeholder ?? props.label}
               required={props.required}
+              defaultValue={props.defaultValue}
             />
           </>
         ) : (

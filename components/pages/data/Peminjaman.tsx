@@ -31,6 +31,7 @@ import {
   FileButton,
   RejectButton,
   RevisionButton,
+  UpdateButton,
   VerifyButton,
 } from "../../button/ActionButton";
 
@@ -303,18 +304,22 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
             </>
           )}
 
-          {(props.role === "UKM" &&
+          {/* Update Button when not verified yet */}
+          {props.role === "UKM" &&
             row.peminjaman.status === "Diproses KBAK" && (
               <>
-                <EditButton row={row} setSelected={setSelected} />
+                <UpdateButton row={row} />
               </>
-            )) ||
-            (row.peminjaman.status === "Ditolak" && (
-              <>
-                <RevisionButton row={row} setSelected={setSelected} />
-              </>
-            ))}
+            )}
 
+          {/* Revision Button */}
+          {props.role === "UKM" && row.peminjaman.status === "Ditolak" && (
+            <>
+              <RevisionButton row={row} />
+            </>
+          )}
+
+          {/* Verify Button */}
           {props.type === "verify" && (
             <>
               {/* Verify Button */}

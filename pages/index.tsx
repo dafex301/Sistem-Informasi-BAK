@@ -11,6 +11,7 @@ const Home: NextPage = () => {
       <Head>
         <title>Dashboard</title>
       </Head>
+      <h1>Dashboard</h1>
     </>
   );
 };

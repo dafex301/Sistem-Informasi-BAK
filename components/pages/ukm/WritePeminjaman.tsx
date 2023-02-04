@@ -1,17 +1,20 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import { useEffect, useState } from "react";
-import PageTitle from "../../components/layout/PageTitle";
-import { useAuth } from "../../lib/authContext";
+import { useAuth } from "../../../lib/authContext";
 
-import Input from "../../components/forms/Input";
-import Select from "../../components/forms/Select";
-import DateTimePicker from "../../components/forms/DateTimePicker";
-import DragDropFile from "../../components/forms/DragDropFile";
-import { uploadFile } from "../../firebase/file";
-import { writePeminjaman } from "../../firebase/peminjaman";
+import Input from "../../forms/Input";
+import Select from "../../forms/Select";
+import DragDropFile from "../../forms/DragDropFile";
+import { getFileName, uploadFile } from "../../../firebase/file";
+import { writePeminjaman } from "../../../firebase/peminjaman";
+import { DocumentData } from "firebase/firestore";
 
-const Peminjaman: NextPage = () => {
+interface IPeminjamanProposalProps {
+  type?: "new" | "edit" | "revision";
+  data?: DocumentData | null;
+}
+
+const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
   const { user, loading } = useAuth();
 
   // State
@@ -32,7 +35,14 @@ const Peminjaman: NextPage = () => {
 
   const [fileUrl, setFileUrl] = useState<string>("");
 
-  const handleSubmit = () => {
+  const handleSubmit = (type: IPeminjamanProposalProps["type"]) => {
+    if (type === "new") {
+      console.log("new");
+    } else if (type === "edit") {
+      console.log("edit");
+    } else if (type === "revision") {
+      console.log("revision");
+    }
     if (!kegiatan) {
       setErrorKegiatan("Nama kegiatan tidak boleh kosong");
     } else {
@@ -88,28 +98,69 @@ const Peminjaman: NextPage = () => {
   };
 
   useEffect(() => {
-    if (fileUrl) {
-      writePeminjaman({
-        jenis_pinjaman: jenisPinjaman,
-        kegiatan,
-        waktu_pinjam: new Date(waktuPinjam),
-        waktu_kembali: new Date(waktuKembali),
-        file: fileUrl,
-      });
+    // If Update or Revision
+    if (props.data?.kegiatan) {
+    } else {
+      if (fileUrl) {
+        writePeminjaman({
+          jenis_pinjaman: jenisPinjaman,
+          kegiatan,
+          waktu_pinjam: new Date(waktuPinjam),
+          waktu_kembali: new Date(waktuKembali),
+          file: fileUrl,
+        });
+      }
     }
     setFileUrl("");
-  }, [fileUrl, jenisPinjaman, kegiatan, waktuPinjam, waktuKembali]);
+  }, [
+    fileUrl,
+    jenisPinjaman,
+    kegiatan,
+    waktuPinjam,
+    waktuKembali,
+    props.data?.kegiatan,
+  ]);
+
+  useEffect(() => {
+    if (props.data?.kegiatan) {
+      setKegiatan(props.data?.kegiatan);
+      setJenisPinjaman(props.data?.jenis_pinjaman);
+      setWaktuPinjam(
+        props.data?.waktu_pinjam.toDate().toISOString().slice(0, 16)
+      );
+      setWaktuKembali(
+        props.data?.waktu_kembali.toDate().toISOString().slice(0, 16)
+      );
+      const fileName = getFileName(props.data?.file);
+    }
+  }, [props.data]);
 
   return (
     <>
-      <Head>
-        <title>Permohonan Peminjaman</title>
-      </Head>
-      <PageTitle title="Permohonan Peminjaman" />
-      <main>
-        <div className="grid grid-cols-12 mx-5 gap-5">
+      <main className="mx-5">
+        {/* Main Form */}
+        <div className="grid grid-cols-12 gap-5">
           {/* Input Section */}
           <div className="flex flex-col col-span-8 gap-4">
+            {/* Rejected Reason */}
+            {props.data?.rejected_reason && (
+              <div className="bg-yellow-100 p-3 flex items-center gap-2 rounded-sm">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-8 h-8 text-yellow-700"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+
+                <p>{props.data!.rejected_reason}</p>
+              </div>
+            )}
             <Input
               value={kegiatan}
               onChange={(e) => setKegiatan(e.target.value)}
@@ -173,10 +224,11 @@ const Peminjaman: NextPage = () => {
               error={errorFile}
               uploader={user?.claims.name}
               name={kegiatan}
+              oldFileName={getFileName(props.data?.file) ?? ""}
             />
 
             <button
-              onClick={handleSubmit}
+              onClick={() => handleSubmit(props.type)}
               className="bg-black text-white rounded py-3 px-4 mt-3 hover:bg-gray-900"
             >
               Submit
@@ -234,4 +286,4 @@ const Peminjaman: NextPage = () => {
   );
 };
 
-export default Peminjaman;
+export default WritePeminjaman;
