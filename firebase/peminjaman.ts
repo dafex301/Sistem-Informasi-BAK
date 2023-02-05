@@ -170,24 +170,13 @@ export const getLogPeminjamanById = async (id: string) => {
 
   const querySnapshot = await getDocs(q);
 
-  // For each log, get user data from user
-  // Edit log.user to user data
-
-  const logPeminjaman: any = [];
-
-  querySnapshot.forEach((doc) => {
-    logPeminjaman.push({
-      id: doc.id,
-      log: doc.data(),
-    });
-  });
-
-  await Promise.all(
-    logPeminjaman.map(async (l: any) => {
-      if (l.log.user instanceof DocumentReference<DocumentData>) {
-        const user = await getDoc(l.log.user);
-        l.log.user = user.data();
+  const logPeminjaman = await Promise.all(
+    querySnapshot.docs.map(async (doc) => {
+      const log = doc.data();
+      if (log.user instanceof DocumentReference<DocumentData>) {
+        log.user = (await getDoc(log.user)).data();
       }
+      return { id: doc.id, log };
     })
   );
 

@@ -11,6 +11,7 @@ import {
   getPeminjamanById,
 } from "../../firebase/peminjaman";
 import { DocumentData } from "firebase/firestore";
+import { actionTranslation, roleAbbreviation } from "../../lib/functions";
 
 const PeminjamanDetail: NextPage = () => {
   const router = useRouter();
@@ -77,34 +78,40 @@ const PeminjamanDetail: NextPage = () => {
           </div>
           <div>
             <h2 className="font-medium mb-2 text-lg">Progress Surat</h2>
-            <div className="grid grid-cols-4 text-center">
-              <p>Waktu</p>
-              <p>Tahap</p>
-              <p>Aktor</p>
-              <p>Keterangan</p>
-            </div>
+            <table className="w-full border-separate border-spacing-y-4">
+              <thead>
+                <tr>
+                  <th>Waktu</th>
+                  <th>Tahap</th>
+                  <th>Aktor</th>
+                  <th>Keterangan</th>
+                </tr>
+              </thead>
+              <tbody>
+                {logData?.map((L: any) => (
+                  <tr
+                    key={L.log.waktu.toDate().toLocaleString("id-ID")}
+                    className={
+                      L.log.aksi === "reject"
+                        ? "bg-red-50 px-5 py-2 text-center"
+                        : "bg-green-50 px-5 py-2 text-center"
+                    }
+                  >
+                    <td className="px-5 py-2 ">
+                      {L.log.waktu.toDate().toLocaleString("id-ID")}
+                    </td>
+                    <td className="px-5 py-2 ">
+                      {roleAbbreviation(L.log.user.role)}
+                    </td>
+                    <td className="px-5 py-2 ">{L.log.user.name}</td>
+                    <td className="px-5 py-2 ">
+                      {actionTranslation(L.log.aksi)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
             {/* Foreach logData */}
-            {logData?.map((L: any) => (
-              <div
-                key={L.log.waktu.toDate().toLocaleString("id-ID")}
-                className="grid grid-cols-4 bg-green-50 px-5 py-2 text-center my-2"
-              >
-                <div>
-                  <p className="">
-                    {L.log.waktu.toDate().toLocaleString("id-ID")}
-                  </p>
-                </div>
-                <div>
-                  <p className="">{L.log.user.role}</p>
-                </div>
-                <div>
-                  <p className="">{L.log.user.name}</p>
-                </div>
-                <div>
-                  <p className="">{L.log.aksi}</p>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </PageBody>
