@@ -147,15 +147,51 @@ export const getAllPeminjaman = async (
 export const getPeminjamanById = async (id: string) => {
   const peminjamanRef = doc(db, "permohonan_peminjaman", id);
   const peminjaman = await getDoc(peminjamanRef);
+  const peminjamanData = peminjaman.data();
 
   if (peminjaman.exists()) {
-    const pemohon = await getDoc(peminjaman.data()!.pemohon);
-    peminjaman.data()!.pemohon = pemohon.data();
+    const pemohon = await getDoc(peminjamanData!.pemohon);
+    peminjamanData!.pemohon = pemohon.data();
 
-    return peminjaman.data();
+    return peminjamanData;
   } else {
     return null;
   }
+};
+
+export const getLogPeminjamanById = async (id: string) => {
+  const permohonanPeminjamanRef = doc(db, "permohonan_peminjaman", id);
+
+  const q = query(
+    collection(db, "log_permohonan_peminjaman"),
+    where("permohonan_peminjaman", "==", permohonanPeminjamanRef),
+    orderBy("waktu", "desc")
+  );
+
+  const querySnapshot = await getDocs(q);
+
+  // For each log, get user data from user
+  // Edit log.user to user data
+
+  const logPeminjaman: any = [];
+
+  querySnapshot.forEach((doc) => {
+    logPeminjaman.push({
+      id: doc.id,
+      log: doc.data(),
+    });
+  });
+
+  await Promise.all(
+    logPeminjaman.map(async (l: any) => {
+      if (l.log.user instanceof DocumentReference<DocumentData>) {
+        const user = await getDoc(l.log.user);
+        l.log.user = user.data();
+      }
+    })
+  );
+
+  return logPeminjaman;
 };
 
 export const writePeminjaman = async (peminjaman: IPeminjaman) => {

@@ -23,10 +23,10 @@ const RevisiPeminjamanPage: NextPage = () => {
   const [data, setData] = useState<DocumentData | null>([]);
 
   useEffect(() => {
-    if (data!.length === 0) {
+    if (data!.length === 0 && id) {
       (async () => {
         const data = await getPeminjamanById(id as string);
-        setData(data);
+        setData(data!);
         setLoadingData(false);
       })();
     }

@@ -277,7 +277,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
       return (
         <div className="flex items-center gap-2">
           <Link href={`/peminjaman/${row.id}`}>
-            <p className="font-semibold hover:font-bold">{display_value}</p>
+            <p className="font-semibold hover:underline">{display_value}</p>
           </Link>
         </div>
       );
