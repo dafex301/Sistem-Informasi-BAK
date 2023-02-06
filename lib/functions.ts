@@ -18,6 +18,8 @@ export const roleAbbreviation = (role: string) => {
       return "Tim BAK";
     case "UKM":
       return "Unit Kegiatan Mahasiswa";
+    default:
+      return "User";
   }
 };
 

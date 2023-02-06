@@ -36,6 +36,7 @@ export interface IPeminjamanRequest extends IPeminjaman {
   rejected: boolean;
   rejected_reason: string;
   created_at: Date;
+  modified_at: Date;
   status?: string;
 }
 
@@ -69,7 +70,7 @@ export const getAllPeminjaman = async (
   if (role === "KBAK") {
     q = query(
       collection(db, "permohonan_peminjaman"),
-      orderBy("created_at", "desc"),
+      orderBy("modified_at", "desc"),
       where("paraf_KBK", "==", false),
       where("paraf_MK", "==", false),
       where("paraf_SM", "==", false),
@@ -78,7 +79,7 @@ export const getAllPeminjaman = async (
   } else if (role === "MK") {
     q = query(
       collection(db, "permohonan_peminjaman"),
-      orderBy("created_at", "desc"),
+      orderBy("modified_at", "desc"),
       where("paraf_KBK", "==", true),
       where("paraf_MK", "==", false),
       where("paraf_SM", "==", false),
@@ -87,7 +88,7 @@ export const getAllPeminjaman = async (
   } else if (role === "SM") {
     q = query(
       collection(db, "permohonan_peminjaman"),
-      orderBy("created_at", "desc"),
+      orderBy("modified_at", "desc"),
       where("paraf_KBK", "==", true),
       where("paraf_MK", "==", true),
       where("paraf_SM", "==", false),
@@ -96,13 +97,13 @@ export const getAllPeminjaman = async (
   } else if (role === "UKM") {
     q = query(
       collection(db, "permohonan_peminjaman"),
-      orderBy("created_at", "desc"),
+      orderBy("modified_at", "desc"),
       where("pemohon", "==", userRef)
     );
   } else {
     q = query(
       collection(db, "permohonan_peminjaman"),
-      orderBy("created_at", "desc")
+      orderBy("modified_at", "desc")
     );
   }
 
@@ -195,6 +196,7 @@ export const writePeminjaman = async (peminjaman: IPeminjaman) => {
     rejected: false,
     rejected_reason: "",
     created_at: new Date(),
+    modified_at: new Date(),
   };
 
   try {
@@ -229,15 +231,23 @@ export const approvePeminjaman = async (id: string) => {
       case "KBAK":
         await setDoc(
           permohonanPeminjaman,
-          { paraf_KBK: true },
+          { paraf_KBK: true, modified_at: new Date() },
           { merge: true }
         );
         break;
       case "MK":
-        await setDoc(permohonanPeminjaman, { paraf_MK: true }, { merge: true });
+        await setDoc(
+          permohonanPeminjaman,
+          { paraf_MK: true, modified_at: new Date() },
+          { merge: true }
+        );
         break;
       case "SM":
-        await setDoc(permohonanPeminjaman, { paraf_SM: true }, { merge: true });
+        await setDoc(
+          permohonanPeminjaman,
+          { paraf_SM: true, modified_at: new Date() },
+          { merge: true }
+        );
         break;
       default:
         break;
@@ -271,6 +281,8 @@ export const rejectPeminjaman = async (id: string, reason: string) => {
 
         rejected: true,
         rejected_reason: reason,
+
+        modified_at: new Date(),
       },
       { merge: true }
     );
@@ -303,7 +315,7 @@ export const updatePeminjaman = async (
       jenis_pinjaman,
       waktu_pinjam,
       waktu_kembali,
-      updated_at: serverTimestamp(),
+      modified_at: serverTimestamp(),
     });
   } catch (e: any) {
     console.log(e);
@@ -321,7 +333,7 @@ type IEditPeminjaman = {
   paraf_SM: boolean;
   rejected: boolean;
   rejected_reason: string;
-  updated_at: Date;
+  modified_at: Date;
 };
 
 export const editPeminjaman = async (
@@ -342,7 +354,7 @@ export const editPeminjaman = async (
       jenis_pinjaman,
       waktu_pinjam,
       waktu_kembali,
-      updated_at: new Date(),
+      modified_at: new Date(),
       paraf_KBK: false,
       paraf_MK: false,
       paraf_SM: false,

@@ -53,11 +53,7 @@ export default function Layout({ children }: Props) {
         <div className="flex">
           {/* Sidebar */}
           <div
-            className={
-              showSidebar
-                ? "min-w-max h-screen bg-gray-900 flex-col sticky top-0"
-                : "hidden"
-            }
+            className={"min-w-max h-screen bg-gray-900 flex-col sticky top-0"}
           >
             {/* Logo */}
             <Link
