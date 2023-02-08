@@ -83,11 +83,43 @@ const PeminjamanDetail: NextPage = () => {
                 <tr>
                   <th>Waktu</th>
                   <th>Tahap</th>
-                  <th>Aktor</th>
+                  <th>Nama</th>
                   <th>Keterangan</th>
                 </tr>
               </thead>
               <tbody>
+                {data?.rejected ? (
+                  <tr className="bg-yellow-50 px-5 py-2 text-center animate-pulse">
+                    <td className="px-5 py-2 ">-</td>
+                    <td className="px-5 py-2 ">User</td>
+                    <td className="px-5 py-2 ">{data?.pemohon.name}</td>
+                    <td className="px-5 py-2 ">Revisi</td>
+                  </tr>
+                ) : !data?.paraf_KBK ? (
+                  <tr className="bg-yellow-50 px-5 py-2 text-center animate-pulse">
+                    <td className="px-5 py-2 ">-</td>
+                    <td className="px-5 py-2 ">Kepala BAK</td>
+                    <td className="px-5 py-2 ">-</td>
+                    <td className="px-5 py-2 ">Diproses</td>
+                  </tr>
+                ) : !data?.paraf_MK ? (
+                  <tr className="bg-yellow-50 px-5 py-2 text-center animate-pulse">
+                    <td className="px-5 py-2 ">-</td>
+                    <td className="px-5 py-2 ">Manager Kemahasiswaan</td>
+                    <td className="px-5 py-2 ">-</td>
+                    <td className="px-5 py-2 ">Diproses</td>
+                  </tr>
+                ) : !data.paraf_SM ? (
+                  <tr className="bg-yellow-50 px-5 py-2 text-center animate-pulse">
+                    <td className="px-5 py-2 ">-</td>
+                    <td className="px-5 py-2 ">Supervisor Minarpresma</td>
+                    <td className="px-5 py-2 ">-</td>
+                    <td className="px-5 py-2 ">Diproses</td>
+                  </tr>
+                ) : (
+                  <></>
+                )}
+
                 {logData?.map((L: any) => (
                   <tr
                     key={L.log.waktu.toDate().toLocaleString("id-ID")}
@@ -105,7 +137,8 @@ const PeminjamanDetail: NextPage = () => {
                     </td>
                     <td className="px-5 py-2 ">{L.log.user.name}</td>
                     <td className="px-5 py-2 ">
-                      {actionTranslation(L.log.aksi)}
+                      <p>{actionTranslation(L.log.aksi)}</p>
+                      <p>{L.log?.alasan}</p>
                     </td>
                   </tr>
                 ))}

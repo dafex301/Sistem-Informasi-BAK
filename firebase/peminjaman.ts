@@ -57,6 +57,7 @@ export interface ILogPeminjaman {
   permohonan_peminjaman: DocumentReference<DocumentData>;
   user: DocumentReference<DocumentData>;
   aksi: "create" | "approve" | "reject" | "update" | "revision";
+  alasan?: string;
   waktu: Date;
 }
 
@@ -291,6 +292,7 @@ export const rejectPeminjaman = async (id: string, reason: string) => {
       permohonan_peminjaman: permohonanPeminjaman,
       user: userRef,
       aksi: "reject",
+      alasan: reason,
       waktu: new Date(),
     };
 

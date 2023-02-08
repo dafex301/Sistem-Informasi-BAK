@@ -45,6 +45,10 @@ export const getTempatById = async (id: string) => {
 
 export const updateTempat = async (id: string, nama: string) => {
   const docRef = doc(db, "tempat", id);
+
+  const docSnap = await getDoc(docRef);
+  const oldNama = docSnap.data()?.nama_tempat;
+
   await updateDoc(docRef, {
     nama_tempat: nama,
     modified_at: serverTimestamp(),
@@ -54,7 +58,7 @@ export const updateTempat = async (id: string, nama: string) => {
   // If found, update jenis_pinjaman to new nama
   const q = query(
     collection(db, "permohonan_peminjaman"),
-    where("jenis_pinjaman", "==", nama)
+    where("jenis_pinjaman", "==", oldNama)
   );
   const querySnapshot = await getDocs(q);
 
