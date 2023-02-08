@@ -9,7 +9,7 @@ interface IGeneralButtonProps {
 interface IButtonWithHandler extends IGeneralButtonProps {
   row: Irow;
   setSelected: React.Dispatch<
-    React.SetStateAction<[string, Irow | IPeminjamanData | undefined]>
+    React.SetStateAction<[string, Irow | IPeminjamanData | undefined | any]>
   >;
 }
 

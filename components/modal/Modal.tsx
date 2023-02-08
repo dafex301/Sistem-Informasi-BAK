@@ -7,6 +7,7 @@ interface IModalWithImageProps {
   name: string;
   cancelHandler: (arg: [string, undefined]) => void;
   mainHandler: () => void;
+  mainText?: string;
   color?: string;
 }
 
@@ -15,7 +16,7 @@ export function ModalWithImage(props: IModalWithImageProps) {
     <>
       <div className="flex flex-col p-5 h-auto w-96 gap-5 justify-center items-center">
         <Image
-          src={"/assets/document-approve.jpeg"}
+          src={props.image}
           width={512}
           height={512}
           alt={"Document"}
@@ -42,7 +43,7 @@ export function ModalWithImage(props: IModalWithImageProps) {
             }
             onClick={props.mainHandler}
           >
-            Approve
+            {props.mainText ?? "Approve"}
           </button>
         </div>
       </div>

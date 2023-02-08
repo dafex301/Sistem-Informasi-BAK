@@ -35,6 +35,7 @@ import {
   VerifyButton,
 } from "../../button/ActionButton";
 import { useRouter } from "next/router";
+import SelectTempat from "../../forms/SelectTempat";
 
 const PDFViewer = dynamic(() => import("../../PDFViewer"), {
   ssr: false,
@@ -426,7 +427,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
                 style="light"
                 required
               />
-              <Select
+              <SelectTempat
                 label={"Jenis Pinjaman"}
                 required
                 value={jenisPinjaman}
@@ -434,20 +435,8 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
                 error={errorJenisPinjaman}
                 id={"jenis-pinjaman"}
                 style="light"
-              >
-                <option value="Halaman Depan Diponegoro (Parkir)">
-                  Halaman Depan Diponegoro (Parkir)
-                </option>
-                <option value="Belakang SC atau Gazebo (Barat)">
-                  Belakang SC atau Gazebo (Barat)
-                </option>
-                <option value="Belakang SC atau Gazebo (Tengah)">
-                  Belakang SC atau Gazebo (Tengah)
-                </option>
-                <option value="Belakang SC atau Gazebo (Timur)">
-                  Belakang SC atau Gazebo (Timur)
-                </option>
-              </Select>
+              />
+
               <div className="grid grid-cols-2 gap-3">
                 <Input
                   label="Waktu Pinjam"

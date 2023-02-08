@@ -1,13 +1,33 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import VerticalBarChart from "../components/charts/vertical-bar/VerticalBarChart";
 import PageBody from "../components/layout/PageBody";
 import PageTitle from "../components/layout/PageTitle";
+import { getTotalPeminjaman, getTotalUser } from "../firebase/dashboard";
 import { useAuth } from "../lib/authContext";
 
 const Home: NextPage = () => {
   const { user, loading } = useAuth();
+
+  const [peminjamanTotal, setPeminjamanTotal] = useState<number | null>(null);
+  const [userTotal, setUserTotal] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (peminjamanTotal === null) {
+      (async () => {
+        setPeminjamanTotal(await getTotalPeminjaman());
+      })();
+    }
+  });
+
+  useEffect(() => {
+    if (userTotal === null) {
+      (async () => {
+        setUserTotal(await getTotalUser());
+      })();
+    }
+  });
 
   return (
     <>
@@ -36,7 +56,7 @@ const Home: NextPage = () => {
             <p className="text-xl mt-5 font-medium">
               Jumlah Permohonan Peminjaman
             </p>
-            <p className="text-4xl font-bold">963</p>
+            <p className="text-4xl font-bold">{peminjamanTotal}</p>
           </div>
           <div className="flex flex-col bg-blue-50 rounded-lg p-5 gap-1">
             <svg
@@ -74,14 +94,18 @@ const Home: NextPage = () => {
             </svg>
 
             <p className="font-medium text-xl mt-5">Jumlah User</p>
-            <p className="text-4xl font-bold">963</p>
+            <p className="text-4xl font-bold">{userTotal}</p>
           </div>
         </div>
         <div className="grid grid-cols-12 mt-8 gap-8">
-          <div className="grid grid-rows-2 gap-8 col-span-3">
+          <div className="grid grid-rows-3 gap-8 col-span-3">
             <div className="bg-pink-50 p-5">
               <h2>Permohonan Peminjaman Baru</h2>
               <p className="text-3xl">23</p>
+            </div>
+            <div className="bg-deep-orange-50 p-5">
+              <h2>New Clients</h2>
+              <h2>New Clients</h2>
             </div>
             <div className="bg-deep-orange-50 p-5">
               <h2>New Clients</h2>

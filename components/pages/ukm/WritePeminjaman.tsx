@@ -9,6 +9,7 @@ import { getFileName, uploadFile } from "../../../firebase/file";
 import { editPeminjaman, writePeminjaman } from "../../../firebase/peminjaman";
 import { DocumentData } from "firebase/firestore";
 import { useRouter } from "next/router";
+import SelectTempat from "../../forms/SelectTempat";
 
 interface IPeminjamanProposalProps {
   type?: "new" | "update" | "revision";
@@ -210,29 +211,14 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
               label="Nama Kegiatan"
               id="nama-kegiatan"
             />
-            <Select
+            <SelectTempat
               value={jenisPinjaman}
               onChange={(e) => setJenisPinjaman(e.target.value)}
               error={errorJenisPinjaman}
               label="Jenis Pinjaman"
               id="jenis-pinjaman"
-            >
-              <option value="" disabled>
-                Pilih Jenis Pinjaman
-              </option>
-              <option value="Halaman Depan Diponegoro (Parkir)">
-                Halaman Depan Diponegoro (Parkir)
-              </option>
-              <option value="Belakang SC atau Gazebo (Barat)">
-                Belakang SC atau Gazebo (Barat)
-              </option>
-              <option value="Belakang SC atau Gazebo (Tengah)">
-                Belakang SC atau Gazebo (Tengah)
-              </option>
-              <option value="Belakang SC atau Gazebo (Timur)">
-                Belakang SC atau Gazebo (Timur)
-              </option>
-            </Select>
+            />
+
             <div className="w-full grid grid-cols-12 gap-5">
               <div className="col-span-6">
                 <Input
