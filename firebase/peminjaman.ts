@@ -161,6 +161,50 @@ export const getPeminjamanById = async (id: string) => {
   }
 };
 
+export const getPeminjamanByTempat = async (tempat: string) => {
+  const q = query(
+    collection(db, "permohonan_peminjaman"),
+    where("jenis_pinjaman", "==", tempat)
+  );
+
+  const querySnapshot = await getDocs(q);
+  const peminjaman: any = [];
+
+  querySnapshot.forEach((doc) => {
+    peminjaman.push({
+      id: doc.id,
+      peminjaman: doc.data(),
+    });
+  });
+
+  // Foreach peminjaman, get pemohon data from user
+  // Edit peminjaman.pemohon to pemohon data
+
+  await Promise.all(
+    peminjaman.map(async (p: IPeminjamanData) => {
+      if (p.peminjaman.pemohon instanceof DocumentReference<DocumentData>) {
+        const pemohon = await getDoc(p.peminjaman.pemohon);
+        p.peminjaman.pemohon = pemohon.data();
+
+        // Set status peminjaman from boolean to string
+        if (p.peminjaman.rejected) {
+          p.peminjaman.status = "Ditolak";
+        } else if (p.peminjaman.paraf_SM) {
+          p.peminjaman.status = "Disetujui";
+        } else if (p.peminjaman.paraf_MK) {
+          p.peminjaman.status = "Diproses SM";
+        } else if (p.peminjaman.paraf_KBK) {
+          p.peminjaman.status = "Diproses MK";
+        } else {
+          p.peminjaman.status = "Diproses KBAK";
+        }
+      }
+    })
+  );
+
+  return peminjaman;
+};
+
 export const getLogPeminjamanById = async (id: string) => {
   const permohonanPeminjamanRef = doc(db, "permohonan_peminjaman", id);
 
