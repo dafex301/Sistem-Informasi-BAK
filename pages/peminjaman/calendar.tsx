@@ -4,8 +4,9 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import PageBody from "../../components/layout/PageBody";
 import PageTitle from "../../components/layout/PageTitle";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { getAllPeminjaman } from "../../firebase/peminjaman";
+import SelectTempat from "../../components/forms/SelectTempat";
 
 // end date is now + 1 hour
 const endDate = new Date();
@@ -15,6 +16,7 @@ export default function Calendar() {
   const [events, setEvents] = useState<any[]>([]);
   const [data, setData] = useState([]);
   const [tempat, setTempat] = useState<string>("");
+
   useEffect(() => {
     if (data.length === 0) {
       (async () => {
@@ -25,39 +27,65 @@ export default function Calendar() {
 
   //   If there is data, then map the data to events
   useEffect(() => {
-    if (data.length > 0) {
+    if (data.length > 0 && tempat) {
+      // Set event where data.peminjaman.jenis_pinjaman === tempat
       setEvents(
-        data.map((item: any) => {
-          return {
-            title: item.peminjaman.pemohon.name,
-            start: item.peminjaman.waktu_pinjam.toDate(),
-            end: item.peminjaman.waktu_kembali.toDate(),
-          };
-        })
+        data
+          .filter((item: any) => {
+            return item.peminjaman.jenis_pinjaman === tempat;
+          })
+          .map((item: any) => {
+            return {
+              title: item.peminjaman.pemohon.name,
+              start: item.peminjaman.waktu_pinjam.toDate(),
+              end: item.peminjaman.waktu_kembali.toDate(),
+              url: `/peminjaman/${item.id}`,
+            };
+          })
       );
     }
-  }, [data]);
+  }, [data, tempat]);
 
-  const handleDateClick = (e: any) => {
-    console.log(e.dateStr);
+  const handleSelect = (e: any) => {
+    console.log(e.startStr);
+    console.log(e.endStr);
+    // console.log(e);
   };
+
+  // const handleDateClick = (e: any) => {
+  //   console.log(e.dateStr);
+  // };
+
   return (
     <>
       <PageTitle>Kalender Peminjaman</PageTitle>
       <PageBody>
-        <div>
+        <div className="mt-5">
+          <div className="absolute -top-2">
+            <SelectTempat
+              label={"Pilih Tempat"}
+              error={""}
+              id={"select-tempat"}
+              value={tempat}
+              onChange={(e) => setTempat(e.target.value)}
+              style={"light"}
+              hideLabel
+            />
+          </div>
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
             headerToolbar={{
-              left: "prev,next today",
+              left: "",
               center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay",
+              right: "prev,next today dayGridMonth,timeGridWeek,timeGridDay",
             }}
             weekends={false}
             events={events}
             eventContent={renderEventContent}
-            dateClick={handleDateClick}
+            // dateClick={handleDateClick}
+            selectable={true}
+            select={handleSelect}
           />
         </div>
       </PageBody>
@@ -88,7 +116,7 @@ function renderEventContent(eventInfo: any) {
             ? eventInfo.event.end.getMinutes()
             : "0" + eventInfo.event.end.getMinutes())}
       </b>
-      <i> | {eventInfo.event.title}</i>
+      <span> | {eventInfo.event.title}</span>
     </>
   );
 }

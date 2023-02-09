@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import { getTempat } from "../../firebase/tempat";
 import Select, { SelectProps } from "./Select";
 
-export default function SelectTempat(props: SelectProps) {
+interface AdvancedSelectProps extends SelectProps {
+  hideLabel?: boolean;
+}
+
+export default function SelectTempat(props: AdvancedSelectProps) {
   const [tempat, setTempat] = useState<DocumentData[]>([]);
 
   useEffect(() => {
@@ -20,12 +24,12 @@ export default function SelectTempat(props: SelectProps) {
         value={props.value}
         onChange={props.onChange}
         error={props.error}
-        label="Jenis Pinjaman"
-        id="jenis-pinjaman"
+        label={props.hideLabel ? "" : props.label}
+        id={props.id}
         style={props.style}
       >
         <option value="" disabled>
-          Pilih Jenis Pinjaman
+          {props.label}
         </option>
         {tempat.map((tempat) => (
           <option key={tempat.id} value={tempat.nama_tempat}>
