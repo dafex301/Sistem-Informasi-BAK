@@ -263,6 +263,41 @@ export const writePeminjaman = async (peminjaman: IPeminjaman) => {
   }
 };
 
+export const checkWaktuPeminjamanAvailable = async (
+  waktu_mulai: Date,
+  waktu_selesai: Date,
+  jenis_pinjaman: string,
+  id?: string
+) => {
+  const q = query(
+    collection(db, "permohonan_peminjaman"),
+    where("jenis_pinjaman", "==", jenis_pinjaman)
+  );
+
+  const querySnapshot = await getDocs(q);
+
+  const docs = querySnapshot.docs;
+
+  for (const doc of docs) {
+    if (id && doc.id === id) continue;
+
+    const data = doc.data();
+
+    const waktuMulai = data.waktu_pinjam.toDate();
+    const waktuSelesai = data.waktu_kembali.toDate();
+
+    if (
+      (waktu_mulai >= waktuMulai && waktu_mulai < waktuSelesai) ||
+      (waktu_selesai > waktuMulai && waktu_selesai <= waktuSelesai) ||
+      (waktu_mulai <= waktuMulai && waktu_selesai >= waktuSelesai)
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 export const approvePeminjaman = async (id: string) => {
   const userRef = doc(db, "users", auth.currentUser!.uid);
   const userSnap = await getDoc(userRef);

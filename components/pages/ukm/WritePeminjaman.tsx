@@ -6,7 +6,11 @@ import Input from "../../forms/Input";
 import Select from "../../forms/Select";
 import DragDropFile from "../../forms/DragDropFile";
 import { getFileName, uploadFile } from "../../../firebase/file";
-import { editPeminjaman, writePeminjaman } from "../../../firebase/peminjaman";
+import {
+  checkWaktuPeminjamanAvailable,
+  editPeminjaman,
+  writePeminjaman,
+} from "../../../firebase/peminjaman";
 import { DocumentData } from "firebase/firestore";
 import { useRouter } from "next/router";
 import SelectTempat from "../../forms/SelectTempat";
@@ -39,7 +43,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
 
   const [fileUrl, setFileUrl] = useState<string>("");
 
-  const handleSubmit = (type: IPeminjamanProposalProps["type"]) => {
+  const handleSubmit = async (type: IPeminjamanProposalProps["type"]) => {
     if (!kegiatan) {
       setErrorKegiatan("Nama kegiatan tidak boleh kosong");
     } else {
@@ -73,7 +77,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
     }
 
     if (waktuPinjam && waktuKembali) {
-      if (waktuPinjam > waktuKembali) {
+      if (waktuPinjam >= waktuKembali) {
         setErrorWaktuPinjam(
           "Waktu kembali tidak boleh lebih dahulu dari waktu pinjam"
         );
@@ -85,32 +89,60 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
         setErrorWaktuPinjam("");
         setErrorWaktuKembali("");
       }
+
+      if (
+        props.type === "new" &&
+        (await checkWaktuPeminjamanAvailable(
+          new Date(waktuPinjam),
+          new Date(waktuKembali),
+          jenisPinjaman
+        ))
+      ) {
+        setErrorWaktuKembali("");
+        setErrorWaktuPinjam("");
+      } else if (
+        props.type !== "new" &&
+        (await checkWaktuPeminjamanAvailable(
+          new Date(waktuPinjam),
+          new Date(waktuKembali),
+          jenisPinjaman,
+          props.id
+        ))
+      ) {
+        console.log("update and available");
+        setErrorWaktuKembali("");
+        setErrorWaktuPinjam("");
+      } else {
+        setErrorWaktuKembali("Tempat sudah dipinjam pada waktu tersebut");
+        setErrorWaktuPinjam("Tempat sudah dipinjam pada waktu tersebut");
+        return;
+      }
     }
 
     if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali) {
-      try {
-        if (file) {
-          uploadFile("permohonan_peminjaman", file, setFileUrl);
-        } else {
-          editPeminjaman(
-            props.type == "revision" ? "revision" : "update",
-            props.id!,
-            kegiatan,
-            jenisPinjaman,
-            new Date(waktuPinjam),
-            new Date(waktuKembali)
-          );
-          route.push(
-            {
-              pathname: "/ukm/peminjaman",
-              query: { success: "Berhasil mengubah permohonan peminjaman" },
-            },
-            "/ukm/peminjaman"
-          );
-        }
-      } catch (error) {
-        console.log(error);
-      }
+      // try {
+      //   if (file) {
+      //     uploadFile("permohonan_peminjaman", file, setFileUrl);
+      //   } else {
+      //     editPeminjaman(
+      //       props.type == "revision" ? "revision" : "update",
+      //       props.id!,
+      //       kegiatan,
+      //       jenisPinjaman,
+      //       new Date(waktuPinjam),
+      //       new Date(waktuKembali)
+      //     );
+      //     route.push(
+      //       {
+      //         pathname: "/ukm/peminjaman",
+      //         query: { success: "Berhasil mengubah permohonan peminjaman" },
+      //       },
+      //       "/ukm/peminjaman"
+      //     );
+      //   }
+      // } catch (error) {
+      //   console.log(error);
+      // }
     }
   };
 
@@ -169,13 +201,14 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
     if (props.data?.kegiatan) {
       setKegiatan(props.data?.kegiatan);
       setJenisPinjaman(props.data?.jenis_pinjaman);
-      setWaktuPinjam(
-        props.data?.waktu_pinjam.toDate().toISOString().slice(0, 16)
-      );
-      setWaktuKembali(
-        props.data?.waktu_kembali.toDate().toISOString().slice(0, 16)
-      );
+      setWaktuPinjam(props.data?.waktu_pinjam.toDate().toString());
+      setWaktuKembali(props.data?.waktu_kembali.toDate().toString());
     }
+
+    // TODO: CONVERT
+
+    console.log(props.data?.waktu_pinjam.toDate().toISOString().slice(0, 16));
+    console.log(props.data?.waktu_kembali.toDate());
   }, [props.data]);
 
   return (

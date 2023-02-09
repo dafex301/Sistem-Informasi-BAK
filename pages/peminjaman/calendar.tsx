@@ -80,7 +80,7 @@ export default function Calendar() {
               center: "title",
               right: "prev,next today dayGridMonth,timeGridWeek,timeGridDay",
             }}
-            weekends={false}
+            weekends={true}
             events={events}
             eventContent={renderEventContent}
             // dateClick={handleDateClick}
