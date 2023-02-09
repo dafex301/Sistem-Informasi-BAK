@@ -14,6 +14,7 @@ import {
   deleteDoc,
   updateDoc,
   serverTimestamp,
+  Timestamp,
 } from "firebase/firestore";
 
 import { getStorage, ref, deleteObject } from "firebase/storage";
@@ -35,8 +36,8 @@ export interface IPeminjamanRequest extends IPeminjaman {
   paraf_SM: boolean;
   rejected: boolean;
   rejected_reason: string;
-  created_at: Date;
-  modified_at: Date;
+  created_at: Timestamp | Date;
+  modified_at: Timestamp | Date;
   status?: string;
 }
 
@@ -44,8 +45,8 @@ export interface IUserData {
   email: string;
   name: string;
   role: string;
-  created_at: Date;
-  modified_at: Date;
+  created_at: Timestamp;
+  modified_at: Timestamp;
 }
 
 export interface IPeminjamanData {

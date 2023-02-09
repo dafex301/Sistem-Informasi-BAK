@@ -36,6 +36,8 @@ import {
 } from "../../button/ActionButton";
 import { useRouter } from "next/router";
 import SelectTempat from "../../forms/SelectTempat";
+import { Timestamp } from "firebase/firestore";
+import { downloadExcel } from "../../../lib/xlsx";
 
 const PDFViewer = dynamic(() => import("../../PDFViewer"), {
   ssr: false,
@@ -144,10 +146,25 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
     if (data.length === 0) {
       (async () => {
         const data: IPeminjamanData[] = await getAllPeminjaman(props.role);
+        if (props.type === "verify") {
+          // Sort data by modified_at asc
+          data.sort((a, b) => {
+            if (
+              a.peminjaman.created_at instanceof Timestamp &&
+              b.peminjaman.created_at instanceof Timestamp
+            ) {
+              return a.peminjaman.created_at.toDate() <
+                b.peminjaman.created_at.toDate()
+                ? -1
+                : 1;
+            }
+            return 0;
+          });
+        }
         setData(data);
       })();
     }
-  }, [data.length, props.role]);
+  }, [data.length, props.role, props.type]);
 
   // Update state value when selected change
   useEffect(() => {
@@ -272,6 +289,25 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
     });
   };
 
+  const handleExport = () => {
+    const exportedData = data.map((item: any) => {
+      return {
+        created_at: item.peminjaman.created_at.toDate().toISOString(),
+        kegiatan: item.peminjaman.kegiatan,
+        pemohon: item.peminjaman.pemohon?.name,
+        jenis_pinjaman: item.peminjaman.jenis_pinjaman,
+        waktu_pinjam: item.peminjaman.waktu_pinjam.toDate().toISOString(),
+        waktu_kembali: item.peminjaman.waktu_kembali.toDate().toISOString(),
+        status: item.peminjaman.status,
+        file: item.peminjaman.file,
+      };
+    });
+    downloadExcel(
+      exportedData,
+      new Date().toISOString() + "_permohonan_peminjaman.xlsx"
+    );
+  };
+
   // Table
   const rowcheck: Irender_row = (row, column, display_value) => {
     if (column.field === "peminjaman.kegiatan") {
@@ -366,6 +402,8 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
           row_render={rowcheck}
           columns={props.type === "verify" ? columnsVerify : columnsData}
           rows={data}
+          export={props.type !== "verify"}
+          handleExport={handleExport}
         />
       </PageBody>
 
