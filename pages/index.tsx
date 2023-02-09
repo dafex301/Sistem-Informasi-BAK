@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 import VerticalBarChart from "../components/charts/vertical-bar/VerticalBarChart";
 import PageBody from "../components/layout/PageBody";
 import PageTitle from "../components/layout/PageTitle";
-import { getTotalPeminjaman, getTotalUser } from "../firebase/dashboard";
+import {
+  getTotalPeminjaman,
+  getTotalTempat,
+  getTotalUser,
+} from "../firebase/dashboard";
 import { useAuth } from "../lib/authContext";
 
 const Home: NextPage = () => {
@@ -13,6 +17,8 @@ const Home: NextPage = () => {
 
   const [peminjamanTotal, setPeminjamanTotal] = useState<number | null>(null);
   const [userTotal, setUserTotal] = useState<number | null>(null);
+  const [suratTotal, setSuratTotal] = useState<number | null>(null);
+  const [tempatTotal, setTempatTotal] = useState<number | null>(null);
 
   useEffect(() => {
     if (peminjamanTotal === null) {
@@ -20,12 +26,14 @@ const Home: NextPage = () => {
         setPeminjamanTotal(await getTotalPeminjaman());
       })();
     }
-  });
-
-  useEffect(() => {
     if (userTotal === null) {
       (async () => {
         setUserTotal(await getTotalUser());
+      })();
+    }
+    if (tempatTotal === null) {
+      (async () => {
+        setTempatTotal(await getTotalTempat());
       })();
     }
   });
@@ -45,7 +53,7 @@ const Home: NextPage = () => {
                 : "/staff/peminjaman/data"
             }
           >
-            <div className="flex flex-col bg-blue-100 rounded-lg p-5 gap-1 hover:bg-blue-200 transition-all">
+            <div className="flex flex-col shadow-sm bg-blue-100 rounded-lg p-5 gap-1 hover:bg-blue-200 transition-all">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -61,11 +69,11 @@ const Home: NextPage = () => {
                 />
               </svg>
 
-              <p className="text-xl mt-5 font-medium">Permohonan Peminjaman</p>
+              <p className="text-xl mt-5 font-medium">Total Peminjaman</p>
               <p className="text-4xl font-bold">{peminjamanTotal ?? 0}</p>
             </div>
           </Link>
-          <div className="flex flex-col bg-green-100 rounded-lg p-5 gap-1 hover:bg-green-200 transition-all">
+          <div className="flex flex-col shadow-sm bg-green-100 rounded-lg p-5 gap-1 hover:bg-green-200 transition-all">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -81,11 +89,11 @@ const Home: NextPage = () => {
               />
             </svg>
 
-            <p className="text-xl mt-5 font-medium">Surat Menyurat</p>
+            <p className="text-xl mt-5 font-medium">Total Surat</p>
             <p className="text-4xl font-bold">0</p>
           </div>
           <Link href="/admin/accounts">
-            <div className="flex flex-col bg-yellow-100 rounded-lg p-5 gap-1 hover:bg-yellow-200 transition-all">
+            <div className="flex flex-col shadow-sm bg-yellow-100 rounded-lg p-5 gap-1 hover:bg-yellow-200 transition-all">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -101,12 +109,12 @@ const Home: NextPage = () => {
                 />
               </svg>
 
-              <p className="font-medium text-xl mt-5">User</p>
+              <p className="font-medium text-xl mt-5">Total Users</p>
               <p className="text-4xl font-bold">{userTotal ?? 0}</p>
             </div>
           </Link>
           <Link href="/admin/tempat">
-            <div className="flex flex-col bg-orange-100 rounded-lg p-5 gap-1 hover:bg-orange-200 transition-all">
+            <div className="flex flex-col shadow-sm bg-orange-100 rounded-lg p-5 gap-1 hover:bg-orange-200 transition-all">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -122,25 +130,55 @@ const Home: NextPage = () => {
                 />
               </svg>
 
-              <p className="font-medium text-xl mt-5">Tempat</p>
-              <p className="text-4xl font-bold">{userTotal ?? 0}</p>
+              <p className="font-medium text-xl mt-5">Total Tempat</p>
+              <p className="text-4xl font-bold">{tempatTotal ?? 0}</p>
             </div>
           </Link>
         </div>
 
         <div className="grid grid-cols-12 mt-8 gap-8">
           <div className="grid grid-rows-3 gap-8 col-span-3">
-            <div className="bg-pink-50 p-5">
-              <h2>Permohonan Peminjaman Baru</h2>
-              <p className="text-3xl">23</p>
+            <div className="bg-gray-100 shadow-sm rounded-lg p-5 flex flex-col justify-evenly">
+              <h2 className="font-medium">Permohonan Peminjaman Baru</h2>
+              <div className="flex items-center gap-2">
+                <p className="text-4xl font-bold">23</p>
+                <div className="flex items-center text-green-800 bg-green-100 px-2 rounded-md">
+                  <p>10%</p>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="w-4 h-4"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M8.25 3.75H19.5a.75.75 0 01.75.75v11.25a.75.75 0 01-1.5 0V6.31L5.03 20.03a.75.75 0 01-1.06-1.06L17.69 5.25H8.25a.75.75 0 010-1.5z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
-            <div className="bg-deep-orange-50 p-5">
-              <h2>New Clients</h2>
-              <h2>New Clients</h2>
-            </div>
-            <div className="bg-deep-orange-50 p-5">
-              <h2>New Clients</h2>
-              <h2>New Clients</h2>
+            <div className="bg-gray-100 shadow-sm rounded-lg p-5 flex flex-col justify-evenly">
+              <h2 className="font-medium">Surat Menyurat Baru</h2>
+              <div className="flex items-center gap-2">
+                <p className="text-4xl font-bold">23</p>
+                <div className="flex items-center text-red-800 bg-red-100 px-2 rounded-md">
+                  <p>-21%</p>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="w-4 h-4"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M3.97 3.97a.75.75 0 011.06 0l13.72 13.72V8.25a.75.75 0 011.5 0V19.5a.75.75 0 01-.75.75H8.25a.75.75 0 010-1.5h9.44L3.97 5.03a.75.75 0 010-1.06z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
           <div className="col-span-9 flex items-center justify-center shadow-lg rounded-lg p-5">
