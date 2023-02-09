@@ -120,29 +120,29 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
     }
 
     if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali) {
-      // try {
-      //   if (file) {
-      //     uploadFile("permohonan_peminjaman", file, setFileUrl);
-      //   } else {
-      //     editPeminjaman(
-      //       props.type == "revision" ? "revision" : "update",
-      //       props.id!,
-      //       kegiatan,
-      //       jenisPinjaman,
-      //       new Date(waktuPinjam),
-      //       new Date(waktuKembali)
-      //     );
-      //     route.push(
-      //       {
-      //         pathname: "/ukm/peminjaman",
-      //         query: { success: "Berhasil mengubah permohonan peminjaman" },
-      //       },
-      //       "/ukm/peminjaman"
-      //     );
-      //   }
-      // } catch (error) {
-      //   console.log(error);
-      // }
+      try {
+        if (file) {
+          uploadFile("permohonan_peminjaman", file, setFileUrl);
+        } else {
+          editPeminjaman(
+            props.type == "revision" ? "revision" : "update",
+            props.id!,
+            kegiatan,
+            jenisPinjaman,
+            new Date(waktuPinjam),
+            new Date(waktuKembali)
+          );
+          route.push(
+            {
+              pathname: "/ukm/peminjaman",
+              query: { success: "Berhasil mengubah permohonan peminjaman" },
+            },
+            "/ukm/peminjaman"
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -201,14 +201,24 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
     if (props.data?.kegiatan) {
       setKegiatan(props.data?.kegiatan);
       setJenisPinjaman(props.data?.jenis_pinjaman);
-      setWaktuPinjam(props.data?.waktu_pinjam.toDate().toString());
-      setWaktuKembali(props.data?.waktu_kembali.toDate().toString());
+
+      // Convert waktu_pinjam to local datetime string then +7 hours
+      setWaktuPinjam(
+        new Date(
+          props.data?.waktu_pinjam.toDate().getTime() + 7 * 60 * 60 * 1000
+        )
+          .toISOString()
+          .slice(0, 16)
+      );
+
+      setWaktuKembali(
+        new Date(
+          props.data?.waktu_kembali.toDate().getTime() + 7 * 60 * 60 * 1000
+        )
+          .toISOString()
+          .slice(0, 16)
+      );
     }
-
-    // TODO: CONVERT
-
-    console.log(props.data?.waktu_pinjam.toDate().toISOString().slice(0, 16));
-    console.log(props.data?.waktu_kembali.toDate());
   }, [props.data]);
 
   return (
