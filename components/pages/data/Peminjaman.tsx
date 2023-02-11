@@ -343,19 +343,24 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
   const handleExport = () => {
     const exportedData = viewData.map((item: any) => {
       return {
-        created_at: item.peminjaman.created_at.toDate().toISOString(),
+        // Convert created_at date to DD/MM/YYYY hh:mm:ss
+        created_at: item.peminjaman.created_at.toDate().toLocaleString("id-ID"),
         kegiatan: item.peminjaman.kegiatan,
         pemohon: item.peminjaman.pemohon?.name,
         jenis_pinjaman: item.peminjaman.jenis_pinjaman,
-        waktu_pinjam: item.peminjaman.waktu_pinjam.toDate().toISOString(),
-        waktu_kembali: item.peminjaman.waktu_kembali.toDate().toISOString(),
+        waktu_pinjam: item.peminjaman.waktu_pinjam
+          .toDate()
+          .toLocaleString("id-ID"),
+        waktu_kembali: item.peminjaman.waktu_kembali
+          .toDate()
+          .toLocaleString("id-ID"),
         status: item.peminjaman.status,
         file: item.peminjaman.file,
       };
     });
     downloadExcel(
       exportedData,
-      new Date().toISOString() + "_permohonan_peminjaman.xlsx"
+      new Date().toLocaleString("id-ID") + "_permohonan_peminjaman.xlsx"
     );
   };
 

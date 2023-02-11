@@ -326,7 +326,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
                   />
                 </svg>
                 <div>
-                  <p className="text-xl">Kalender Peminjaman</p>
+                  <p className="text-xl font-semibold">Kalender Peminjaman</p>
                   <p className="text-sm">Cek jadwal peminjaman yang tersedia</p>
                 </div>
               </div>

@@ -254,18 +254,19 @@ const Accounts: NextPage = () => {
         name: updatedName,
         role: updatedRole,
       }),
-    });
-    setModal(null);
-    handleToast("Create");
+    }).then((res) => {
+      setModal(null);
+      handleToast("Create");
 
-    setData([
-      ...data,
-      {
-        identifier: updatedIdentifier,
-        name: updatedName,
-        role: updatedRole,
-      },
-    ]);
+      setData([
+        ...data,
+        {
+          identifier: updatedIdentifier,
+          name: updatedName,
+          role: updatedRole,
+        },
+      ]);
+    });
   };
 
   // ================== Toast ==================

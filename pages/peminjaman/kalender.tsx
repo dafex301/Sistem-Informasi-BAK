@@ -101,19 +101,19 @@ function renderEventContent(eventInfo: any) {
       {/* <b>{eventInfo.event.start.toLocaleTimeString("id-ID")}</b> */}
       {/* Only get hour and minute */}
       <b>
-        {(eventInfo.event.start.getHours() > 10
+        {(eventInfo.event.start.getHours() >= 10
           ? eventInfo.event.start.getHours()
           : "0" + eventInfo.event.start.getHours()) +
           ":" +
-          (eventInfo.event.start.getMinutes() > 10
+          (eventInfo.event.start.getMinutes() >= 10
             ? eventInfo.event.start.getMinutes()
             : "0" + eventInfo.event.start.getMinutes()) +
           " - " +
-          (eventInfo.event.end.getHours() > 10
+          (eventInfo.event.end.getHours() >= 10
             ? eventInfo.event.end.getHours()
             : "0" + eventInfo.event.end.getHours()) +
           ":" +
-          (eventInfo.event.end.getMinutes() > 10
+          (eventInfo.event.end.getMinutes() >= 10
             ? eventInfo.event.end.getMinutes()
             : "0" + eventInfo.event.end.getMinutes())}
       </b>
