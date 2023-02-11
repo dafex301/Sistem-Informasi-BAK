@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import PageBody from "../components/layout/PageBody";
 import PageTitle from "../components/layout/PageTitle";
 import AdminDashboard from "../components/pages/dashboard/AdminDashboard";
+import GuestDashboard from "../components/pages/dashboard/GuestDashboard";
+import StaffDashboard from "../components/pages/dashboard/StaffDashbord";
+import UKMDashboard from "../components/pages/dashboard/UKMDashboard";
 
 import { useAuth } from "../lib/authContext";
 
@@ -22,11 +25,11 @@ const Home: NextPage = () => {
         {role === "admin" ? (
           <AdminDashboard />
         ) : role === "UKM" ? (
-          <p>UKM</p>
+          <UKMDashboard />
         ) : role === "KBAK" || role === "SM" || role === "MK" ? (
-          <p>Staff</p>
+          <StaffDashboard />
         ) : (
-          <p>Guest</p>
+          <GuestDashboard />
         )}
       </PageBody>
     </>

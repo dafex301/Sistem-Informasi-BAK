@@ -112,6 +112,41 @@ const columnsVerify = [
   },
 ];
 
+const columnsPemohon = [
+  {
+    field: "peminjaman.kegiatan",
+    use: "Nama Kegiatan",
+  },
+  {
+    field: "peminjaman.jenis_pinjaman",
+    use: "Jenis Pinjaman",
+  },
+  {
+    field: "peminjaman.waktu_pinjam",
+    use: "Waktu Pinjam",
+  },
+  {
+    field: "peminjaman.waktu_kembali",
+    use: "Waktu Kembali",
+  },
+
+  {
+    field: "peminjaman.status",
+    use: "Status",
+    // use_in_search:false
+  },
+  {
+    field: "aksi",
+    use: "Aksi",
+    use_in_search: false,
+  },
+  // {
+  //   field: "actions",
+  //   use: "Actions",
+  //   // use_in_search:false
+  // },
+];
+
 interface IManajemenPeminjamanProps {
   role?: "admin" | "KBAK" | "SM" | "MK" | "UKM";
   type?: "verify" | "data";
@@ -427,7 +462,13 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
         <DataTable
           // per_page={3}
           row_render={rowcheck}
-          columns={props.type === "verify" ? columnsVerify : columnsData}
+          columns={
+            props.role === "UKM"
+              ? columnsPemohon
+              : props.type === "verify"
+              ? columnsVerify
+              : columnsData
+          }
           rows={viewData}
           export={props.type !== "verify"}
           handleExport={handleExport}
