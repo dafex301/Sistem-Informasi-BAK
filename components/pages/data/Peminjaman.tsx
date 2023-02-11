@@ -122,6 +122,9 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
 ) => {
   // Data State
   const [data, setData] = useState<IPeminjamanData[]>([]);
+  const [viewData, setViewData] = useState<IPeminjamanData[]>([]);
+  const [tempat, setTempat] = useState("");
+
   const [selected, setSelected] = useState<
     [string, Irow | IPeminjamanData | undefined]
   >(["", undefined]);
@@ -162,6 +165,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
           });
         }
         setData(data);
+        setViewData(data);
       })();
     }
   }, [data.length, props.role, props.type]);
@@ -179,6 +183,18 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
       );
     }
   }, [selected]);
+
+  // Update when tempat change
+  useEffect(() => {
+    if (tempat !== "") {
+      const newData = data.filter((item) => {
+        return item.peminjaman.jenis_pinjaman === tempat;
+      });
+      setViewData(newData);
+    } else {
+      setViewData(data);
+    }
+  }, [data, tempat]);
 
   // Handler
   const handleDelete = async () => {
@@ -290,7 +306,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
   };
 
   const handleExport = () => {
-    const exportedData = data.map((item: any) => {
+    const exportedData = viewData.map((item: any) => {
       return {
         created_at: item.peminjaman.created_at.toDate().toISOString(),
         kegiatan: item.peminjaman.kegiatan,
@@ -397,11 +413,22 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
   return (
     <>
       <PageBody>
+        <div className="absolute left-52 top-3 scale-90">
+          <SelectTempat
+            id="select-tempat"
+            onChange={(e) => setTempat(e.target.value)}
+            value={tempat}
+            error={""}
+            hideLabel
+            label="Pilih Tempat"
+          />
+        </div>
+
         <DataTable
           // per_page={3}
           row_render={rowcheck}
           columns={props.type === "verify" ? columnsVerify : columnsData}
-          rows={data}
+          rows={viewData}
           export={props.type !== "verify"}
           handleExport={handleExport}
         />

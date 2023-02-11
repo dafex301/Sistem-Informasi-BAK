@@ -17,21 +17,25 @@ import {
 } from "firebase/firestore";
 
 import { getStorage, ref, deleteObject } from "firebase/storage";
+import { IPeminjamanData } from "./peminjaman";
 
-export const getTotalPeminjaman = async () => {
-  const q = query(collection(db, "permohonan_peminjaman"));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.size;
-};
+// Compare peminjaman data this month and last month
+// Return array of this month data and percentage from last month
+export const comparePeminjaman = (data: IPeminjamanData[]) => {
+  const thisMonth = new Date().getMonth();
+  const thisMonthData = data.filter((item) => {
+    return item.peminjaman.created_at.toDate().getMonth() === thisMonth;
+  });
 
-export const getTotalTempat = async () => {
-  const q = query(collection(db, "tempat"));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.size;
-};
+  const lastMonthData = data.filter((item) => {
+    item.peminjaman.created_at.toDate().getMonth() === thisMonth - 1;
+  });
 
-export const getTotalUser = async () => {
-  const q = query(collection(db, "users"));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.size;
+  const thisMonthTotal = thisMonthData.length;
+  const lastMonthTotal = lastMonthData.length;
+
+  const percentage =
+    lastMonthTotal === 0 ? 0 : (thisMonthTotal / lastMonthTotal - 1) * 100;
+
+  return { total: thisMonthTotal, percentage };
 };

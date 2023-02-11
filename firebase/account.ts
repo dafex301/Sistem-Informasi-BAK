@@ -24,6 +24,7 @@ import {
   getDocs,
   query,
   where,
+  DocumentData,
 } from "firebase/firestore";
 
 // Other module
@@ -33,6 +34,18 @@ const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 const githubProvider = new GithubAuthProvider();
 const microsoftProvider = new OAuthProvider("microsoft.com");
+
+export const getAllUsers = async () => {
+  const users: DocumentData[] = [];
+  const q = query(collection(db, "users"));
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach((doc) => {
+    users.push({ id: doc.id, ...doc.data() });
+  });
+
+  return users;
+};
 
 export const createAccount = async (
   auth: Auth,

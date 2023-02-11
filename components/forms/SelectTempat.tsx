@@ -1,6 +1,6 @@
 import { DocumentData } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { getTempat } from "../../firebase/tempat";
+import { getAllTempat } from "../../firebase/tempat";
 import Select, { SelectProps } from "./Select";
 
 interface AdvancedSelectProps extends SelectProps {
@@ -13,7 +13,7 @@ export default function SelectTempat(props: AdvancedSelectProps) {
   useEffect(() => {
     if (tempat.length === 0) {
       (async () => {
-        setTempat(await getTempat());
+        setTempat(await getAllTempat());
       })();
     }
   });
@@ -28,9 +28,7 @@ export default function SelectTempat(props: AdvancedSelectProps) {
         id={props.id}
         style={props.style}
       >
-        <option value="" disabled>
-          {props.label}
-        </option>
+        <option value="">{props.label}</option>
         {tempat.map((tempat) => (
           <option key={tempat.id} value={tempat.nama_tempat}>
             {tempat.nama_tempat}

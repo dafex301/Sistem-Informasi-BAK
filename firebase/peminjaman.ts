@@ -51,7 +51,7 @@ export interface IUserData {
 
 export interface IPeminjamanData {
   id: string;
-  peminjaman: IPeminjamanRequest;
+  peminjaman: IPeminjamanRequest | DocumentData;
 }
 
 export interface ILogPeminjaman {
@@ -110,7 +110,7 @@ export const getAllPeminjaman = async (
   }
 
   const querySnapshot = await getDocs(q);
-  const peminjaman: any = [];
+  const peminjaman: IPeminjamanData[] = [];
 
   querySnapshot.forEach((doc) => {
     peminjaman.push({

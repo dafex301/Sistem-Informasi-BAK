@@ -13,7 +13,7 @@ import DataTable from "../../components/table/Table";
 import {
   addTempat,
   deleteTempat,
-  getTempat,
+  getAllTempat,
   updateTempat,
 } from "../../firebase/tempat";
 import { Irender_row } from "../../interface/table";
@@ -93,7 +93,7 @@ const ManajemenAkun: NextPage = () => {
   useEffect(() => {
     if (data.length === 0) {
       (async () => {
-        setData(await getTempat());
+        setData(await getAllTempat());
       })();
     }
   });

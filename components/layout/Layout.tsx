@@ -77,7 +77,7 @@ export default function Layout({ children }: Props) {
                 text={"Dashboard"}
               />
               {/* Main Menu */}
-              <div>
+              {/* <div>
                 <p className="text-xs mx-3 mb-2 text-gray-600">Menu Utama</p>
                 <SidebarMenu
                   href={"/peminjaman"}
@@ -87,11 +87,11 @@ export default function Layout({ children }: Props) {
                 />
                 <SidebarMenu
                   href={"/proposal"}
-                  solidIcon={<BankSolid />}
+                  solidIcon={<`+BankSolid />}
                   outlineIcon={<BankOutline />}
                   text={"Pengajuan Proposal & Dana"}
                 />
-              </div>
+              </div> */}
               {/* End of Main Menu */}
 
               {/* Admin Menu */}

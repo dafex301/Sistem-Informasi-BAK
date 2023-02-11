@@ -25,7 +25,7 @@ export const addTempat = async (nama: string) => {
   return docRef;
 };
 
-export const getTempat = async () => {
+export const getAllTempat = async () => {
   const tempat: DocumentData[] = [];
   const q = query(collection(db, "tempat"), orderBy("modified_at", "desc"));
   const querySnapshot = await getDocs(q);
