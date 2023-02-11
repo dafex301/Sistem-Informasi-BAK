@@ -5,6 +5,7 @@ import Select, { SelectProps } from "./Select";
 
 interface AdvancedSelectProps extends SelectProps {
   hideLabel?: boolean;
+  disabled?: boolean;
 }
 
 export default function SelectTempat(props: AdvancedSelectProps) {
@@ -28,7 +29,9 @@ export default function SelectTempat(props: AdvancedSelectProps) {
         id={props.id}
         style={props.style}
       >
-        <option value="">{props.label}</option>
+        <option value="" disabled={props.disabled}>
+          {props.label}
+        </option>
         {tempat.map((tempat) => (
           <option key={tempat.id} value={tempat.nama_tempat}>
             {tempat.nama_tempat}

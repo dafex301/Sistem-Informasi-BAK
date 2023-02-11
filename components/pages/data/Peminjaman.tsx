@@ -420,7 +420,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
             value={tempat}
             error={""}
             hideLabel
-            label="Pilih Tempat"
+            label="Semua Tempat"
           />
         </div>
 

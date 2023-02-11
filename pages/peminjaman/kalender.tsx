@@ -5,16 +5,16 @@ import interactionPlugin from "@fullcalendar/interaction";
 import PageBody from "../../components/layout/PageBody";
 import PageTitle from "../../components/layout/PageTitle";
 import { ChangeEvent, useEffect, useState } from "react";
-import { getAllPeminjaman } from "../../firebase/peminjaman";
+import { getAllPeminjaman, IPeminjamanData } from "../../firebase/peminjaman";
 import SelectTempat from "../../components/forms/SelectTempat";
 
 // end date is now + 1 hour
 const endDate = new Date();
 endDate.setHours(endDate.getHours() + 1);
 
-export default function Calendar() {
+export default function Kalender() {
   const [events, setEvents] = useState<any[]>([]);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<IPeminjamanData[]>([]);
   const [tempat, setTempat] = useState<string>("");
 
   useEffect(() => {
@@ -70,6 +70,7 @@ export default function Calendar() {
               onChange={(e) => setTempat(e.target.value)}
               style={"light"}
               hideLabel
+              disabled
             />
           </div>
           <FullCalendar

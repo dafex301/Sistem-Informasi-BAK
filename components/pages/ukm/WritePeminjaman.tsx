@@ -14,6 +14,7 @@ import {
 import { DocumentData } from "firebase/firestore";
 import { useRouter } from "next/router";
 import SelectTempat from "../../forms/SelectTempat";
+import Link from "next/link";
 
 interface IPeminjamanProposalProps {
   type?: "new" | "update" | "revision";
@@ -223,7 +224,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
 
   return (
     <>
-      <main className="mx-5">
+      <main className="mx-5 -translate-y-5">
         {/* Main Form */}
         <div className="grid grid-cols-12 gap-5">
           {/* Input Section */}
@@ -308,48 +309,74 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
           {/* End of Input Section */}
 
           {/* Right Section */}
-          <div className="col-span-4 bg-blue-gray-100 p-5 text-gray-900 rounded">
-            <p className="font-semibold text-center text-sm mb-4">
-              RINCIAN PELAKSANAAN PELAYANAN ADMINISTRASI PEMINJAMAN RUANG PKM
-              DAN SC UNDIP
-            </p>
-            <ol className="list-decimal mx-5 gap-3 flex flex-col text-sm text-justify">
-              <li>
-                Pengurus Ormawa atau UKM yang akan menggunakan ruang yang ada di
-                Gedung PKM Pleburan, PKM Tembalang atau Student Center, wajib
-                mengajukan surat permohonan kepada Kepala Biro Akademik dan
-                Kemahasiswaan dengan format surat bisa didownload di web Bagian
-                Kemahasiswaan Undip.
-              </li>
-              <li>
-                Proses persetujuan permohonan oleh Kepala BAK, Manager
-                Kemahasiswaan, dan Supervisor Minarpresma.
-              </li>
-              <li>
-                Tim BAK menghubungi mahasiswa yang bersangkutan untuk melengkapi
-                Nota Peminjaman dan menyerahkan persyaratan peminjaman.
-              </li>
-              <li>
-                Setelah Nota Peminjaman dan persyaratan disyahkan oleh
-                Supervisor Minarpresma, Tim BAK mencatat dalam buku agenda
-                peminjaman dan menghubungi Petugas Ruang PKM dan/atau SC
-                setempat.
-              </li>
-              <li>
-                Petugas Ruang PKM dan/atau SC mempersiapkan ruang dimaksud untuk
-                proses penggunaan, dan mengunci kembali ruangan setelah selesai
-                digunakan oleh Pengurus Ormawa dan/atau UKM.
-              </li>
-              <li>
-                Mahasiswa WAJIB mematuhi semua peraturan peminjaman ruang yang
-                ditetapkan oleh Pimpinan Universitas.
-              </li>
-              <li>
-                Petugas Ruang DILARANG menyerahkan kunci kepada mahasiswa
-                dengan alasan apapun.
-              </li>
-            </ol>
+          <div className="col-span-4">
+            <Link href="/peminjaman/kalender">
+              <div className="flex p-5 items-center gap-3 text-gray-900 mb-5 bg-gray-100 hover:bg-gray-300 transition-all rounded-md">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-9 h-9"
+                >
+                  <path d="M12.75 12.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM7.5 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM8.25 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM9.75 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM10.5 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM12.75 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM14.25 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM15 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM16.5 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM15 12.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM16.5 13.5a.75.75 0 100-1.5.75.75 0 000 1.5z" />
+                  <path
+                    fillRule="evenodd"
+                    d="M6.75 2.25A.75.75 0 017.5 3v1.5h9V3A.75.75 0 0118 3v1.5h.75a3 3 0 013 3v11.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V7.5a3 3 0 013-3H6V3a.75.75 0 01.75-.75zm13.5 9a1.5 1.5 0 00-1.5-1.5H5.25a1.5 1.5 0 00-1.5 1.5v7.5a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5v-7.5z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <div>
+                  <p className="text-xl">Kalender Peminjaman</p>
+                  <p className="text-sm">Cek jadwal peminjaman yang tersedia</p>
+                </div>
+              </div>
+            </Link>
+
+            <div className="bg-blue-gray-100 p-5 text-gray-900 rounded">
+              <p className="font-semibold text-center text-sm mb-4">
+                RINCIAN PELAKSANAAN PELAYANAN ADMINISTRASI PEMINJAMAN RUANG PKM
+                DAN SC UNDIP
+              </p>
+              <ol className="list-decimal mx-5 gap-3 flex flex-col text-sm text-justify">
+                <li>
+                  Pengurus Ormawa atau UKM yang akan menggunakan ruang yang ada
+                  di Gedung PKM Pleburan, PKM Tembalang atau Student Center,
+                  wajib mengajukan surat permohonan kepada Kepala Biro Akademik
+                  dan Kemahasiswaan dengan format surat bisa didownload di web
+                  Bagian Kemahasiswaan Undip.
+                </li>
+                <li>
+                  Proses persetujuan permohonan oleh Kepala BAK, Manager
+                  Kemahasiswaan, dan Supervisor Minarpresma.
+                </li>
+                <li>
+                  Tim BAK menghubungi mahasiswa yang bersangkutan untuk
+                  melengkapi Nota Peminjaman dan menyerahkan persyaratan
+                  peminjaman.
+                </li>
+                <li>
+                  Setelah Nota Peminjaman dan persyaratan disyahkan oleh
+                  Supervisor Minarpresma, Tim BAK mencatat dalam buku agenda
+                  peminjaman dan menghubungi Petugas Ruang PKM dan/atau SC
+                  setempat.
+                </li>
+                <li>
+                  Petugas Ruang PKM dan/atau SC mempersiapkan ruang dimaksud
+                  untuk proses penggunaan, dan mengunci kembali ruangan setelah
+                  selesai digunakan oleh Pengurus Ormawa dan/atau UKM.
+                </li>
+                <li>
+                  Mahasiswa WAJIB mematuhi semua peraturan peminjaman ruang yang
+                  ditetapkan oleh Pimpinan Universitas.
+                </li>
+                <li>
+                  Petugas Ruang DILARANG menyerahkan kunci kepada mahasiswa
+                  dengan alasan apapun.
+                </li>
+              </ol>
+            </div>
           </div>
+
           {/* End of Right Section */}
         </div>
       </main>
