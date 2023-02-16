@@ -31,7 +31,7 @@ export interface IPeminjaman {
 
 export interface IPeminjamanRequest extends IPeminjaman {
   pemohon: DocumentReference<DocumentData> | DocumentData | undefined;
-  paraf_KBK: boolean;
+  paraf_KBAK: boolean;
   paraf_MK: boolean;
   paraf_SM: boolean;
   rejected: boolean;
@@ -73,7 +73,7 @@ export const getAllPeminjaman = async (
     q = query(
       collection(db, "permohonan_peminjaman"),
       orderBy("modified_at", "desc"),
-      where("paraf_KBK", "==", false),
+      where("paraf_KBAK", "==", false),
       where("paraf_MK", "==", false),
       where("paraf_SM", "==", false),
       where("rejected", "==", false)
@@ -82,7 +82,7 @@ export const getAllPeminjaman = async (
     q = query(
       collection(db, "permohonan_peminjaman"),
       orderBy("modified_at", "desc"),
-      where("paraf_KBK", "==", true),
+      where("paraf_KBAK", "==", true),
       where("paraf_MK", "==", false),
       where("paraf_SM", "==", false),
       where("rejected", "==", false)
@@ -91,7 +91,7 @@ export const getAllPeminjaman = async (
     q = query(
       collection(db, "permohonan_peminjaman"),
       orderBy("modified_at", "desc"),
-      where("paraf_KBK", "==", true),
+      where("paraf_KBAK", "==", true),
       where("paraf_MK", "==", true),
       where("paraf_SM", "==", false),
       where("rejected", "==", false)
@@ -135,7 +135,7 @@ export const getAllPeminjaman = async (
           p.peminjaman.status = "Disetujui";
         } else if (p.peminjaman.paraf_MK) {
           p.peminjaman.status = "Diproses SM";
-        } else if (p.peminjaman.paraf_KBK) {
+        } else if (p.peminjaman.paraf_KBAK) {
           p.peminjaman.status = "Diproses MK";
         } else {
           p.peminjaman.status = "Diproses KBAK";
@@ -194,7 +194,7 @@ export const getPeminjamanByTempat = async (tempat: string) => {
           p.peminjaman.status = "Disetujui";
         } else if (p.peminjaman.paraf_MK) {
           p.peminjaman.status = "Diproses SM";
-        } else if (p.peminjaman.paraf_KBK) {
+        } else if (p.peminjaman.paraf_KBAK) {
           p.peminjaman.status = "Diproses MK";
         } else {
           p.peminjaman.status = "Diproses KBAK";
@@ -236,7 +236,7 @@ export const writePeminjaman = async (peminjaman: IPeminjaman) => {
   const peminjamanRequest: IPeminjamanRequest = {
     pemohon,
     ...peminjaman,
-    paraf_KBK: false,
+    paraf_KBAK: false,
     paraf_MK: false,
     paraf_SM: false,
     rejected: false,
@@ -312,7 +312,7 @@ export const approvePeminjaman = async (id: string) => {
       case "KBAK":
         await setDoc(
           permohonanPeminjaman,
-          { paraf_KBK: true, modified_at: new Date() },
+          { paraf_KBAK: true, modified_at: new Date() },
           { merge: true }
         );
         break;
@@ -356,7 +356,7 @@ export const rejectPeminjaman = async (id: string, reason: string) => {
     await setDoc(
       permohonanPeminjaman,
       {
-        paraf_KBK: false,
+        paraf_KBAK: false,
         paraf_MK: false,
         paraf_SM: false,
 
@@ -410,7 +410,7 @@ type IEditPeminjaman = {
   waktu_pinjam: Date;
   waktu_kembali: Date;
   file?: string;
-  paraf_KBK: boolean;
+  paraf_KBAK: boolean;
   paraf_MK: boolean;
   paraf_SM: boolean;
   rejected: boolean;
@@ -437,7 +437,7 @@ export const editPeminjaman = async (
       waktu_pinjam,
       waktu_kembali,
       modified_at: new Date(),
-      paraf_KBK: false,
+      paraf_KBAK: false,
       paraf_MK: false,
       paraf_SM: false,
       rejected: false,

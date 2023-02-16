@@ -95,7 +95,7 @@ const PeminjamanDetail: NextPage = () => {
                     <td className="px-5 py-2 ">{data?.pemohon.name}</td>
                     <td className="px-5 py-2 ">Revisi</td>
                   </tr>
-                ) : !data?.paraf_KBK ? (
+                ) : !data?.paraf_KBAK ? (
                   <tr className="bg-yellow-50 px-5 py-2 text-center animate-pulse">
                     <td className="px-5 py-2 ">-</td>
                     <td className="px-5 py-2 ">Kepala BAK</td>

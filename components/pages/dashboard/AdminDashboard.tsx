@@ -2,7 +2,7 @@ import { DocumentData } from "firebase/firestore";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { getAllUsers } from "../../../firebase/account";
-import { comparePeminjaman } from "../../../firebase/dashboard";
+import { comparePeminjaman } from "../../../lib/dashboard";
 import {
   IPeminjamanData,
   getAllPeminjaman,
@@ -23,28 +23,14 @@ export default function AdminDashboard(props: any) {
     percentage: number;
   }>({ total: 0, percentage: 0 });
 
-  // Fetch Data
-  let fetchCheck: boolean[] = [false, false, false];
+  // Fetch data
   useEffect(() => {
-    if (!fetchCheck[0] && peminjamanData.length === 0) {
-      (async () => {
-        setPeminjamanData(await getAllPeminjaman());
-        fetchCheck[0] = true;
-      })();
-    }
-    if (!fetchCheck[1] && userData.length === 0) {
-      (async () => {
-        setUserData(await getAllUsers());
-        fetchCheck[1] = true;
-      })();
-    }
-    if (!fetchCheck[2] && tempatData.length === 0) {
-      (async () => {
-        setTempatData(await getAllTempat());
-        fetchCheck[2] = true;
-      })();
-    }
-  });
+    (async () => {
+      setPeminjamanData(await getAllPeminjaman());
+      setUserData(await getAllUsers());
+      setTempatData(await getAllTempat());
+    })();
+  }, []);
 
   // Calculate Data
   useEffect(() => {
@@ -56,7 +42,7 @@ export default function AdminDashboard(props: any) {
   }, [peminjamanData]);
   return (
     <>
-      <div className="grid grid-cols-4 gap-8">
+      <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
         <Link href={"/admin/peminjaman"}>
           <div className="flex flex-col shadow-sm bg-blue-100 rounded-lg p-5 gap-1 hover:bg-blue-200 transition-all">
             <svg
@@ -141,8 +127,8 @@ export default function AdminDashboard(props: any) {
         </Link>
       </div>
 
-      <div className="grid grid-cols-12 mt-8 gap-8">
-        <div className="grid grid-rows-3 gap-8 col-span-3">
+      <div className="grid md:grid-cols-9 lg:grid-cols-12 mt-8 gap-8">
+        <div className="grid grid-rows-3 gap-8 md:col-span-3">
           <div className="bg-gray-100 shadow-sm rounded-lg p-5 flex flex-col justify-evenly">
             <h2 className="font-medium">Permohonan Peminjaman Baru</h2>
             <div className="flex items-center gap-2">
@@ -212,8 +198,12 @@ export default function AdminDashboard(props: any) {
             <h2 className="font-medium text-xl">Kalender Peminjaman</h2>
           </Link>
         </div>
-        <div className="col-span-9 flex items-center justify-center shadow-lg rounded-lg p-5">
-          <VerticalBarChart />
+        <div className="md:col-span-9 flex items-center justify-center shadow-lg rounded-lg p-5">
+          <VerticalBarChart
+            title={"Data Permohonan dan Surat"}
+            dataPermohonan={[]}
+            dataSurat={[]}
+          />
         </div>
       </div>
     </>

@@ -19,7 +19,13 @@ ChartJS.register(
   Legend
 );
 
-export default function VerticalBarChart() {
+interface IVerticalBarChartProps {
+  title: string;
+  dataPermohonan: number[];
+  dataSurat: number[];
+}
+
+export default function VerticalBarChart(props: IVerticalBarChartProps) {
   const options = {
     responsive: true,
     plugins: {
@@ -28,24 +34,24 @@ export default function VerticalBarChart() {
       },
       title: {
         display: true,
-        text: "Jumlah Peminjaman dan Proposal",
+        text: props.title,
       },
     },
   };
 
   const labels = [
-    "Januari",
-    "Februari",
-    "Maret",
-    "April",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
     "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
+    "Jun",
+    "Jul",
+    "Agu",
+    "Sep",
+    "Okt",
+    "Nov",
+    "Des",
   ];
 
   const data = {
@@ -53,12 +59,12 @@ export default function VerticalBarChart() {
     datasets: [
       {
         label: "Permohonan Peminjaman",
-        data: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56],
+        data: props.dataPermohonan,
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
       {
-        label: "Proposal dan Dana",
-        data: [28, 48, 40, 19, 86, 27, 90, 28, 48, 40, 19, 86],
+        label: "Surat Menyurat",
+        data: props.dataSurat,
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
     ],
