@@ -12,17 +12,14 @@ export default function SelectTempat(props: AdvancedSelectProps) {
   const [tempat, setTempat] = useState<DocumentData[]>([]);
 
   useEffect(() => {
-    if (tempat.length === 0) {
-      (async () => {
-        setTempat(await getAllTempat());
-      })();
-    }
-  });
+    (async () => {
+      setTempat(await getAllTempat());
+    })();
+  }, []);
 
   return (
     <>
       <Select
-        value={props.value}
         onChange={props.onChange}
         error={props.error}
         label={props.hideLabel ? "" : props.label}

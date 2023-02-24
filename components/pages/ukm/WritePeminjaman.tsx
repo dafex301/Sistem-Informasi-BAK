@@ -256,7 +256,6 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
               id="nama-kegiatan"
             />
             <SelectTempat
-              value={jenisPinjaman}
               onChange={(e) => setJenisPinjaman(e.target.value)}
               error={errorJenisPinjaman}
               label="Jenis Pinjaman"
