@@ -5,7 +5,7 @@ interface InputProps {
   id: string;
   value: string | number;
   placeholder?: string;
-  type?: "text" | "date" | "time" | "datetime-local" | "number";
+  type?: "text" | "date" | "time" | "datetime-local" | "number" | "tel";
   style?: "dark" | "light";
   required?: boolean;
   defaultValue?: string;

@@ -11,6 +11,7 @@ interface DragDropFileProps {
   setFile: React.Dispatch<React.SetStateAction<File | null>>;
   setErrorFile: React.Dispatch<React.SetStateAction<string>>;
   oldFileName?: string;
+  required?: boolean;
 }
 
 // drag drop file component
@@ -96,11 +97,12 @@ export default function DragDropFile(props: DragDropFileProps) {
         htmlFor="input-file-upload"
       >
         {props.label}
+        {props.required && <span className="">*</span>}
       </label>
-      <form
+      <div
         id="form-file-upload"
         onDragEnter={handleDrag}
-        onSubmit={(e) => e.preventDefault()}
+        // onSubmit={(e) => e.preventDefault()}
         className="flex items-center justify-center w-full"
       >
         <input
@@ -110,6 +112,7 @@ export default function DragDropFile(props: DragDropFileProps) {
           multiple={true}
           onChange={handleChange}
           accept={props.filetype.join(",")}
+          required={props.required}
         />
         <label
           htmlFor="input-file-upload"
@@ -221,7 +224,7 @@ export default function DragDropFile(props: DragDropFileProps) {
             onDrop={handleDrop}
           ></div>
         )}
-      </form>
+      </div>
       {props.error && <p className="text-red-500 text-xs">{props.error}</p>}
     </>
   );

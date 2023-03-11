@@ -2,14 +2,13 @@ export interface SelectProps {
   label: string;
   error: string;
   id: string;
-  value: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   children?: React.ReactNode;
   style?: "light" | "dark";
   required?: boolean;
 }
 
-export default function Input(props: SelectProps) {
+export default function Select(props: SelectProps) {
   return (
     <div>
       {props.style === "light" ? (
@@ -29,7 +28,6 @@ export default function Input(props: SelectProps) {
                   : "appearance-none border-2 border-red-500 rounded-md w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               }
               id={props.id}
-              value={props.value}
               onChange={props.onChange}
               required={props.required}
             >
@@ -64,7 +62,6 @@ export default function Input(props: SelectProps) {
                   : "block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               }
               id={props.id}
-              value={props.value}
               onChange={props.onChange}
               required={props.required}
             >

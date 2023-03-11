@@ -21,11 +21,27 @@ import { getStorage, ref, deleteObject } from "firebase/storage";
 
 const storage = getStorage();
 
+
+export interface ITebusan {
+    KBAK: boolean;
+    MK: boolean;
+    SM: boolean;
+    SB: boolean;
+    SK: boolean;
+}
+
 export interface ISurat {
     nomor_surat: string;
-    tanggal_surat: Timestamp;
+    tanggal_surat: Timestamp | string | Date;
     perihal: string;
     penerima: string;
+    tebusan: ITebusan
+    nama_pengirim: string,
+    nim_pengirim: string,
+    prodi_pengirim: string,
+    fakultas_pengirim: string,
+    kontak_pengirim: string,
+    ormawa_pengirim?: string;
     file?: string;
 }
 
@@ -35,8 +51,8 @@ export interface ISuratRequest extends ISurat {
     paraf_SM: boolean;
     paraf_MK: boolean;
     paraf_KBAK: boolean;
-    disposisi_status: boolean;
-    disposisi_note: string;
+    // disposisi_status: boolean;
+    // disposisi_note: string;
     created_at: Timestamp;
     modified_at: Timestamp;
     status?: string;
@@ -66,6 +82,17 @@ export interface ILogSurat {
 export const getAllSurat = async (
     role?: "guest" | "Staf" | "SM" | "MK" | "KBAK" | "admin"
 ) => {
-    const userRef = 
 }
+
+export const createSurat = async (surat: ISurat) => {
+    try {
+        await addDoc(collection(db, "surat"), {
+            ...surat,
+            created_at: serverTimestamp(),
+            modified_at: serverTimestamp(),
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
 
