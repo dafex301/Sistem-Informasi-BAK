@@ -23,24 +23,24 @@ const PeminjamanDetail: NextPage = () => {
   const [logData, setLogData] = useState<DocumentData | null>(null);
 
   useEffect(() => {
-    if (data === null && id) {
+    if (id) {
       (async () => {
         await getPeminjamanById(id as string).then((data) => {
           setData(data!);
         });
       })();
     }
-  }, [data, id]);
+  }, [id]);
 
   useEffect(() => {
-    if (logData === null && id) {
+    if (id) {
       (async () => {
         await getLogPeminjamanById(id as string).then((data) => {
           setLogData(data);
         });
       })();
     }
-  });
+  }, [id]);
 
   return (
     <>
