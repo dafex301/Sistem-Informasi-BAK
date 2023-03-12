@@ -2,16 +2,16 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import PageTitle from "../../components/layout/PageTitle";
-import { useAuth } from "../../lib/authContext";
+import PageTitle from "../../../components/layout/PageTitle";
+import { useAuth } from "../../../lib/authContext";
 import { useRouter } from "next/router";
-import PageBody from "../../components/layout/PageBody";
+import PageBody from "../../../components/layout/PageBody";
 // import {
 //   getLogPeminjamanById,
 //   getPeminjamanById,
 // } from "../../firebase/peminjaman";
 import { DocumentData } from "firebase/firestore";
-import { actionTranslation, roleAbbreviation } from "../../lib/functions";
+import { actionTranslation, roleAbbreviation } from "../../../lib/functions";
 
 const SuratDetail: NextPage = () => {
   const router = useRouter();

@@ -9,6 +9,7 @@ interface InputProps {
   style?: "dark" | "light";
   required?: boolean;
   defaultValue?: string;
+  disabled?: boolean;
 }
 
 export default function Input(props: InputProps) {
@@ -37,6 +38,7 @@ export default function Input(props: InputProps) {
               placeholder={props.placeholder ?? props.label}
               required={props.required}
               defaultValue={props.defaultValue}
+              disabled={props.disabled}
             />
           </>
         ) : (
@@ -59,6 +61,9 @@ export default function Input(props: InputProps) {
               id={props.id}
               type={props.type ?? "text"}
               placeholder={props.placeholder ?? props.label}
+              required={props.required}
+              defaultValue={props.defaultValue}
+              disabled={props.disabled}
             />
           </>
         )}

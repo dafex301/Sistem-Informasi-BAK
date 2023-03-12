@@ -296,6 +296,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
               uploader={user?.claims.name}
               name={kegiatan}
               oldFileName={getFileName(props.data?.file) ?? ""}
+              required
             />
 
             <button

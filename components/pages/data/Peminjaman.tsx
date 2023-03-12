@@ -457,7 +457,6 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
           <SelectTempat
             id="select-tempat"
             onChange={(e) => setTempat(e.target.value)}
-            value={tempat}
             error={""}
             hideLabel
             label="Semua Tempat"
@@ -541,7 +540,6 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
               <SelectTempat
                 label={"Jenis Pinjaman"}
                 required
-                value={jenisPinjaman}
                 onChange={(e) => setJenisPinjaman(e.target.value)}
                 error={errorJenisPinjaman}
                 id={"jenis-pinjaman"}

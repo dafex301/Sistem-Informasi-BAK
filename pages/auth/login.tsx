@@ -43,7 +43,6 @@ const Login: NextPage = () => {
       setError("Login gagal. username dan/atau password salah.");
     });
   }
-
   if (!loading && !user) {
     return (
       <>
@@ -59,8 +58,15 @@ const Login: NextPage = () => {
   flex items-center justify-center"
           >
             <div className="w-full h-100">
-              <h1 className="text-xl md:text-2xl font-bold leading-tight mt-12">
-                Log in to your account
+              <Image
+                src="/undip.png"
+                alt="Undip"
+                width={1024}
+                height={1024}
+                className="w-1/6"
+              />
+              <h1 className="text-xl md:text-2xl font-bold leading-tight mt-6">
+                SI-BAK Undip
               </h1>
               <form className="mt-6" action="#">
                 <div>
@@ -87,21 +93,22 @@ const Login: NextPage = () => {
                     value={password}
                   />
                 </div>
-                <div className="text-right mt-2">
-                  <a
-                    href="#"
-                    className="text-sm font-semibold text-gray-700 hover:text-blue-700 focus:text-blue-700"
-                  >
-                    Forgot Password?
-                  </a>
-                </div>
                 <button
                   type="button"
                   className="w-full block bg-indigo-500 hover:bg-indigo-400 focus:bg-indigo-400 text-white font-semibold rounded-lg
         px-4 py-3 mt-6"
                   onClick={handleLogin}
                 >
-                  Log In
+                  Masuk
+                </button>
+                <hr className="w-full bg-gray-300 h-0.5 mt-6" />
+                <button
+                  type="button"
+                  className="w-full block bg-white border-gray-700 border hover:bg-gray-200 focus:bg-gray-200 text-black font-semibold rounded-lg
+                  px-4 py-3 mt-6"
+                  onClick={() => route.push("/")}
+                >
+                  <span className="">Masuk tanpa Akun</span>
                 </button>
               </form>
             </div>

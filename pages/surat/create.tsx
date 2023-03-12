@@ -8,16 +8,20 @@ import Select from "../../components/forms/Select";
 import PageBody from "../../components/layout/PageBody";
 import PageTitle from "../../components/layout/PageTitle";
 import CreatePeminjaman from "../../components/pages/data/Peminjaman";
-import { getFileName } from "../../firebase/file";
+import { getFileName, uploadFile } from "../../firebase/file";
 import { useAuth } from "../../lib/authContext";
 
 import fakultas from "../../data/fakultas.json";
 import jurusan from "../../data/jurusan.json";
-import { createSurat, ITebusan } from "../../firebase/surat";
+import { createSurat, ISurat, ITebusan } from "../../firebase/surat";
 
 const CreateSuratPage: NextPage = () => {
   const { user, loading } = useAuth();
   const route = useRouter();
+
+  const ormawa = user?.claims.role === "UKM" ? user.claims.name : "";
+
+  console.log(ormawa);
 
   const [nomorSurat, setNomorSurat] = useState<string>("");
   const [errorNomorSurat, setNomorErrorSurat] = useState<string>("");
@@ -56,7 +60,7 @@ const CreateSuratPage: NextPage = () => {
   const [kontakPengirim, setKontakPengirim] = useState<string>("");
   const [errorKontakPengirim, setErrorKontakPengirim] = useState<string>("");
 
-  const [ormawaPengirim, setOrmawaPengirim] = useState<string>("");
+  const [ormawaPengirim, setOrmawaPengirim] = useState<string>(ormawa);
   const [errorOrmawaPengirim, setErrorOrmawaPengirim] = useState<string>("");
 
   const [file, setFile] = useState<File | null>(null);
@@ -133,17 +137,33 @@ const CreateSuratPage: NextPage = () => {
     if (!kontakPengirim) {
       error = true;
       setErrorKontakPengirim("Kontak Pengirim (WA) tidak boleh kosong");
-    }
-    // else if the kontakPengirim is not a number
-    else if (isNaN(Number(kontakPengirim))) {
+    } else if (isNaN(Number(kontakPengirim))) {
       error = true;
       setErrorKontakPengirim("Kontak Pengirim harus berupa angka");
     } else {
       setErrorKontakPengirim("");
     }
 
+    if (!file) {
+      error = true;
+      setErrorFile("File tidak boleh kosong");
+    }
+
     if (!error) {
-      await createSurat({
+      try {
+        if (file) {
+          uploadFile("surat", file, setFileUrl);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  // Submit if fileUrl is available
+  useEffect(() => {
+    if (fileUrl) {
+      const suratRequest: ISurat = {
         nomor_surat: nomorSurat,
         tanggal_surat: tanggalSurat,
         perihal: perihal,
@@ -154,20 +174,15 @@ const CreateSuratPage: NextPage = () => {
         prodi_pengirim: prodiPengirim,
         fakultas_pengirim: fakultasPengirim,
         kontak_pengirim: kontakPengirim,
-        ormawa_pengirim: ormawaPengirim,
+        ormawa_pengirim: ormawaPengirim ?? null,
         file: fileUrl,
-      }).then(() => {
-        // TODO : Handle if failed
-        route.push(
-          {
-            pathname: "/ukm/peminjaman",
-            query: { success: "Berhasil membuat surat" },
-          },
-          "/ukm/peminjaman"
-        );
-      });
+      };
+
+      createSurat(suratRequest);
+
+      route.push("/");
     }
-  };
+  }, [fileUrl]);
 
   const [jurusanView, setJurusanView] = useState<
     { fakultas: string; nama: string }[]
@@ -383,6 +398,7 @@ const CreateSuratPage: NextPage = () => {
                 onChange={(e) => setOrmawaPengirim(e.target.value)}
                 id={"ormawa-pengirim"}
                 value={ormawaPengirim}
+                disabled={ormawa}
               />
             </div>
             <DragDropFile
@@ -393,11 +409,10 @@ const CreateSuratPage: NextPage = () => {
               maxSize={512000}
               file={file}
               error={errorFile}
-              uploader={user?.claims.name}
-              name={nomorSurat}
-              // oldFileName={getFileName(props.data?.file) ?? ""}
+              uploader={namaPengirim}
+              name={perihal}
               oldFileName={""}
-              //required
+              required
             />
             <button
               onClick={(e) => handleSubmit(e)}

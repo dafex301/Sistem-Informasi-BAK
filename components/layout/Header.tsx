@@ -18,11 +18,13 @@ import { useState } from "react";
 
 export default function Header(props: any) {
   const { user, loading } = useAuth();
-  const [modal, setModal] = useState(false);
   const router = useRouter();
+  const [modal, setModal] = useState(false);
 
   const handleLogout = async () => {
-    await signOut();
+    await signOut().then(() => {
+      router.push("/auth/login");
+    });
   };
 
   return (
@@ -48,7 +50,7 @@ export default function Header(props: any) {
             </div>
           </>
         ) : (
-          <p>Login</p>
+          <div className="flex justify-end m-5"></div>
         )}
         {/* Modal */}
         {modal && (
