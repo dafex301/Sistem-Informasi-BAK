@@ -62,7 +62,7 @@ export interface ISuratRequest extends ISurat {
 
 export interface ISuratData {
   id: string;
-  //surat: ISuratRequest | DocumentData;
+  surat: ISuratRequest | DocumentData;
 }
 
 export interface ILogSurat {
@@ -126,7 +126,9 @@ export const getAllSurat = async (role?: Role) => {
     surat.push({ id: doc.id, ...doc.data() });
   });
 
-  return surat;
+  console.log("surat", surat);
+
+  return surat as ISuratData[];
 };
 
 export const getDisposisiSurat = async (role?: Role) => {

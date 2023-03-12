@@ -37,6 +37,7 @@ import { useRouter } from "next/router";
 import SelectTempat from "../../forms/SelectTempat";
 import { Timestamp } from "firebase/firestore";
 import { downloadExcel } from "../../../lib/xlsx";
+import { getAllSurat, ISuratData } from "../../../firebase/surat";
 
 const PDFViewer = dynamic(() => import("../../PDFViewer"), {
   ssr: false,
@@ -146,17 +147,17 @@ const columnsPemohon = [
   // },
 ];
 
-interface IManajemenPeminjamanProps {
+interface IManajemenSurat {
   role?: "admin" | "KBAK" | "SM" | "MK" | "UKM";
   type?: "verify" | "data";
 }
 
-const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
-  props: IManajemenPeminjamanProps
+export const ManajemenSurat: NextPage<IManajemenSurat> = (
+  props: IManajemenSurat
 ) => {
   // Data State
-  const [data, setData] = useState<IPeminjamanData[]>([]);
-  const [viewData, setViewData] = useState<IPeminjamanData[]>([]);
+  const [data, setData] = useState<ISuratData[]>([]);
+  const [viewData, setViewData] = useState<ISuratData[]>([]);
   const [tempat, setTempat] = useState("");
 
   const [selected, setSelected] = useState<
@@ -182,28 +183,14 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
   useEffect(() => {
     if (data.length === 0) {
       (async () => {
-        const data: IPeminjamanData[] = await getAllPeminjaman(props.role);
-        if (props.type === "verify") {
-          // Sort data by modified_at asc
-          data.sort((a, b) => {
-            if (
-              a.peminjaman.created_at instanceof Timestamp &&
-              b.peminjaman.created_at instanceof Timestamp
-            ) {
-              return a.peminjaman.created_at.toDate() <
-                b.peminjaman.created_at.toDate()
-                ? -1
-                : 1;
-            }
-            return 0;
-          });
-        }
+        const data: ISuratData[] = await getAllSurat();
         setData(data);
         setViewData(data);
       })();
     }
   }, [data.length, props.role, props.type]);
 
+  console.log(data);
   // Update state value when selected change
   useEffect(() => {
     if (selected[1]) {
@@ -618,5 +605,3 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
     </>
   );
 };
-
-export default ManajemenPeminjaman;
