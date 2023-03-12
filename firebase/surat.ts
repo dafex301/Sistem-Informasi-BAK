@@ -47,7 +47,7 @@ export interface ISurat {
 }
 
 export interface ISuratRequest extends ISurat {
-  status?: "diproses" | "disetujui" | "ditolak";
+  status?: "Diproses" | "Disetujui" | "Ditolak";
   paraf_KBAK?: boolean;
   paraf_MK?: boolean;
   paraf_SM?: boolean;
@@ -60,15 +60,14 @@ export interface ISuratRequest extends ISurat {
   modified_at: FieldValue;
 }
 
-export interface ISuratData {
+export interface ISuratData extends ISuratRequest {
   id: string;
-  surat: ISuratRequest | DocumentData;
 }
 
 export interface ILogSurat {
   surat: DocumentReference<DocumentData>;
   user: DocumentReference<DocumentData>;
-  aksi: "dibuat" | "disetujui" | "disposisi" | "ditolak";
+  aksi: "dibuat" | "Disetujui" | "disposisi" | "Ditolak";
   disposisi?: string;
   waktu: FieldValue;
 }
@@ -126,8 +125,6 @@ export const getAllSurat = async (role?: Role) => {
     surat.push({ id: doc.id, ...doc.data() });
   });
 
-  console.log("surat", surat);
-
   return surat as ISuratData[];
 };
 
@@ -170,6 +167,7 @@ export const createSurat = async (surat: ISurat) => {
 
   const suratObj: ISuratRequest = {
     ...surat,
+    status: "Diproses",
     created_at: serverTimestamp(),
     modified_at: serverTimestamp(),
   };
@@ -187,7 +185,7 @@ export const createSurat = async (surat: ISurat) => {
   }
   try {
     await addDoc(collection(db, "surat"), {
-      suratObj,
+      ...suratObj,
     });
   } catch (error) {
     console.log(error);
@@ -209,7 +207,7 @@ export const disposisiSurat = async (
       ...suratData,
       [`paraf_${role}`]: true,
       [`paraf_${tujuan}`]: false,
-      status: "diproses",
+      status: "Diproses",
       modified_at: serverTimestamp(),
     };
 
@@ -252,7 +250,7 @@ export const finalizeSurat = async (
     const suratObj = {
       ...suratData,
       [`paraf_${role}`]: true,
-      status: approve ? "disetujui" : "ditolak",
+      status: approve ? "Disetujui" : "Ditolak",
       modified_at: serverTimestamp(),
     };
 
@@ -267,7 +265,7 @@ export const finalizeSurat = async (
     const logSurat: ILogSurat = {
       surat: suratRef,
       user: doc(db, "users", auth.currentUser!.uid),
-      aksi: approve ? "disetujui" : "ditolak",
+      aksi: approve ? "Disetujui" : "Ditolak",
       waktu: serverTimestamp(),
     };
 

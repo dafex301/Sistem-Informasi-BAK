@@ -21,8 +21,6 @@ const CreateSuratPage: NextPage = () => {
 
   const ormawa = user?.claims.role === "UKM" ? user.claims.name : "";
 
-  console.log(ormawa);
-
   const [nomorSurat, setNomorSurat] = useState<string>("");
   const [errorNomorSurat, setNomorErrorSurat] = useState<string>("");
 

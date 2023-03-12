@@ -5,7 +5,7 @@ import Image from "next/image";
 
 // Components
 import { Irow } from "react-tailwind-table";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Irender_row } from "../../../interface/table";
 import PageBody from "../../layout/PageBody";
 import { Dialog } from "@material-tailwind/react";
@@ -13,14 +13,6 @@ import Input from "../../forms/Input";
 import { ToastContainer, toast } from "react-toastify";
 
 // Data
-import {
-  getAllPeminjaman,
-  deletePeminjaman,
-  IPeminjamanData,
-  updatePeminjaman,
-  approvePeminjaman,
-  rejectPeminjaman,
-} from "../../../firebase/peminjaman";
 import DataTable from "../../table/Table";
 import Link from "next/link";
 import { ModalWithImage, RejectModal } from "../../modal/Modal";
@@ -38,6 +30,7 @@ import SelectTempat from "../../forms/SelectTempat";
 import { Timestamp } from "firebase/firestore";
 import { downloadExcel } from "../../../lib/xlsx";
 import { getAllSurat, ISuratData } from "../../../firebase/surat";
+import Select from "../../forms/Select";
 
 const PDFViewer = dynamic(() => import("../../PDFViewer"), {
   ssr: false,
@@ -46,108 +39,38 @@ const PDFViewer = dynamic(() => import("../../PDFViewer"), {
 // Columns
 const columnsData = [
   {
-    field: "peminjaman.kegiatan",
-    use: "Nama Kegiatan",
+    field: "nomor_surat",
+    use: "Nomor Surat",
   },
   {
-    // use_in_display: false,
-    field: "peminjaman.pemohon.name",
-    use: "Pemohon",
+    field: "tanggal_surat",
+    use: "Tanggal Surat",
   },
   {
-    field: "peminjaman.jenis_pinjaman",
-    use: "Jenis Pinjaman",
+    field: "perihal",
+    use: "Perihal",
   },
   {
-    field: "peminjaman.waktu_pinjam",
-    use: "Waktu Pinjam",
+    field: "nama_pengirim",
+    use: "Nama Pengirim",
   },
   {
-    field: "peminjaman.waktu_kembali",
-    use: "Waktu Kembali",
+    field: "penerima",
+    use: "Penerima",
   },
-
   {
-    field: "peminjaman.status",
+    field: "status",
     use: "Status",
-    // use_in_search:false
   },
   {
     field: "aksi",
     use: "Aksi",
     use_in_search: false,
   },
-  // {
-  //   field: "actions",
-  //   use: "Actions",
-  //   // use_in_search:false
-  // },
-];
-
-const columnsVerify = [
-  {
-    field: "peminjaman.kegiatan",
-    use: "Nama Kegiatan",
-  },
-  {
-    field: "peminjaman.pemohon.name",
-    use: "Pemohon",
-  },
-  {
-    field: "peminjaman.jenis_pinjaman",
-    use: "Jenis Pinjaman",
-  },
-  {
-    field: "peminjaman.waktu_pinjam",
-    use: "Waktu Pinjam",
-  },
-  {
-    field: "peminjaman.waktu_kembali",
-    use: "Waktu Kembali",
-  },
-  {
-    field: "aksi",
-    use: "Aksi",
-    use_in_search: false,
-  },
-];
-
-const columnsPemohon = [
-  {
-    field: "peminjaman.kegiatan",
-    use: "Nama Kegiatan",
-  },
-  {
-    field: "peminjaman.jenis_pinjaman",
-    use: "Jenis Pinjaman",
-  },
-  {
-    field: "peminjaman.waktu_pinjam",
-    use: "Waktu Pinjam",
-  },
-  {
-    field: "peminjaman.waktu_kembali",
-    use: "Waktu Kembali",
-  },
-
-  {
-    field: "peminjaman.status",
-    use: "Status",
-    // use_in_search:false
-  },
-  {
-    field: "aksi",
-    use: "Aksi",
-    use_in_search: false,
-  },
-  // {
-  //   field: "actions",
-  //   use: "Actions",
-  //   // use_in_search:false
-  // },
 ];
 
 interface IManajemenSurat {
+  data: ISuratData[];
   role?: "admin" | "KBAK" | "SM" | "MK" | "UKM";
   type?: "verify" | "data";
 }
@@ -155,67 +78,24 @@ interface IManajemenSurat {
 export const ManajemenSurat: NextPage<IManajemenSurat> = (
   props: IManajemenSurat
 ) => {
+  const { data } = props;
   // Data State
-  const [data, setData] = useState<ISuratData[]>([]);
   const [viewData, setViewData] = useState<ISuratData[]>([]);
-  const [tempat, setTempat] = useState("");
+  const [penerima, setPenerima] = useState("");
 
-  const [selected, setSelected] = useState<
-    [string, Irow | IPeminjamanData | undefined]
-  >(["", undefined]);
-
-  // Input State
-  const [kegiatan, setKegiatan] = useState("");
-  const [errorKegiatan, setErrorKegiatan] = useState("");
-
-  const [jenisPinjaman, setJenisPinjaman] = useState("");
-  const [errorJenisPinjaman, setErrorJenisPinjaman] = useState("");
-
-  const [waktuPinjam, setWaktuPinjam] = useState("");
-  const [errorWaktuPinjam, setErrorWaktuPinjam] = useState("");
-
-  const [waktuKembali, setWaktuKembali] = useState("");
-  const [errorWaktuKembali, setErrorWaktuKembali] = useState("");
+  const [selected, setSelected] = useState<[string, ISuratData | undefined]>([
+    "",
+    undefined,
+  ]);
 
   const router = useRouter();
 
   // Get Data
   useEffect(() => {
-    if (data.length === 0) {
-      (async () => {
-        const data: ISuratData[] = await getAllSurat();
-        setData(data);
-        setViewData(data);
-      })();
-    }
-  }, [data.length, props.role, props.type]);
-
-  console.log(data);
-  // Update state value when selected change
-  useEffect(() => {
-    if (selected[1]) {
-      setKegiatan(selected[1].peminjaman.kegiatan);
-      setJenisPinjaman(selected[1].peminjaman.jenis_pinjaman);
-      setWaktuPinjam(
-        selected[1].peminjaman.waktu_pinjam.toDate().toISOString().slice(0, 16)
-      );
-      setWaktuKembali(
-        selected[1].peminjaman.waktu_kembali.toDate().toISOString().slice(0, 16)
-      );
-    }
-  }, [selected]);
-
-  // Update when tempat change
-  useEffect(() => {
-    if (tempat !== "") {
-      const newData = data.filter((item) => {
-        return item.peminjaman.jenis_pinjaman === tempat;
-      });
-      setViewData(newData);
-    } else {
+    if (viewData.length === 0) {
       setViewData(data);
     }
-  }, [data, tempat]);
+  }, [data, props.role, props.type, viewData.length]);
 
   // Handler
   const handleDelete = async () => {
@@ -235,63 +115,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     });
   };
 
-  const handleUpdate = async () => {
-    if (kegiatan === "") {
-      setErrorKegiatan("Nama kegiatan tidak boleh kosong");
-    } else {
-      setErrorKegiatan("");
-    }
-
-    if (jenisPinjaman === "") {
-      setErrorJenisPinjaman("Jenis pinjaman tidak boleh kosong");
-    } else {
-      setErrorJenisPinjaman("");
-    }
-
-    if (waktuPinjam && waktuKembali) {
-      if (waktuPinjam > waktuKembali) {
-        setErrorWaktuKembali(
-          "Waktu kembali tidak boleh kurang dari waktu pinjam"
-        );
-        setErrorWaktuKembali(
-          "Waktu kembali tidak boleh kurang dari waktu pinjam"
-        );
-        return;
-      } else {
-        setErrorWaktuPinjam("");
-        setErrorWaktuKembali("");
-      }
-    } else {
-      setErrorWaktuKembali("Waktu kembali tidak boleh kosong");
-      setErrorWaktuPinjam("Waktu pinjam tidak boleh kosong");
-    }
-
-    if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali) {
-      console.log("updating");
-      await updatePeminjaman(
-        selected[1]?.id,
-        kegiatan,
-        jenisPinjaman,
-        new Date(waktuPinjam),
-        new Date(waktuKembali)
-      ).then(() => {
-        setData([]);
-        setSelected(["", undefined]);
-
-        toast.success("Update success", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      });
-    }
-  };
-
+  // TODO
   const handleApprove = async () => {
     await approvePeminjaman(selected[1]?.id).then(() => {
       setData([]);
@@ -309,6 +133,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     });
   };
 
+  // TODO
   const handleReject = async (reason: string) => {
     await rejectPeminjaman(selected[1]?.id, reason).then(() => {
       setData([]);
@@ -327,47 +152,45 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
   };
 
   const handleExport = () => {
-    const exportedData = viewData.map((item: any) => {
+    const exportedData = viewData.map((item: ISuratData) => {
+      const tgl_surat = item.tanggal_surat as string;
+      const createdAt = item.created_at as Timestamp;
       return {
-        // Convert created_at date to DD/MM/YYYY hh:mm:ss
-        created_at: item.peminjaman.created_at.toDate().toLocaleString("id-ID"),
-        kegiatan: item.peminjaman.kegiatan,
-        pemohon: item.peminjaman.pemohon?.name,
-        jenis_pinjaman: item.peminjaman.jenis_pinjaman,
-        waktu_pinjam: item.peminjaman.waktu_pinjam
-          .toDate()
-          .toLocaleString("id-ID"),
-        waktu_kembali: item.peminjaman.waktu_kembali
-          .toDate()
-          .toLocaleString("id-ID"),
-        status: item.peminjaman.status,
-        file: item.peminjaman.file,
+        created_at: createdAt.toDate().toLocaleString("id-ID"),
+        nomor_surat: item.nomor_surat,
+        tanggal_surat: tgl_surat.split("-").reverse().join("/"),
+        perihal: item.perihal,
+        penerima: item.penerima,
+        nama_pengirim: item.nama_pengirim,
+        fakultas_pengirim: item.fakultas_pengirim,
+        prodi_pengirim: item.prodi_pengirim,
+        ormawa_pengirim: item.ormawa_pengirim,
+        kontak_pengirim: item.kontak_pengirim,
+        status: item.status,
+        file: item.file,
       };
     });
     downloadExcel(
       exportedData,
-      new Date().toLocaleString("id-ID") + "_permohonan_peminjaman.xlsx"
+      new Date().toLocaleString("id-ID") + "_surat.xlsx"
     );
   };
 
+  // TODO
   // Table
   const rowcheck: Irender_row = (row, column, display_value) => {
-    if (column.field === "peminjaman.kegiatan") {
+    if (column.field === "nomor_surat") {
       return (
         <div className="flex items-center gap-2">
-          <Link href={`/peminjaman/${row.id}`}>
+          <Link href={`/surat/detail/${row.id}`}>
             <p className="font-semibold hover:underline">{display_value}</p>
           </Link>
         </div>
       );
     }
 
-    if (column.field === "peminjaman.waktu_pinjam") {
-      return <p>{display_value.toDate().toLocaleString("id-ID")}</p>;
-    }
-
-    if (column.field === "peminjaman.waktu_kembali") {
-      return <p>{display_value.toDate().toLocaleString("id-ID")}</p>;
+    if (column.field === "tanggal_surat") {
+      return <p>{display_value.split("-").reverse().join("/")}</p>;
     }
 
     if (column.field === "aksi") {
@@ -378,26 +201,8 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
 
           {props.role === "admin" && (
             <>
-              {/* Edit Button */}
-              <EditButton row={row} setSelected={setSelected} />
-
               {/* Delete Button */}
               <DeleteButton row={row} setSelected={setSelected} />
-            </>
-          )}
-
-          {/* Update Button when not verified yet */}
-          {props.role === "UKM" &&
-            row.peminjaman.status === "Diproses KBAK" && (
-              <>
-                <UpdateButton row={row} />
-              </>
-            )}
-
-          {/* Revision Button */}
-          {props.role === "UKM" && row.peminjaman.status === "Ditolak" && (
-            <>
-              <RevisionButton row={row} />
             </>
           )}
 
@@ -418,6 +223,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     return display_value;
   };
 
+  // TODO
   // Toaster trigger when route.query.success is filled
   let show = 0;
   useEffect(() => {
@@ -440,25 +246,19 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     <>
       <PageBody>
         <div className="absolute left-52 top-3 scale-90">
-          <SelectTempat
-            id="select-tempat"
-            onChange={(e) => setTempat(e.target.value)}
-            error={""}
-            hideLabel
-            label="Semua Tempat"
-          />
+          <Select
+            label={"Penerima"}
+            id={""}
+            onChange={(e) => console.log(e.target.value)}
+          >
+            <option value=""></option>
+          </Select>
         </div>
 
         <DataTable
           // per_page={3}
           row_render={rowcheck}
-          columns={
-            props.role === "UKM"
-              ? columnsPemohon
-              : props.type === "verify"
-              ? columnsVerify
-              : columnsData
-          }
+          columns={columnsData}
           rows={viewData}
           export={props.type !== "verify"}
           handleExport={handleExport}
@@ -472,7 +272,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
       >
         {selected[0] === "file" && (
           <div className="h-[36rem]">
-            <PDFViewer file={selected[1]?.peminjaman.file} />
+            <PDFViewer file={selected[1]?.file!} />
           </div>
         )}
 
@@ -488,7 +288,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
             <h2 className="text-xl font-semibold text-gray-800">
               Apakah anda yakin untuk menghapus permohonan peminjaman ini?
             </h2>
-            <p className="text-gray-800">{selected[1]?.peminjaman.kegiatan}</p>
+            <p className="text-gray-800">{selected[1]?.nomor_surat}</p>
             <div className="flex gap-3">
               <button
                 onClick={() => setSelected(["", undefined])}
@@ -506,72 +306,6 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
           </div>
         )}
 
-        {selected[0] === "update" && (
-          <div className="flex flex-col p-5 h-auto w-[36rem] gap-5">
-            <div className="">
-              <h2 className="font-semibold text-lg text-gray-900">
-                Update Permohonan Peminjaman
-              </h2>
-            </div>
-            <form className="flex flex-col gap-4">
-              <Input
-                label="Nama Kegiatan"
-                error={errorKegiatan}
-                onChange={(e) => setKegiatan(e.target.value)}
-                id={"nama-kegiatan"}
-                value={kegiatan}
-                style="light"
-                required
-              />
-              <SelectTempat
-                label={"Jenis Pinjaman"}
-                required
-                onChange={(e) => setJenisPinjaman(e.target.value)}
-                error={errorJenisPinjaman}
-                id={"jenis-pinjaman"}
-                style="light"
-              />
-
-              <div className="grid grid-cols-2 gap-3">
-                <Input
-                  label="Waktu Pinjam"
-                  type="datetime-local"
-                  error={errorWaktuPinjam}
-                  onChange={(e) => setWaktuPinjam(e.target.value)}
-                  id={"waktu-pinjam"}
-                  value={waktuPinjam}
-                  style="light"
-                  required
-                />
-                <Input
-                  label="Waktu Kembali"
-                  type="datetime-local"
-                  error={errorWaktuKembali}
-                  onChange={(e) => setWaktuKembali(e.target.value)}
-                  id={"waktu-kembali"}
-                  value={waktuKembali}
-                  style="light"
-                  required
-                />
-              </div>
-            </form>
-            <div className="w-full grid grid-cols-2 gap-3 font-medium">
-              <button
-                onClick={() => setSelected(["", undefined])}
-                className="border border-gray-300 text-gray-800 p-2 rounded-md hover:bg-gray-100"
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-gray-900 text-white p-2 rounded-md hover:bg-gray-800"
-                onClick={handleUpdate}
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        )}
-
         {selected[0] === "approve" && (
           <>
             <ModalWithImage
@@ -581,7 +315,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
                 "Apakah anda yakin untuk menyetujui permohonan peminjaman ini?"
               }
               image={"/assets/document-approve.jpeg"}
-              name={selected[1]?.peminjaman.kegiatan}
+              name={selected[1]?.nomor_surat!}
               color={"green"}
             />
           </>
@@ -595,7 +329,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
               description={
                 "Apakah anda yakin untuk menolak permohonan peminjaman ini?"
               }
-              name={selected[1]?.peminjaman.kegiatan}
+              name={selected[1]?.nomor_surat!}
             />
           </>
         )}

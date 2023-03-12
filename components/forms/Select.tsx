@@ -1,8 +1,8 @@
 export interface SelectProps {
   label: string;
-  error: string;
   id: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  error?: string;
   children?: React.ReactNode;
   style?: "light" | "dark";
   required?: boolean;
