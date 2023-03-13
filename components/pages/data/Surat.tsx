@@ -15,9 +15,10 @@ import { ToastContainer, toast } from "react-toastify";
 // Data
 import DataTable from "../../table/Table";
 import Link from "next/link";
-import { ModalWithImage, RejectModal } from "../../modal/Modal";
+import { ModalWithImage, ActionModal, DisposisiModal } from "../../modal/Modal";
 import {
   DeleteButton,
+  DisposisiButton,
   EditButton,
   FileButton,
   RejectButton,
@@ -29,7 +30,14 @@ import { useRouter } from "next/router";
 import SelectTempat from "../../forms/SelectTempat";
 import { Timestamp } from "firebase/firestore";
 import { downloadExcel } from "../../../lib/xlsx";
-import { getAllSurat, ISuratData } from "../../../firebase/surat";
+import {
+  deleteSurat,
+  disposisiSurat,
+  finalizeSurat,
+  getAllSurat,
+  ISuratData,
+  Role,
+} from "../../../firebase/surat";
 import Select from "../../forms/Select";
 
 const PDFViewer = dynamic(() => import("../../PDFViewer"), {
@@ -71,8 +79,8 @@ const columnsData = [
 
 interface IManajemenSurat {
   data: ISuratData[];
-  role?: "admin" | "KBAK" | "SM" | "MK" | "UKM";
-  type?: "verify" | "data";
+  role: "KBAK" | "MK" | "SM" | "SB" | "SK" | "staf_SM" | "staf_SB" | "staf_SK";
+  type?: "data" | "pribadi" | "disposisi" | "tebusan";
 }
 
 export const ManajemenSurat: NextPage<IManajemenSurat> = (
@@ -99,8 +107,8 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
 
   // Handler
   const handleDelete = async () => {
-    await deletePeminjaman(selected[1]?.id).then(() => {
-      setData([]);
+    await deleteSurat(selected[1]!).then(() => {
+      setViewData([]);
       setSelected(["", undefined]);
       toast.success("Delete success", {
         position: "top-right",
@@ -115,10 +123,9 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     });
   };
 
-  // TODO
-  const handleApprove = async () => {
-    await approvePeminjaman(selected[1]?.id).then(() => {
-      setData([]);
+  const handleApprove = async (catatan: string) => {
+    await finalizeSurat(selected[1]!, props.role, true, catatan).then(() => {
+      setViewData([]);
       setSelected(["", undefined]);
       toast.success("Approve berhasil", {
         position: "top-right",
@@ -133,10 +140,9 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     });
   };
 
-  // TODO
-  const handleReject = async (reason: string) => {
-    await rejectPeminjaman(selected[1]?.id, reason).then(() => {
-      setData([]);
+  const handleReject = async (catatan: string) => {
+    await finalizeSurat(selected[1]!, props.role, false, catatan).then(() => {
+      setViewData([]);
       setSelected(["", undefined]);
       toast.success("Reject berhasil", {
         position: "top-right",
@@ -149,6 +155,10 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
         theme: "light",
       });
     });
+  };
+
+  const handleDisposisi = async (catatan: string, tujuan?: Role[]) => {
+    await disposisiSurat(selected[1]!, props.role, catatan);
   };
 
   const handleExport = () => {
@@ -199,18 +209,18 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
           {/* File Button */}
           <FileButton row={row} setSelected={setSelected} />
 
-          {props.role === "admin" && (
+          {props.role === "KBAK" && (
             <>
               {/* Delete Button */}
-              <DeleteButton row={row} setSelected={setSelected} />
+              {/* <DeleteButton row={row} setSelected={setSelected} /> */}
             </>
           )}
 
           {/* Verify Button */}
-          {props.type === "verify" && (
+          {props.type === "disposisi" && (
             <>
               {/* Verify Button */}
-              <VerifyButton row={row} setSelected={setSelected} />
+              <DisposisiButton row={row} setSelected={setSelected} />
 
               {/* Reject Button */}
               <RejectButton row={row} setSelected={setSelected} />
@@ -245,22 +255,30 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
   return (
     <>
       <PageBody>
-        <div className="absolute left-52 top-3 scale-90">
-          <Select
-            label={"Penerima"}
-            id={""}
-            onChange={(e) => console.log(e.target.value)}
-          >
-            <option value=""></option>
-          </Select>
-        </div>
+        {/* Select Penerima */}
+        {props.type === "data" && (
+          <div className="absolute top-3 left-52 scale-90">
+            <Select
+              id={"penerima"}
+              onChange={(e) => console.log(e.target.value)}
+            >
+              <option value="">Penerima</option>
+              <option value="KBAK">Kepala BAK</option>
+              <option value="MK">Manager Kemahasiswaan</option>
+              <option value="SM">Supervisor Minarpresma</option>
+              <option value="SB">Supervisor Bikalima</option>
+              <option value="SK">Supervisor Kesmala</option>
+            </Select>
+          </div>
+        )}
+        {/* End of Select Penerima */}
 
         <DataTable
           // per_page={3}
           row_render={rowcheck}
           columns={columnsData}
           rows={viewData}
-          export={props.type !== "verify"}
+          export={props.type !== "disposisi"}
           handleExport={handleExport}
         />
       </PageBody>
@@ -308,28 +326,39 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
 
         {selected[0] === "approve" && (
           <>
-            <ModalWithImage
+            <ActionModal
               cancelHandler={setSelected}
-              mainHandler={handleApprove}
-              description={
-                "Apakah anda yakin untuk menyetujui permohonan peminjaman ini?"
-              }
-              image={"/assets/document-approve.jpeg"}
+              mainHandler={handleReject}
+              description={"Apakah anda yakin untuk menyetujui surat ini?"}
               name={selected[1]?.nomor_surat!}
-              color={"green"}
+              type={"approve"}
+            />
+          </>
+        )}
+
+        {selected[0] === "disposisi" && (
+          <>
+            <DisposisiModal
+              cancelHandler={setSelected}
+              mainHandler={handleDisposisi}
+              description={"Apakah anda yakin untuk mendisposisi surat ini?"}
+              name={selected[1]!.nomor_surat}
+              // select={props.role === "MK"}
+              select={props.role === "MK"}
             />
           </>
         )}
 
         {selected[0] === "reject" && (
           <>
-            <RejectModal
+            <ActionModal
               cancelHandler={setSelected}
               mainHandler={handleReject}
               description={
                 "Apakah anda yakin untuk menolak permohonan peminjaman ini?"
               }
               name={selected[1]?.nomor_surat!}
+              type={"reject"}
             />
           </>
         )}

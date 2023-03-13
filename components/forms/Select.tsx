@@ -1,7 +1,7 @@
 export interface SelectProps {
-  label: string;
   id: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  label?: string;
   error?: string;
   children?: React.ReactNode;
   style?: "light" | "dark";

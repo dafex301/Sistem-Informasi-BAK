@@ -23,7 +23,7 @@ import {
 } from "../../../firebase/peminjaman";
 import DataTable from "../../table/Table";
 import Link from "next/link";
-import { ModalWithImage, RejectModal } from "../../modal/Modal";
+import { ModalWithImage, ActionModal } from "../../modal/Modal";
 import {
   DeleteButton,
   EditButton,
@@ -602,13 +602,14 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
 
         {selected[0] === "reject" && (
           <>
-            <RejectModal
+            <ActionModal
               cancelHandler={setSelected}
               mainHandler={handleReject}
               description={
                 "Apakah anda yakin untuk menolak permohonan peminjaman ini?"
               }
               name={selected[1]?.peminjaman.kegiatan}
+              type={"reject"}
             />
           </>
         )}

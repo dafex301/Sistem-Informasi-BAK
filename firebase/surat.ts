@@ -23,12 +23,35 @@ import { getStorage, ref, deleteObject } from "firebase/storage";
 
 const storage = getStorage();
 
+export interface ITebusanDetail {
+  status: boolean;
+  view: boolean;
+  waktu?: FieldValue;
+}
+
 export interface ITebusan {
-  KBAK: boolean;
-  MK: boolean;
-  SM: boolean;
-  SB: boolean;
-  SK: boolean;
+  KBAK: ITebusanDetail;
+  MK: ITebusanDetail;
+  SM: ITebusanDetail;
+  SB: ITebusanDetail;
+  SK: ITebusanDetail;
+}
+
+export interface IParafDetail {
+  status: boolean;
+  catatan?: string;
+  waktu?: FieldValue;
+}
+
+export interface IParaf {
+  KBAK?: IParafDetail;
+  MK?: IParafDetail;
+  SM?: IParafDetail;
+  SB?: IParafDetail;
+  SK?: IParafDetail;
+  staf_SM?: IParafDetail;
+  staf_SB?: IParafDetail;
+  staf_SK?: IParafDetail;
 }
 
 export interface ISurat {
@@ -47,29 +70,14 @@ export interface ISurat {
 }
 
 export interface ISuratRequest extends ISurat {
-  status?: "Diproses" | "Disetujui" | "Ditolak";
-  paraf_KBAK?: boolean;
-  paraf_MK?: boolean;
-  paraf_SM?: boolean;
-  paraf_SB?: boolean;
-  paraf_SK?: boolean;
-  paraf_staf_SM?: boolean;
-  paraf_staf_SB?: boolean;
-  paraf_staf_SK?: boolean;
+  status?: string;
+  paraf: IParaf;
   created_at: FieldValue;
   modified_at: FieldValue;
 }
 
 export interface ISuratData extends ISuratRequest {
   id: string;
-}
-
-export interface ILogSurat {
-  surat: DocumentReference<DocumentData>;
-  user: DocumentReference<DocumentData>;
-  aksi: "dibuat" | "Disetujui" | "disposisi" | "Ditolak";
-  disposisi?: string;
-  waktu: FieldValue;
 }
 
 export type Role =
@@ -133,7 +141,7 @@ export const getDisposisiSurat = async (role?: Role) => {
   let q: Query<DocumentData>;
   q = query(
     collection(db, "surat"),
-    where(`paraf_${role}`, "==", false),
+    where(`paraf.${role}.status`, "==", false),
     orderBy("modified_at", "desc")
   );
   const querySnapshot = await getDocs(q);
@@ -142,7 +150,7 @@ export const getDisposisiSurat = async (role?: Role) => {
     surat.push({ id: doc.id, ...doc.data() });
   });
 
-  return surat;
+  return surat as ISuratData[];
 };
 
 export const getTebusanSurat = async (role?: Role) => {
@@ -150,7 +158,7 @@ export const getTebusanSurat = async (role?: Role) => {
   let q: Query<DocumentData>;
   q = query(
     collection(db, "surat"),
-    where(`tebusan.${role}`, "==", true),
+    where(`tebusan.${role}.status`, "==", true),
     orderBy("modified_at", "desc")
   );
   const querySnapshot = await getDocs(q);
@@ -159,7 +167,7 @@ export const getTebusanSurat = async (role?: Role) => {
     surat.push({ id: doc.id, ...doc.data() });
   });
 
-  return surat;
+  return surat as ISuratData[];
 };
 
 export const createSurat = async (surat: ISurat) => {
@@ -167,22 +175,16 @@ export const createSurat = async (surat: ISurat) => {
 
   const suratObj: ISuratRequest = {
     ...surat,
-    status: "Diproses",
+    status: `Diproses ${penerima}`,
+    paraf: {
+      [`${penerima}`]: {
+        status: false,
+      },
+    },
     created_at: serverTimestamp(),
     modified_at: serverTimestamp(),
   };
 
-  if (penerima === "KBAK") {
-    suratObj["paraf_KBAK"] = false;
-  } else if (penerima === "MK") {
-    suratObj["paraf_MK"] = false;
-  } else if (penerima === "SM") {
-    suratObj["paraf_SM"] = false;
-  } else if (penerima === "SB") {
-    suratObj["paraf_SB"] = false;
-  } else if (penerima === "SK") {
-    suratObj["paraf_SK"] = false;
-  }
   try {
     await addDoc(collection(db, "surat"), {
       ...suratObj,
@@ -193,88 +195,111 @@ export const createSurat = async (surat: ISurat) => {
 };
 
 export const disposisiSurat = async (
-  id: string,
+  surat: ISuratData,
   role: Role,
   catatan: string,
-  tujuan: Role
+  tujuan?: Role[]
 ) => {
-  const suratRef = doc(db, "surat", id);
-  const surat = await getDoc(suratRef);
-  const suratData = surat.data();
-
-  if (suratData) {
-    const suratObj = {
-      ...suratData,
-      [`paraf_${role}`]: true,
-      [`paraf_${tujuan}`]: false,
-      status: "Diproses",
-      modified_at: serverTimestamp(),
-    };
-
-    try {
-      await updateDoc(suratRef, {
-        suratObj,
-      });
-    } catch (error) {
-      console.log(error);
+  if (tujuan!.length === 0) {
+    let defined_tujuan: Role[];
+    switch (role) {
+      case "KBAK":
+        defined_tujuan = ["MK"];
+        break;
+      case "SM":
+        defined_tujuan = ["staf_SM"];
+        break;
+      case "SB":
+        defined_tujuan = ["staf_SB"];
+        break;
+      case "SK":
+        defined_tujuan = ["staf_SK"];
+        break;
+      default:
+        defined_tujuan = [];
     }
+  }
 
-    const logSurat: ILogSurat = {
-      surat: suratRef,
-      user: doc(db, "users", auth.currentUser!.uid),
-      aksi: "disposisi",
-      disposisi: catatan,
-      waktu: serverTimestamp(),
-    };
+  const suratRef = doc(db, "surat", surat.id);
 
-    try {
-      await addDoc(collection(db, "log_surat"), {
-        logSurat,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  const suratObj: ISuratData = {
+    ...(surat as ISuratData),
+    paraf: {
+      ...surat.paraf,
+      [`${role}`]: {
+        status: true,
+        catatan,
+        waktu: serverTimestamp(),
+      },
+      // For each tujuan, add paraf with status false
+      ...(tujuan?.reduce((acc: IParaf, curr: Role) => {
+        acc[curr] = { status: false };
+        return acc;
+      }, {}) as IParaf),
+    },
+    modified_at: serverTimestamp(),
+    status: `Diproses ${tujuan?.join(", ")}`,
+  };
+  try {
+    await updateDoc(suratRef, {
+      suratObj,
+    });
+  } catch (error) {
+    console.log(error);
   }
 };
 
 export const finalizeSurat = async (
-  id: string,
+  surat: ISuratData,
   role: Role,
-  approve: boolean
+  approve: boolean,
+  catatan?: string
 ) => {
-  const suratRef = doc(db, "surat", id);
-  const surat = await getDoc(suratRef);
-  const suratData = surat.data();
+  const suratRef = doc(db, "surat", surat.id);
 
-  if (suratData) {
-    const suratObj = {
-      ...suratData,
-      [`paraf_${role}`]: true,
-      status: approve ? "Disetujui" : "Ditolak",
-      modified_at: serverTimestamp(),
-    };
+  const suratObj = {
+    ...surat,
+    paraf: {
+      [`${role}`]: {
+        status: true,
+        catatan,
+        waktu: serverTimestamp(),
+      },
+    },
+    modified_at: serverTimestamp(),
+  };
 
-    try {
-      await updateDoc(suratRef, {
-        suratObj,
-      });
-    } catch (error) {
-      console.log(error);
+  if (approve) {
+    const isAllParafTrue = Object.values(suratObj.paraf).every(
+      (paraf) => paraf.status
+    );
+    if (isAllParafTrue) {
+      suratObj.status = "Disetujui";
+    } else {
+      const parafFalse = Object.entries(suratObj.paraf).find(
+        ([key, value]) => value.status === false
+      );
+      suratObj.status = `Diproses ${parafFalse![0]}`;
     }
+  } else {
+    suratObj.status = "Ditolak";
+  }
 
-    const logSurat: ILogSurat = {
-      surat: suratRef,
-      user: doc(db, "users", auth.currentUser!.uid),
-      aksi: approve ? "Disetujui" : "Ditolak",
-      waktu: serverTimestamp(),
-    };
+  try {
+    await updateDoc(suratRef, {
+      suratObj,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    try {
-      await addDoc(collection(db, "log_surat"), {
-        logSurat,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+// Delete surat from firestore and also delete the file from storage
+export const deleteSurat = async (surat: ISuratData) => {
+  try {
+    await deleteDoc(doc(db, "surat", surat.id));
+    await deleteObject(ref(storage, surat.file));
+  } catch (error) {
+    console.log(error);
   }
 };

@@ -34,11 +34,26 @@ const CreateSuratPage: NextPage = () => {
   const [errorPenerima, setErrorPenerima] = useState<string>("");
 
   const [tebusan, setTebusan] = useState<ITebusan>({
-    KBAK: false,
-    MK: false,
-    SM: false,
-    SB: false,
-    SK: false,
+    KBAK: {
+      status: false,
+      view: false,
+    },
+    MK: {
+      status: false,
+      view: false,
+    },
+    SB: {
+      status: false,
+      view: false,
+    },
+    SK: {
+      status: false,
+      view: false,
+    },
+    SM: {
+      status: false,
+      view: false,
+    },
   });
   const [errorTebusan, setErrorTebusan] = useState<string>("");
 
@@ -260,7 +275,10 @@ const CreateSuratPage: NextPage = () => {
                     onChange={(e) => {
                       setTebusan({
                         ...tebusan,
-                        [e.target.value]: e.target.checked,
+                        [e.target.value]: {
+                          status: e.target.checked,
+                          view: false,
+                        },
                       });
                     }}
                   />
@@ -275,7 +293,10 @@ const CreateSuratPage: NextPage = () => {
                     onChange={(e) => {
                       setTebusan({
                         ...tebusan,
-                        [e.target.value]: e.target.checked,
+                        [e.target.value]: {
+                          status: e.target.checked,
+                          view: false,
+                        },
                       });
                     }}
                   />
@@ -290,7 +311,10 @@ const CreateSuratPage: NextPage = () => {
                     onChange={(e) => {
                       setTebusan({
                         ...tebusan,
-                        [e.target.value]: e.target.checked,
+                        [e.target.value]: {
+                          status: e.target.checked,
+                          view: false,
+                        },
                       });
                     }}
                   />
@@ -305,7 +329,10 @@ const CreateSuratPage: NextPage = () => {
                     onChange={(e) => {
                       setTebusan({
                         ...tebusan,
-                        [e.target.value]: e.target.checked,
+                        [e.target.value]: {
+                          status: e.target.checked,
+                          view: false,
+                        },
                       });
                     }}
                   />
@@ -320,7 +347,10 @@ const CreateSuratPage: NextPage = () => {
                     onChange={(e) => {
                       setTebusan({
                         ...tebusan,
-                        [e.target.value]: e.target.checked,
+                        [e.target.value]: {
+                          status: e.target.checked,
+                          view: false,
+                        },
                       });
                     }}
                   />

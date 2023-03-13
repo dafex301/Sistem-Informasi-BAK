@@ -3,29 +3,29 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import PageTitle from "../../../components/layout/PageTitle";
 import { ManajemenSurat } from "../../../components/pages/data/Surat";
-import { getAllSurat, ISuratData } from "../../../firebase/surat";
+import { getDisposisiSurat, ISuratData } from "../../../firebase/surat";
 import { useAuth } from "../../../lib/authContext";
 
-const SuratManajemen: NextPage = () => {
+const SuratTebusan: NextPage = () => {
   const { user, loading } = useAuth();
   const [data, setData] = useState<ISuratData[]>([]);
 
   useEffect(() => {
     (async () => {
-      const data: ISuratData[] = await getAllSurat();
+      const data: ISuratData[] = await getDisposisiSurat(user?.claims.role);
       setData(data);
     })();
-  }, []);
+  }, [user?.claims.role]);
 
   return (
     <>
       <Head>
-        <title>Manajemen Surat</title>
+        <title>Disposisi Surat</title>
       </Head>
-      <PageTitle title="Manajemen Surat" />
-      <ManajemenSurat data={data} role={user?.claims.role} type="data" />
+      <PageTitle title="Disposisi Surat" />
+      <ManajemenSurat data={data} role={user?.claims.role} type="disposisi" />
     </>
   );
 };
 
-export default SuratManajemen;
+export default SuratTebusan;
