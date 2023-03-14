@@ -84,11 +84,11 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
 ) => {
   const { data } = props;
   const [viewData, setViewData] = useState<ISuratData[]>([]);
-
   const [selected, setSelected] = useState<[string, ISuratData | undefined]>([
     "",
     undefined,
   ]);
+  const [penerima, setPenerima] = useState<Role | "">("");
 
   const router = useRouter();
 
@@ -96,6 +96,15 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
   useEffect(() => {
     setViewData(data);
   }, [data]);
+
+  // Change data based on penerima
+  useEffect(() => {
+    if (penerima === "") {
+      setViewData(data);
+    } else {
+      setViewData(data.filter((item) => item.penerima === penerima));
+    }
+  }, [data, penerima]);
 
   // Handler
   const handleDelete = async () => {
@@ -260,7 +269,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
           <div className="absolute top-3 left-52 scale-90">
             <Select
               id={"penerima"}
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(e) => setPenerima(e.target.value as Role | "")}
             >
               <option value="">Penerima</option>
               <option value="KBAK">Kepala BAK</option>

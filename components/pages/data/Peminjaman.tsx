@@ -368,7 +368,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
     if (column.field === "peminjaman.kegiatan") {
       return (
         <div className="flex items-center gap-2">
-          <Link href={`/peminjaman/${row.id}`}>
+          <Link href={`/peminjaman/detail/${row.id}`}>
             <p className="font-semibold hover:underline">{display_value}</p>
           </Link>
         </div>

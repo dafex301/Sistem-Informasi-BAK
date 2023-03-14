@@ -39,7 +39,7 @@ export default function Kalender() {
               title: item.peminjaman.pemohon.name,
               start: item.peminjaman.waktu_pinjam.toDate(),
               end: item.peminjaman.waktu_kembali.toDate(),
-              url: `/peminjaman/${item.id}`,
+              url: `/peminjaman/detail/${item.id}`,
             };
           })
       );
@@ -66,7 +66,6 @@ export default function Kalender() {
               label={"Pilih Tempat"}
               error={""}
               id={"select-tempat"}
-              value={tempat}
               onChange={(e) => setTempat(e.target.value)}
               style={"light"}
               hideLabel
