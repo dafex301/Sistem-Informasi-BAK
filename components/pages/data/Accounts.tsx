@@ -383,7 +383,11 @@ const Accounts: NextPage = () => {
                     </Option>
                     <Option value="MK">Manager Kemahasiswaan</Option>
                     <Option value="SM">Supervisor Minarpresma</Option>
-                    <Option value="TBAK">Tim BAK</Option>
+                    <Option value="SB">Supervisor Bikalima</Option>
+                    <Option value="SK">Supervisor Kesmala</Option>
+                    <Option value="staf_SM">Staf Supervisor Minarpresma</Option>
+                    <Option value="staf_SB">Staf Supervisor Bikalima</Option>
+                    <Option value="staf_SK">Staf Supervisor Kesmala</Option>
                   </Select>
                 </div>
 

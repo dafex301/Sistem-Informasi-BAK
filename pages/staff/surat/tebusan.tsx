@@ -10,12 +10,16 @@ const SuratTebusan: NextPage = () => {
   const { user, loading } = useAuth();
   const [data, setData] = useState<ISuratData[]>([]);
 
+  const role = user?.claims.role;
+
+  const roleWithoutStaf = role?.replace("staf_", "");
+
   useEffect(() => {
     (async () => {
-      const data: ISuratData[] = await getTebusanSurat(user?.claims.role);
+      const data: ISuratData[] = await getTebusanSurat(roleWithoutStaf);
       setData(data);
     })();
-  }, [user?.claims.role]);
+  }, [roleWithoutStaf]);
 
   return (
     <>

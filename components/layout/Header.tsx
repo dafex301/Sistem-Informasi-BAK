@@ -22,8 +22,8 @@ export default function Header(props: any) {
   const [modal, setModal] = useState(false);
 
   const handleLogout = async () => {
-    router.push("/auth/login");
     await signOut();
+    // router.push("/auth/login");
   };
 
   return (

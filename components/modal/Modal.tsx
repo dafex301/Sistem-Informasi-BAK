@@ -147,7 +147,7 @@ export function DisposisiModal(props: IDisposisiModalProps) {
 
   const handleDisposisi = () => {
     if (reason === "") {
-      setError("Alasan wajib diisi!");
+      setError("Catatan wajib diisi!");
       return;
     } else {
       setError("");

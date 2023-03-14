@@ -5,36 +5,29 @@ import Image from "next/image";
 
 // Components
 import { Irow } from "react-tailwind-table";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Irender_row } from "../../../interface/table";
 import PageBody from "../../layout/PageBody";
 import { Dialog } from "@material-tailwind/react";
-import Input from "../../forms/Input";
 import { ToastContainer, toast } from "react-toastify";
 
 // Data
 import DataTable from "../../table/Table";
 import Link from "next/link";
-import { ModalWithImage, ActionModal, DisposisiModal } from "../../modal/Modal";
+import { ActionModal, DisposisiModal } from "../../modal/Modal";
 import {
-  DeleteButton,
   DisposisiButton,
-  EditButton,
   FileButton,
   RejectButton,
-  RevisionButton,
-  UpdateButton,
   VerifyButton,
 } from "../../button/ActionButton";
 import { useRouter } from "next/router";
-import SelectTempat from "../../forms/SelectTempat";
 import { Timestamp } from "firebase/firestore";
 import { downloadExcel } from "../../../lib/xlsx";
 import {
   deleteSurat,
   disposisiSurat,
   finalizeSurat,
-  getAllSurat,
   ISuratData,
   Role,
 } from "../../../firebase/surat";
@@ -83,13 +76,14 @@ interface IManajemenSurat {
   type?: "data" | "pribadi" | "disposisi" | "tebusan";
 }
 
+const RoleUtama = ["KBAK", "MK", "SM", "SB", "SK"];
+const RoleStaff = ["staf_SM", "staf_SB", "staf_SK"];
+
 export const ManajemenSurat: NextPage<IManajemenSurat> = (
   props: IManajemenSurat
 ) => {
   const { data } = props;
-  // Data State
   const [viewData, setViewData] = useState<ISuratData[]>([]);
-  const [penerima, setPenerima] = useState("");
 
   const [selected, setSelected] = useState<[string, ISuratData | undefined]>([
     "",
@@ -100,10 +94,8 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
 
   // Get Data
   useEffect(() => {
-    if (viewData.length === 0) {
-      setViewData(data);
-    }
-  }, [data, props.role, props.type, viewData.length]);
+    setViewData(data);
+  }, [data]);
 
   // Handler
   const handleDelete = async () => {
@@ -142,23 +134,27 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
 
   const handleReject = async (catatan: string) => {
     await finalizeSurat(selected[1]!, props.role, false, catatan).then(() => {
-      setViewData([]);
-      setSelected(["", undefined]);
-      toast.success("Reject berhasil", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
+      setViewData((prev) => {
+        return prev.filter((item) => item.id !== selected[1]?.id);
       });
+      setSelected(["", undefined]);
+      toast.success("Reject berhasil");
     });
   };
 
   const handleDisposisi = async (catatan: string, tujuan?: Role[]) => {
-    await disposisiSurat(selected[1]!, props.role, catatan);
+    if (tujuan) {
+      await disposisiSurat(selected[1]!, props.role, catatan, tujuan);
+    } else {
+      await disposisiSurat(selected[1]!, props.role, catatan);
+    }
+
+    setViewData((prev) => {
+      return prev.filter((item) => item.id !== selected[1]?.id);
+    });
+
+    setSelected(["", undefined]);
+    toast.success("Disposisi berhasil");
   };
 
   const handleExport = () => {
@@ -220,8 +216,12 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
           {props.type === "disposisi" && (
             <>
               {/* Verify Button */}
-              <DisposisiButton row={row} setSelected={setSelected} />
-
+              {/* If role is in RoleUtama, show Disposisi Button, else show Approve Button */}
+              {RoleUtama.includes(props.role) ? (
+                <DisposisiButton row={row} setSelected={setSelected} />
+              ) : (
+                <VerifyButton row={row} setSelected={setSelected} />
+              )}
               {/* Reject Button */}
               <RejectButton row={row} setSelected={setSelected} />
             </>
@@ -304,7 +304,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
               className="w-24 h-24"
             />
             <h2 className="text-xl font-semibold text-gray-800">
-              Apakah anda yakin untuk menghapus permohonan peminjaman ini?
+              Apakah anda yakin untuk menolak surat ini?
             </h2>
             <p className="text-gray-800">{selected[1]?.nomor_surat}</p>
             <div className="flex gap-3">
@@ -328,7 +328,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
           <>
             <ActionModal
               cancelHandler={setSelected}
-              mainHandler={handleReject}
+              mainHandler={handleApprove}
               description={"Apakah anda yakin untuk menyetujui surat ini?"}
               name={selected[1]?.nomor_surat!}
               type={"approve"}
@@ -354,9 +354,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
             <ActionModal
               cancelHandler={setSelected}
               mainHandler={handleReject}
-              description={
-                "Apakah anda yakin untuk menolak permohonan peminjaman ini?"
-              }
+              description={"Apakah anda yakin untuk menolak surat ini?"}
               name={selected[1]?.nomor_surat!}
               type={"reject"}
             />

@@ -200,8 +200,8 @@ export const disposisiSurat = async (
   catatan: string,
   tujuan?: Role[]
 ) => {
+  let defined_tujuan: Role[];
   if (tujuan!.length === 0) {
-    let defined_tujuan: Role[];
     switch (role) {
       case "KBAK":
         defined_tujuan = ["MK"];
@@ -218,32 +218,43 @@ export const disposisiSurat = async (
       default:
         defined_tujuan = [];
     }
+  } else {
+    defined_tujuan = tujuan!;
   }
 
   const suratRef = doc(db, "surat", surat.id);
 
-  const suratObj: ISuratData = {
-    ...(surat as ISuratData),
+  const parafObj = defined_tujuan.reduce((acc, curr) => {
+    acc[curr] = {
+      status: false,
+    };
+    return acc;
+  }, {} as IParaf);
+
+  const cleanDefinedTujuan = defined_tujuan.map((t) => {
+    if (t.includes("staf_")) {
+      return t.replace("staf_", "Staf ");
+    }
+    return t;
+  });
+
+  const suratObj = {
+    ...surat,
     paraf: {
       ...surat.paraf,
+      ...parafObj,
       [`${role}`]: {
         status: true,
         catatan,
         waktu: serverTimestamp(),
       },
-      // For each tujuan, add paraf with status false
-      ...(tujuan?.reduce((acc: IParaf, curr: Role) => {
-        acc[curr] = { status: false };
-        return acc;
-      }, {}) as IParaf),
     },
+    status: `Diproses ${cleanDefinedTujuan.join(", ")}`,
     modified_at: serverTimestamp(),
-    status: `Diproses ${tujuan?.join(", ")}`,
   };
+
   try {
-    await updateDoc(suratRef, {
-      suratObj,
-    });
+    await updateDoc(suratRef, { ...suratObj });
   } catch (error) {
     console.log(error);
   }
@@ -260,6 +271,7 @@ export const finalizeSurat = async (
   const suratObj = {
     ...surat,
     paraf: {
+      ...surat.paraf,
       [`${role}`]: {
         status: true,
         catatan,
@@ -286,9 +298,7 @@ export const finalizeSurat = async (
   }
 
   try {
-    await updateDoc(suratRef, {
-      suratObj,
-    });
+    await updateDoc(suratRef, { ...suratObj });
   } catch (error) {
     console.log(error);
   }
