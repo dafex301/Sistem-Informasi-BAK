@@ -20,6 +20,7 @@ import {
 } from "firebase/firestore";
 
 import { getStorage, ref, deleteObject } from "firebase/storage";
+import { TIdTokenResult } from "../lib/authContext";
 
 const storage = getStorage();
 
@@ -39,6 +40,7 @@ export interface ITebusan {
 
 export interface IParafDetail {
   status: boolean;
+  nama?: string;
   catatan?: string;
   waktu?: FieldValue;
 }
@@ -136,6 +138,18 @@ export const getAllSurat = async (role?: Role) => {
   return surat as ISuratData[];
 };
 
+export const getSuratById = async (id: string) => {
+  if (!id) {return;}
+  const suratRef = doc(db, "surat", id);
+  const suratDoc = await getDoc(suratRef);
+
+  if (suratDoc.exists()) {
+    return { id: suratDoc.id, ...suratDoc.data() } as ISuratData;
+  } else {
+    return null;
+  }
+}
+
 export const getDisposisiSurat = async (role?: Role) => {
   const surat: DocumentData[] = [];
   let q: Query<DocumentData>;
@@ -196,6 +210,7 @@ export const createSurat = async (surat: ISurat) => {
 
 export const disposisiSurat = async (
   surat: ISuratData,
+  user: TIdTokenResult,
   role: Role,
   catatan: string,
   tujuan?: Role[]
@@ -245,6 +260,7 @@ export const disposisiSurat = async (
       ...parafObj,
       [`${role}`]: {
         status: true,
+        nama: user.claims.name,
         catatan,
         waktu: serverTimestamp(),
       },
@@ -262,6 +278,7 @@ export const disposisiSurat = async (
 
 export const finalizeSurat = async (
   surat: ISuratData,
+  user: TIdTokenResult,
   role: Role,
   approve: boolean,
   catatan?: string
@@ -274,6 +291,7 @@ export const finalizeSurat = async (
       ...surat.paraf,
       [`${role}`]: {
         status: true,
+        nama: user.claims.name,
         catatan,
         waktu: serverTimestamp(),
       },

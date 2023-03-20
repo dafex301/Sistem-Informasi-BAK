@@ -32,6 +32,7 @@ import {
   Role,
 } from "../../../firebase/surat";
 import Select from "../../forms/Select";
+import { useAuth } from "../../../lib/authContext";
 
 const PDFViewer = dynamic(() => import("../../PDFViewer"), {
   ssr: false,
@@ -82,12 +83,15 @@ const RoleStaff = ["staf_SM", "staf_SB", "staf_SK"];
 export const ManajemenSurat: NextPage<IManajemenSurat> = (
   props: IManajemenSurat
 ) => {
+  const { user, loading } = useAuth();
+
   const { data } = props;
   const [viewData, setViewData] = useState<ISuratData[]>([]);
   const [selected, setSelected] = useState<[string, ISuratData | undefined]>([
     "",
     undefined,
   ]);
+
   const [penerima, setPenerima] = useState<Role | "">("");
 
   const router = useRouter();
@@ -125,37 +129,41 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
   };
 
   const handleApprove = async (catatan: string) => {
-    await finalizeSurat(selected[1]!, props.role, true, catatan).then(() => {
-      setViewData([]);
-      setSelected(["", undefined]);
-      toast.success("Approve berhasil", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    });
+    await finalizeSurat(selected[1]!, user!, props.role, true, catatan).then(
+      () => {
+        setViewData([]);
+        setSelected(["", undefined]);
+        toast.success("Approve berhasil", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    );
   };
 
   const handleReject = async (catatan: string) => {
-    await finalizeSurat(selected[1]!, props.role, false, catatan).then(() => {
-      setViewData((prev) => {
-        return prev.filter((item) => item.id !== selected[1]?.id);
-      });
-      setSelected(["", undefined]);
-      toast.success("Reject berhasil");
-    });
+    await finalizeSurat(selected[1]!, user!, props.role, false, catatan).then(
+      () => {
+        setViewData((prev) => {
+          return prev.filter((item) => item.id !== selected[1]?.id);
+        });
+        setSelected(["", undefined]);
+        toast.success("Reject berhasil");
+      }
+    );
   };
 
   const handleDisposisi = async (catatan: string, tujuan?: Role[]) => {
     if (tujuan) {
-      await disposisiSurat(selected[1]!, props.role, catatan, tujuan);
+      await disposisiSurat(selected[1]!, user!, props.role, catatan, tujuan);
     } else {
-      await disposisiSurat(selected[1]!, props.role, catatan);
+      await disposisiSurat(selected[1]!, user!, props.role, catatan);
     }
 
     setViewData((prev) => {
