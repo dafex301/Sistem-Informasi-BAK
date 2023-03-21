@@ -14,6 +14,16 @@ export const roleAbbreviation = (role: string) => {
       return "Manager Kemahasiswaan";
     case "SM":
       return "Supervisor Minarpresma";
+    case "SK":
+      return "Supervisor Kesmala";
+    case "SB":
+      return "Supervisor Bikalima";
+    case "staf_SM":
+      return "Staf Supervisor Minarpresma";
+    case "staf_SK":
+      return "Staf Supervisor Kesmala";
+    case "staf_SB":
+      return "Staf Supervisor Bikalima";
     case "TBAK":
       return "Tim BAK";
     case "UKM":
@@ -39,3 +49,16 @@ export const actionTranslation = (action: string) => {
       return "Direvisi";
   }
 };
+
+export const convertLocalTime = (date: string, time?: boolean) => {
+  const dateObj = new Date(date);
+  if (time) {
+    return dateObj.toLocaleString("id-ID", {
+      timeZone: "Asia/Jakarta",
+    });
+  } else {
+    return dateObj.toLocaleDateString("id-ID", {
+      timeZone: "Asia/Jakarta",
+    });
+  }
+}
