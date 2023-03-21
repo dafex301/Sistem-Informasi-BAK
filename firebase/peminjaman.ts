@@ -124,6 +124,38 @@ export const getAllPeminjaman = async (
 
   await Promise.all(
     peminjaman.map(async (p: IPeminjamanData) => {
+      // delete peminjaman where rejected is true and modified_at is more than 1 week
+      try {
+        if (p.peminjaman.rejected) {
+          const modified_at = p.peminjaman.modified_at.toDate();
+          const now = new Date();
+          const diffTime = Math.abs(now.getTime() - modified_at.getTime());
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+          if (diffDays > 7) {
+            if (p.peminjaman.file) {
+              try {
+                const storageRef = ref(storage, p.peminjaman.file);
+                await deleteObject(storageRef);
+              } catch (e) {
+                // console.log(e);
+              }
+            }
+
+            const peminjamanRef = doc(db, "permohonan_peminjaman", p.id);
+            await deleteDoc(peminjamanRef);
+
+            const logRef = doc(db, "log_peminjaman", p.id);
+            await deleteDoc(logRef);
+          }
+
+          // delete element from array
+          peminjaman.splice(peminjaman.indexOf(p), 1);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+
       if (p.peminjaman.pemohon instanceof DocumentReference<DocumentData>) {
         const pemohon = await getDoc(p.peminjaman.pemohon);
         p.peminjaman.pemohon = pemohon.data();

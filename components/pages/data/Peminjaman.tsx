@@ -180,29 +180,27 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
 
   // Get Data
   useEffect(() => {
-    if (data.length === 0) {
-      (async () => {
-        const data: IPeminjamanData[] = await getAllPeminjaman(props.role);
-        if (props.type === "verify") {
-          // Sort data by modified_at asc
-          data.sort((a, b) => {
-            if (
-              a.peminjaman.created_at instanceof Timestamp &&
-              b.peminjaman.created_at instanceof Timestamp
-            ) {
-              return a.peminjaman.created_at.toDate() <
-                b.peminjaman.created_at.toDate()
-                ? -1
-                : 1;
-            }
-            return 0;
-          });
-        }
-        setData(data);
-        setViewData(data);
-      })();
-    }
-  }, [data.length, props.role, props.type]);
+    (async () => {
+      const data: IPeminjamanData[] = await getAllPeminjaman(props.role);
+      if (props.type === "verify") {
+        // Sort data by modified_at asc
+        data.sort((a, b) => {
+          if (
+            a.peminjaman.created_at instanceof Timestamp &&
+            b.peminjaman.created_at instanceof Timestamp
+          ) {
+            return a.peminjaman.created_at.toDate() <
+              b.peminjaman.created_at.toDate()
+              ? -1
+              : 1;
+          }
+          return 0;
+        });
+      }
+      setData(data);
+      setViewData(data);
+    })();
+  }, [props.role, props.type]);
 
   // Update state value when selected change
   useEffect(() => {
