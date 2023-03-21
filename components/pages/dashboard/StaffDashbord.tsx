@@ -5,6 +5,7 @@ import {
   getAllPeminjaman,
   IPeminjamanData,
 } from "../../../firebase/peminjaman";
+import { getAllSurat, ISuratData } from "../../../firebase/surat";
 import { useAuth } from "../../../lib/authContext";
 import {
   peminjamanMonthly,
@@ -15,16 +16,59 @@ import VerticalBarChart from "../../charts/vertical-bar/VerticalBarChart";
 
 export default function StaffDashboard(props: any) {
   const { user, loading } = useAuth();
+  const role = user?.claims.role;
 
   const [peminjamanData, setPeminjamanData] = useState<IPeminjamanData[]>([]);
-  const [suratData, setSuratData] = useState([]);
+  const [suratData, setSuratData] = useState<ISuratData[]>([]);
 
+  // Peminjaman
   const { diproses, ditolak, disetujui } = peminjamanRecap(peminjamanData);
   const verify = peminjamanVerify(peminjamanData, user?.claims.role);
+
+  // Surat
+  const [surat, setSurat] = useState({
+    pribadi: 0,
+    disposisi: 0,
+    tebusan: 0,
+    total: 0,
+  });
+
+  useEffect(() => {
+    let pribadi = 0;
+    let disposisi = 0;
+    let tebusan = 0;
+
+    suratData.forEach((item) => {
+      if (item.penerima === role) {
+        pribadi++;
+      }
+      if (item.paraf[role]?.status === false) {
+        disposisi++;
+      }
+      if (item?.tebusan[role].status === true) {
+        tebusan++;
+      }
+    });
+
+    setSurat((prevSurat) => ({
+      ...prevSurat,
+      pribadi,
+      disposisi,
+      tebusan,
+    }));
+  }, [role, suratData]);
+
+  useEffect(() => {
+    setSurat((prevSurat) => ({
+      ...prevSurat,
+      total: prevSurat.pribadi + prevSurat.disposisi + prevSurat.tebusan,
+    }));
+  }, [surat.pribadi, surat.disposisi, surat.tebusan]);
 
   useEffect(() => {
     (async () => {
       setPeminjamanData(await getAllPeminjaman());
+      setSuratData(await getAllSurat());
     })();
   }, []);
 
@@ -127,7 +171,7 @@ export default function StaffDashboard(props: any) {
           </Link>
         </div>
         <div className="flex flex-col gap-5 col-span-2 md:col-span-1">
-          <Link href="/">
+          <Link href="/staff/surat/disposisi">
             <div className="bg-gray-100 hover:bg-gray-200 rounded-md p-5">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -148,7 +192,7 @@ export default function StaffDashboard(props: any) {
               <h2 className="text-2xl font-semibold">{verify ?? 0}</h2>
             </div>
           </Link>
-          <Link href="/" className="col-span-2 lg:col-span-1">
+          <div className="col-span-2 lg:col-span-1">
             <div className="flex flex-col shadow-sm bg-gray-100 rounded-lg p-5 hover:bg-gray-200 transition-all">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -166,26 +210,26 @@ export default function StaffDashboard(props: any) {
               </svg>
               <h2 className="mt-2 text-lg font-semibold">Surat Menyurat</h2>
               <div className="flex items-center justify-between">
-                <p className="text-md">Diproses</p>
-                <p className="text-md font-semibold">{suratData.length ?? 0}</p>
+                <p className="text-md">Pribadi</p>
+                <p className="text-md font-semibold">{surat.pribadi}</p>
               </div>
 
               <div className="flex items-center justify-between ">
-                <p className="text-md">Ditolak</p>
-                <p className="text-md font-semibold">{suratData.length ?? 0}</p>
+                <p className="text-md">Disposisi</p>
+                <p className="text-md font-semibold">{surat.disposisi}</p>
               </div>
 
               <div className="flex items-center justify-between">
-                <p className="text-md">Disetujui</p>
-                <p className="text-md font-semibold">{suratData.length ?? 0}</p>
+                <p className="text-md">Tebusan</p>
+                <p className="text-md font-semibold">{surat.tebusan}</p>
               </div>
 
               <div className="flex items-center justify-between">
                 <p className="text-md">Total</p>
-                <p className="text-md font-semibold">{suratData.length ?? 0}</p>
+                <p className="text-md font-semibold">{surat.total}</p>
               </div>
             </div>
-          </Link>
+          </div>
         </div>
         <div className="col-span-2 bg-gray-50 flex items-center justify-center p-5 rounded-md h-min">
           <VerticalBarChart

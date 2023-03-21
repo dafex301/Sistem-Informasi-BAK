@@ -36,6 +36,7 @@ export interface ITebusan {
   SM: ITebusanDetail;
   SB: ITebusanDetail;
   SK: ITebusanDetail;
+  [key: string]: ITebusanDetail;
 }
 
 export interface IParafDetail {
@@ -46,6 +47,8 @@ export interface IParafDetail {
 }
 
 export interface IParaf {
+  // key is a string
+  [key: string]: IParafDetail | undefined;
   KBAK?: IParafDetail;
   MK?: IParafDetail;
   SM?: IParafDetail;
@@ -139,7 +142,9 @@ export const getAllSurat = async (role?: Role) => {
 };
 
 export const getSuratById = async (id: string) => {
-  if (!id) {return;}
+  if (!id) {
+    return;
+  }
   const suratRef = doc(db, "surat", id);
   const suratDoc = await getDoc(suratRef);
 
@@ -148,7 +153,7 @@ export const getSuratById = async (id: string) => {
   } else {
     return null;
   }
-}
+};
 
 export const getDisposisiSurat = async (role?: Role) => {
   const surat: DocumentData[] = [];
@@ -301,13 +306,13 @@ export const finalizeSurat = async (
 
   if (approve) {
     const isAllParafTrue = Object.values(suratObj.paraf).every(
-      (paraf) => paraf.status
+      (paraf) => paraf!.status
     );
     if (isAllParafTrue) {
       suratObj.status = "Disetujui";
     } else {
       const parafFalse = Object.entries(suratObj.paraf).find(
-        ([key, value]) => value.status === false
+        ([key, value]) => value!.status === false
       );
       suratObj.status = `Diproses ${parafFalse![0]}`;
     }
