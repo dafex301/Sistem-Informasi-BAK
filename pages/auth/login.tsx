@@ -37,7 +37,8 @@ const Login: NextPage = () => {
 
   const route = useRouter();
 
-  function handleLogin() {
+  function handleLogin(e: any) {
+    e.preventDefault();
     loginAccount(identifier, password).catch((error) => {
       console.log(error);
       setError("Login gagal. username dan/atau password salah.");
@@ -68,7 +69,8 @@ const Login: NextPage = () => {
               <h1 className="text-xl md:text-2xl font-bold leading-tight mt-6">
                 SI-BAK Undip
               </h1>
-              <form className="mt-6" action="#">
+              <form className="mt-6" action="#" onSubmit={handleLogin}>
+                {error && <div className="w-full px-4 py-3 mb-2 text-red-900 bg-red-50 rounded-lg items-center ">{error}</div>}
                 <div>
                   <label className="block text-gray-700">Username/NIP</label>
                   <input
@@ -94,10 +96,9 @@ const Login: NextPage = () => {
                   />
                 </div>
                 <button
-                  type="button"
+                  type="submit"
                   className="w-full block bg-indigo-500 hover:bg-indigo-400 focus:bg-indigo-400 text-white font-semibold rounded-lg
         px-4 py-3 mt-6"
-                  onClick={handleLogin}
                 >
                   Masuk
                 </button>

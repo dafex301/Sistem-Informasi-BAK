@@ -8,6 +8,7 @@ import { convertLocalTime, roleAbbreviation } from "../../../lib/functions";
 import { getSuratById, ISuratData } from "../../../firebase/surat";
 import dynamic from "next/dynamic";
 import Dialog from "@material-tailwind/react/components/Dialog";
+import Image from "next/image";
 
 const PDFViewer = dynamic(() => import("../../../components/PDFViewer"), {
   ssr: false,
@@ -39,10 +40,18 @@ const SuratDetail: NextPage = () => {
           <div>
             <div className="grid grid-cols-2 gap-4 place-content-between">
               <h2 className="font-medium mb-2 text-lg p-2">Detail Surat</h2>
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-4">
+              <a
+                   href={`https://wa.me/62${data?.kontak_pengirim}`}
+                  className="font-medium mb-2 text-lg bg-green-50 hover:bg-green-100 rounded-sm p-2 px-4 min-w-min flex gap-1 items-center"
+                >
+                  <Image src="/assets/whatsapp.svg" height={25} width={25} alt={"Whatsapp"}/>
+
+                  <p>WA pengirim</p>
+                </a>
                 <button
                   onClick={() => setOpenModal(true)}
-                  className="font-medium mb-2 text-lg bg-green-50 hover:bg-green-100 rounded-sm p-2 px-4 min-w-min flex gap-2 items-center"
+                  className="font-medium mb-2 text-lg bg-gray-200 hover:bg-gray-300 rounded-sm p-2 px-4 min-w-min flex gap-1 items-center"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -139,9 +148,7 @@ const SuratDetail: NextPage = () => {
                           <tr
                             key={key}
                             className={`${
-                              idx === 0 && data.status === "Ditolak"
-                                ? "bg-red-50"
-                                : data.paraf[key]!.status
+                              data.paraf[key]!.status
                                 ? "bg-green-50"
                                 : "bg-yellow-50 animate-pulse"
                             } px-5 py-2 text-center`}
