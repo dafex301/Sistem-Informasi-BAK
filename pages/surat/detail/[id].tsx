@@ -139,11 +139,11 @@ const SuratDetail: NextPage = () => {
                         if (!data.paraf[b]!.waktu) return 1;
 
                         return (
-                          data.paraf[b]!.waktu.seconds -
-                          data.paraf[a]!.waktu.seconds
+                          data.paraf[b]!.waktu!.seconds -
+                          data.paraf[a]!.waktu!.seconds
                         );
                       })
-                      .map((key) => {
+                      .map((key, idx) => {
                         return (
                           <tr
                             key={key}
@@ -156,9 +156,9 @@ const SuratDetail: NextPage = () => {
                             <td className="px-5 py-2 ">
                               {data.paraf[key]!.waktu
                                 ? convertLocalTime(
-                                    data.paraf[key].waktu
-                                      .toDate()
-                                      .toLocaleString(),
+                                    data.paraf[
+                                      key
+                                    ]!.waktu!.toDate().toLocaleString(),
                                     true
                                   )
                                 : "Diproses"}
@@ -167,10 +167,10 @@ const SuratDetail: NextPage = () => {
                               {roleAbbreviation(key)}
                             </td>
                             <td className="px-5 py-2 ">
-                              {data.paraf[key].nama ?? "Diproses"}
+                              {data.paraf[key]!.nama ?? "Diproses"}
                             </td>
                             <td className="px-5 py-2 ">
-                              {data.paraf[key].catatan ?? "Diproses"}
+                              {data.paraf[key]!.catatan ?? "Diproses"}
                             </td>
                           </tr>
                         );

@@ -43,7 +43,7 @@ export interface IParafDetail {
   status: boolean;
   nama?: string;
   catatan?: string;
-  waktu?: FieldValue;
+  waktu?: Timestamp;
 }
 
 export interface IParaf {
@@ -77,8 +77,8 @@ export interface ISurat {
 export interface ISuratRequest extends ISurat {
   status?: string;
   paraf: IParaf;
-  created_at: FieldValue;
-  modified_at: FieldValue;
+  created_at: Timestamp;
+  modified_at: Timestamp;
 }
 
 export interface ISuratData extends ISuratRequest {
@@ -200,8 +200,8 @@ export const createSurat = async (surat: ISurat) => {
         status: false,
       },
     },
-    created_at: serverTimestamp(),
-    modified_at: serverTimestamp(),
+    created_at: serverTimestamp() as Timestamp,
+    modified_at: serverTimestamp() as Timestamp,
   };
 
   try {

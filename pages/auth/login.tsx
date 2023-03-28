@@ -37,7 +37,7 @@ const Login: NextPage = () => {
 
   const route = useRouter();
 
-  function handleLogin(e) {
+  function handleLogin(e: any) {
     e.preventDefault();
     loginAccount(identifier, password).catch((error) => {
       console.log(error);
