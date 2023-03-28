@@ -189,7 +189,7 @@ export default function StaffDashboard(props: any) {
               </svg>
 
               <h1 className="mt-5 text-lg font-semibold">Disposisi Surat</h1>
-              <h2 className="text-2xl font-semibold">{verify ?? 0}</h2>
+              <h2 className="text-2xl font-semibold">{surat.disposisi}</h2>
             </div>
           </Link>
           <div className="col-span-2 lg:col-span-1">
