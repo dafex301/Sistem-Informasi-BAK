@@ -418,7 +418,7 @@ const CreateSuratPage: NextPage = () => {
               <Input
                 required
                 type="tel"
-                label={"Kontak Pengirim (nomor WA dimulai dengan 62)"}
+                label={"Nomor WA Pengirim"}
                 error={errorKontakPengirim}
                 onChange={(e) => setKontakPengirim(e.target.value)}
                 id={"kontak-pengirim"}
