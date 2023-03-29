@@ -156,8 +156,7 @@ const CreateSuratPage: NextPage = () => {
     } else if (!kontakPengirim.startsWith("08")) {
       error = true;
       setErrorKontakPengirim("Kontak Pengirim harus diawali dengan 08");
-    }
-    else {
+    } else {
       setErrorKontakPengirim("");
     }
 
@@ -418,7 +417,7 @@ const CreateSuratPage: NextPage = () => {
               <Input
                 required
                 type="tel"
-                label={"Kontak Pengirim (nomor WA dimulai dengan 62)"}
+                label={"Kontak Pengirim (nomor WA)"}
                 error={errorKontakPengirim}
                 onChange={(e) => setKontakPengirim(e.target.value)}
                 id={"kontak-pengirim"}
