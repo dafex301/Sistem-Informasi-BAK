@@ -92,6 +92,8 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     undefined,
   ]);
 
+  console.log(viewData);
+
   const [penerima, setPenerima] = useState<Role | "">("");
 
   const router = useRouter();
@@ -150,9 +152,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
   const handleReject = async (catatan: string) => {
     await finalizeSurat(selected[1]!, user!, props.role, false, catatan).then(
       () => {
-        setViewData((prev) => {
-          return prev.filter((item) => item.id !== selected[1]?.id);
-        });
+        setViewData([]);
         setSelected(["", undefined]);
         toast.success("Reject berhasil");
       }
@@ -166,9 +166,15 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
       await disposisiSurat(selected[1]!, user!, props.role, catatan);
     }
 
-    setViewData((prev) => {
-      return prev.filter((item) => item.id !== selected[1]?.id);
-    });
+      // set the selected data.paraf.role.status to true
+      setViewData((prev) => {
+        return prev.map((item) => {
+          if (item.id === selected[1]?.id) {
+            item.paraf[props.role]!.status = true;
+          }
+          return item;
+        });
+      });
 
     setSelected(["", undefined]);
     toast.success("Disposisi berhasil");
@@ -230,7 +236,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
           )}
 
           {/* Verify Button */}
-          {props.type === "disposisi" && (
+          {props.type === "disposisi" && row.paraf[props.role].status === false && (
             <>
               {/* Verify Button */}
               {/* If role is in RoleUtama, show Disposisi Button, else show Approve Button */}

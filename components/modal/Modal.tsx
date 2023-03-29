@@ -149,7 +149,11 @@ export function DisposisiModal(props: IDisposisiModalProps) {
     if (reason === "") {
       setError("Catatan wajib diisi!");
       return;
-    } else {
+    } else if (tujuan.length === 0 && props.select) {
+      setError("Tujuan wajib dipilih!");
+      return;
+    } 
+    else {
       setError("");
     }
 
