@@ -92,6 +92,8 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     undefined,
   ]);
 
+  console.log(viewData);
+
   const [penerima, setPenerima] = useState<Role | "">("");
 
   const router = useRouter();

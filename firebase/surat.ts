@@ -184,12 +184,29 @@ export const getDisposisiSurat = async (role?: Role) => {
   return surat as ISuratData[];
 };
 
+export const getFinishedDisposisiSurat = async (role?: Role) => {
+  const surat: DocumentData[] = [];
+  let q: Query<DocumentData>;
+  q = query(
+    collection(db, "surat"),
+    where(`paraf.${role}.status`, "==", true),
+    orderBy("modified_at", "desc")
+  );
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach((doc) => {
+    surat.push({ id: doc.id, ...doc.data() });
+  });
+
+  return surat as ISuratData[];
+}
+
 export const getTebusanSurat = async (role?: Role) => {
   const surat: DocumentData[] = [];
   let q: Query<DocumentData>;
   q = query(
     collection(db, "surat"),
-    where(`tebusan.${role}.status`, "==", true),
+    where(`tebusan.${role}.status`, "==", false),
     orderBy("modified_at", "desc")
   );
   const querySnapshot = await getDocs(q);
