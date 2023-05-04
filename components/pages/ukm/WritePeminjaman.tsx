@@ -45,6 +45,8 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
   const [fileUrl, setFileUrl] = useState<string>("");
 
   const handleSubmit = async (type: IPeminjamanProposalProps["type"]) => {
+    if (route.isFallback) return;
+
     if (!kegiatan) {
       setErrorKegiatan("Nama kegiatan tidak boleh kosong");
     } else {
@@ -372,6 +374,11 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
                 <li>
                   Petugas Ruang DILARANG menyerahkan kunci kepada mahasiswa
                   dengan alasan apapun.
+                </li>
+                <li className="font-bold">
+                  Dalam keadaan peminjaman tempat digunakan oleh universitas,
+                  maka peminjaman ormawa dapat dibatalkan; dengan catatan
+                  dicarikan tempat baru oleh staff BAK.
                 </li>
               </ol>
             </div>

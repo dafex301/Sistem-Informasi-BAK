@@ -132,7 +132,7 @@ export const getAllPeminjaman = async (
           const diffTime = Math.abs(now.getTime() - modified_at.getTime());
           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-          if (diffDays > 7) {
+          if (diffDays > 3) {
             if (p.peminjaman.file) {
               try {
                 const storageRef = ref(storage, p.peminjaman.file);
@@ -147,10 +147,8 @@ export const getAllPeminjaman = async (
 
             const logRef = doc(db, "log_peminjaman", p.id);
             await deleteDoc(logRef);
+            peminjaman.splice(peminjaman.indexOf(p), 1);
           }
-
-          // delete element from array
-          peminjaman.splice(peminjaman.indexOf(p), 1);
         }
       } catch (e) {
         console.log(e);
@@ -340,40 +338,26 @@ export const approvePeminjaman = async (id: string) => {
   const permohonanPeminjaman = doc(db, "permohonan_peminjaman", id);
 
   try {
-    switch (role) {
-      case "KBAK":
-        await setDoc(
-          permohonanPeminjaman,
-          { paraf_KBAK: true, modified_at: new Date() },
-          { merge: true }
-        );
-        break;
-      case "MK":
-        await setDoc(
-          permohonanPeminjaman,
-          { paraf_MK: true, modified_at: new Date() },
-          { merge: true }
-        );
-        break;
-      case "SM":
-        await setDoc(
-          permohonanPeminjaman,
-          { paraf_SM: true, modified_at: new Date() },
-          { merge: true }
-        );
-        break;
-      default:
-        break;
+    const permohonanPeminjamanSnap = await getDoc(permohonanPeminjaman);
+    const permohonanPeminjamanData = permohonanPeminjamanSnap.data();
+    console.log(permohonanPeminjamanData![`paraf_${role}`]);
+
+    if (permohonanPeminjamanData![`paraf_${role}`] === false) {
+      await setDoc(
+        permohonanPeminjaman,
+        { [`paraf_${role}`]: true, modified_at: new Date() },
+        { merge: true }
+      );
+
+      const logPeminjaman: ILogPeminjaman = {
+        permohonan_peminjaman: permohonanPeminjaman,
+        user: userRef,
+        aksi: "approve",
+        waktu: new Date(),
+      };
+
+      await addDoc(collection(db, "log_permohonan_peminjaman"), logPeminjaman);
     }
-
-    const logPeminjaman: ILogPeminjaman = {
-      permohonan_peminjaman: permohonanPeminjaman,
-      user: userRef,
-      aksi: "approve",
-      waktu: new Date(),
-    };
-
-    await addDoc(collection(db, "log_permohonan_peminjaman"), logPeminjaman);
   } catch (e: any) {
     console.log(e);
   }
@@ -385,30 +369,35 @@ export const rejectPeminjaman = async (id: string, reason: string) => {
   const permohonanPeminjaman = doc(db, "permohonan_peminjaman", id);
 
   try {
-    await setDoc(
-      permohonanPeminjaman,
-      {
-        paraf_KBAK: false,
-        paraf_MK: false,
-        paraf_SM: false,
+    // check if reject is already true
+    const permohonanPeminjamanSnap = await getDoc(permohonanPeminjaman);
+    const permohonanPeminjamanData = permohonanPeminjamanSnap.data();
+    if (permohonanPeminjamanData!.rejected === false) {
+      await setDoc(
+        permohonanPeminjaman,
+        {
+          paraf_KBAK: false,
+          paraf_MK: false,
+          paraf_SM: false,
 
-        rejected: true,
-        rejected_reason: reason,
+          rejected: true,
+          rejected_reason: reason,
 
-        modified_at: new Date(),
-      },
-      { merge: true }
-    );
+          modified_at: new Date(),
+        },
+        { merge: true }
+      );
 
-    const logPeminjaman: ILogPeminjaman = {
-      permohonan_peminjaman: permohonanPeminjaman,
-      user: userRef,
-      aksi: "reject",
-      alasan: reason,
-      waktu: new Date(),
-    };
+      const logPeminjaman: ILogPeminjaman = {
+        permohonan_peminjaman: permohonanPeminjaman,
+        user: userRef,
+        aksi: "reject",
+        alasan: reason,
+        waktu: new Date(),
+      };
 
-    await addDoc(collection(db, "log_permohonan_peminjaman"), logPeminjaman);
+      await addDoc(collection(db, "log_permohonan_peminjaman"), logPeminjaman);
+    }
   } catch (e: any) {
     console.log(e);
   }

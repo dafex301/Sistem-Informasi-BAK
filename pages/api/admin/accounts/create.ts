@@ -8,7 +8,7 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const { identifier, name, role } = req.body;
+      const { identifier, name, role, pic, contact } = req.body;
 
       // Generate email based on username
       const email = `${name.split(" ").join("").toLowerCase() + "@gmail.com"}`;
@@ -31,14 +31,27 @@ export default async function handler(
       let created_at = admin.firestore.Timestamp.fromDate(new Date());
 
       // Create user in firestore
-      await admin.firestore().collection("users").doc(user.uid).set({
-        email,
-        name,
-        identifier,
-        role,
-        created_at,
-        modified_at: created_at,
-      });
+      if (role === "UKM") {
+        await admin.firestore().collection("users").doc(user.uid).set({
+          email,
+          name,
+          identifier,
+          role,
+          pic,
+          contact,
+          created_at,
+          modified_at: created_at,
+        });
+      } else {
+        await admin.firestore().collection("users").doc(user.uid).set({
+          email,
+          name,
+          identifier,
+          role,
+          created_at,
+          modified_at: created_at,
+        });
+      }
 
       res.status(200).json({ message: "Success" });
     } catch (error: any) {

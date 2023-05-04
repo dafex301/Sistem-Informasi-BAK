@@ -178,6 +178,8 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
 
   const router = useRouter();
 
+  console.log(data);
+
   // Get Data
   useEffect(() => {
     (async () => {
@@ -233,16 +235,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
     await deletePeminjaman(selected[1]?.id).then(() => {
       setData([]);
       setSelected(["", undefined]);
-      toast.success("Delete success", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.success("Delete success");
     });
   };
 
@@ -289,51 +282,24 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
         setData([]);
         setSelected(["", undefined]);
 
-        toast.success("Update success", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Update success");
       });
     }
   };
 
   const handleApprove = async () => {
-    await approvePeminjaman(selected[1]?.id).then(() => {
-      setData([]);
+    await approvePeminjaman(selected[1]?.id).then(async () => {
+      setData(await getAllPeminjaman(props.role));
       setSelected(["", undefined]);
-      toast.success("Approve berhasil", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.success("Approve berhasil");
     });
   };
 
   const handleReject = async (reason: string) => {
-    await rejectPeminjaman(selected[1]?.id, reason).then(() => {
-      setData([]);
+    await rejectPeminjaman(selected[1]?.id, reason).then(async () => {
+      setData(await getAllPeminjaman(props.role));
       setSelected(["", undefined]);
-      toast.success("Reject berhasil", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.success("Reject berhasil");
     });
   };
 

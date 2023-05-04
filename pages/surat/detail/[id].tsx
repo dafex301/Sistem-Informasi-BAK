@@ -41,11 +41,16 @@ const SuratDetail: NextPage = () => {
             <div className="grid grid-cols-2 gap-4 place-content-between">
               <h2 className="font-medium mb-2 text-lg p-2">Detail Surat</h2>
               <div className="flex justify-end gap-4">
-              <a
-                   href={`https://wa.me/62${data?.kontak_pengirim}`}
+                <a
+                  href={`https://wa.me/62${data?.kontak_pengirim}`}
                   className="font-medium mb-2 text-lg bg-green-50 hover:bg-green-100 rounded-sm p-2 px-4 min-w-min flex gap-1 items-center"
                 >
-                  <Image src="/assets/whatsapp.svg" height={25} width={25} alt={"Whatsapp"}/>
+                  <Image
+                    src="/assets/whatsapp.svg"
+                    height={25}
+                    width={25}
+                    alt={"Whatsapp"}
+                  />
 
                   <p>WA pengirim</p>
                 </a>
@@ -149,7 +154,9 @@ const SuratDetail: NextPage = () => {
                             key={key}
                             className={`${
                               data.paraf[key]!.status
-                                ? "bg-green-50"
+                                ? data.status === "Ditolak" && idx === 0
+                                  ? "bg-red-50"
+                                  : "bg-green-50"
                                 : "bg-yellow-50 animate-pulse"
                             } px-5 py-2 text-center`}
                           >

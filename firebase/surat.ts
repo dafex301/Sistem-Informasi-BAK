@@ -169,6 +169,18 @@ export const getDisposisiSurat = async (role?: Role) => {
     surat.push({ id: doc.id, ...doc.data() });
   });
 
+  q = query(
+    collection(db, "surat"),
+    where(`paraf.${role}.status`, "==", true),
+    orderBy("modified_at", "desc")
+  );
+
+  const querySnapshot2 = await getDocs(q);
+
+  querySnapshot2.forEach((doc) => {
+    surat.push({ id: doc.id, ...doc.data() });
+  });
+
   return surat as ISuratData[];
 };
 

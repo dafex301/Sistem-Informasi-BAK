@@ -12,6 +12,7 @@ import {
 } from "../../../firebase/peminjaman";
 import { DocumentData } from "firebase/firestore";
 import { actionTranslation, roleAbbreviation } from "../../../lib/functions";
+import Image from "next/image";
 
 const PeminjamanDetail: NextPage = () => {
   const router = useRouter();
@@ -52,8 +53,23 @@ const PeminjamanDetail: NextPage = () => {
         <div className="flex flex-col gap-5">
           <h1 className="text-2xl font-semibold">{data?.kegiatan}</h1>
           <div>
-            <h2 className="font-medium mb-2 text-lg">Detail Kegiatan</h2>
-            <div className="grid grid-cols-4 bg-blue-50 p-5">
+            <div className="flex justify-between">
+              <h2 className="font-medium mb-2 text-lg">Detail Kegiatan</h2>
+              <a
+                href={`https://wa.me/62${data?.pemohon.contact}`}
+                className="font-medium mb-2 text-lg bg-green-50 hover:bg-green-100 rounded-sm p-2 px-4 min-w-min flex gap-1 items-center"
+              >
+                <Image
+                  src="/assets/whatsapp.svg"
+                  height={25}
+                  width={25}
+                  alt={"Whatsapp"}
+                />
+
+                <p>WA pengirim</p>
+              </a>
+            </div>
+            <div className="grid grid-cols-4 bg-blue-50 p-5 gap-y-5">
               <div>
                 <h3 className="text-sm">Pemohon</h3>
                 <p className="text-lg">{data?.pemohon.name}</p>
@@ -73,6 +89,14 @@ const PeminjamanDetail: NextPage = () => {
                 <p className="text-lg">
                   {data?.waktu_kembali.toDate().toLocaleString("id-ID")}
                 </p>
+              </div>
+              <div>
+                <h3 className="text-sm">Penanggung Jawab</h3>
+                <p className="text-lg">{data?.pemohon.pic}</p>
+              </div>
+              <div>
+                <h3 className="text-sm">Contact Person</h3>
+                <p className="text-lg">{data?.pemohon.contact}</p>
               </div>
             </div>
           </div>

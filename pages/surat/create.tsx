@@ -82,6 +82,8 @@ const CreateSuratPage: NextPage = () => {
   const [fileUrl, setFileUrl] = useState<string>("");
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
+    if (route.isFallback) return;
+
     e.preventDefault();
 
     let error: boolean = false;

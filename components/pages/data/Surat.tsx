@@ -131,18 +131,25 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
   const handleApprove = async (catatan: string) => {
     await finalizeSurat(selected[1]!, user!, props.role, true, catatan).then(
       () => {
-        setViewData([]);
-        setSelected(["", undefined]);
-        toast.success("Approve berhasil", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
+        setViewData((prev) => {
+          // change prev item.id == selected[1].id item.paraf.role.status to true
+          return prev.map((item) => {
+            if (item.id === selected[1]?.id) {
+              return {
+                ...item,
+                paraf: {
+                  [props.role]: {
+                    status: true,
+                  },
+                },
+              };
+            } else {
+              return item;
+            }
+          });
         });
+        setSelected(["", undefined]);
+        toast.success("Approve berhasil");
       }
     );
   };
@@ -151,7 +158,21 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     await finalizeSurat(selected[1]!, user!, props.role, false, catatan).then(
       () => {
         setViewData((prev) => {
-          return prev.filter((item) => item.id !== selected[1]?.id);
+          // change prev item.id == selected[1].id item.paraf.role.status to true
+          return prev.map((item) => {
+            if (item.id === selected[1]?.id) {
+              return {
+                ...item,
+                paraf: {
+                  [props.role]: {
+                    status: true,
+                  },
+                },
+              };
+            } else {
+              return item;
+            }
+          });
         });
         setSelected(["", undefined]);
         toast.success("Reject berhasil");
@@ -167,7 +188,21 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     }
 
     setViewData((prev) => {
-      return prev.filter((item) => item.id !== selected[1]?.id);
+      // change prev item.id == selected[1].id item.paraf.role.status to true
+      return prev.map((item) => {
+        if (item.id === selected[1]?.id) {
+          return {
+            ...item,
+            paraf: {
+              [props.role]: {
+                status: true,
+              },
+            },
+          };
+        } else {
+          return item;
+        }
+      });
     });
 
     setSelected(["", undefined]);
@@ -230,19 +265,20 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
           )}
 
           {/* Verify Button */}
-          {props.type === "disposisi" && (
-            <>
-              {/* Verify Button */}
-              {/* If role is in RoleUtama, show Disposisi Button, else show Approve Button */}
-              {RoleUtama.includes(props.role) ? (
-                <DisposisiButton row={row} setSelected={setSelected} />
-              ) : (
-                <VerifyButton row={row} setSelected={setSelected} />
-              )}
-              {/* Reject Button */}
-              <RejectButton row={row} setSelected={setSelected} />
-            </>
-          )}
+          {props.type === "disposisi" &&
+            row.paraf[props.role].status === false && (
+              <>
+                {/* Verify Button */}
+                {/* If role is in RoleUtama, show Disposisi Button, else show Approve Button */}
+                {RoleUtama.includes(props.role) ? (
+                  <DisposisiButton row={row} setSelected={setSelected} />
+                ) : (
+                  <VerifyButton row={row} setSelected={setSelected} />
+                )}
+                {/* Reject Button */}
+                <RejectButton row={row} setSelected={setSelected} />
+              </>
+            )}
         </div>
       );
     }

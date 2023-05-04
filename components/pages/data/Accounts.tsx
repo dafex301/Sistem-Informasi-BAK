@@ -42,6 +42,18 @@ import { titleCase } from "../../../lib/functions";
 import DataTable from "../../table/Table";
 // import Select from "../../forms/Select";
 
+interface IAccountCreate {
+  name: string;
+  identifier: string;
+  role: string;
+  pic?: string;
+  contact?: string;
+}
+
+interface IAccountUpdate extends IAccountCreate {
+  id: string;
+}
+
 const Accounts: NextPage = () => {
   // =============== State ===============
   const { user } = useAuth();
@@ -52,9 +64,13 @@ const Accounts: NextPage = () => {
   // =============== Update state ===============
   const [updatedName, setUpdatedName] = useState<string>("");
   const [updatedIdentifier, setUpdatedIdentifier] = useState<string>("");
-  const [updatedRole, setUpdatedRole] = useState<string | undefined>("UKM");
+  const [updatedRole, setUpdatedRole] = useState<string>("UKM");
+  const [updatedPIC, setUpdatedPIC] = useState<string>("");
+  const [updatedContact, setUpdatedContact] = useState<string>("");
   const [errorIdentifier, setErrorIdentifier] = useState<string>("");
   const [errorName, setErrorName] = useState<string>("");
+  const [errorPIC, setErrorPIC] = useState<string>("");
+  const [errorContact, setErrorContact] = useState<string>("");
 
   // =============== Firebase Query ===============
   // Get all accounts
@@ -196,6 +212,21 @@ const Accounts: NextPage = () => {
       setErrorName("");
     }
 
+    let submittedBody: IAccountUpdate = {
+      id: selectedUser!.id,
+      identifier: updatedIdentifier,
+      name: updatedName,
+      role: updatedRole,
+    };
+
+    if (updatedRole === "UKM") {
+      submittedBody = {
+        ...submittedBody,
+        pic: updatedPIC,
+        contact: updatedContact,
+      };
+    }
+
     fetch("/api/admin/accounts/update", {
       method: "POST",
       headers: {
@@ -203,15 +234,11 @@ const Accounts: NextPage = () => {
         // Authorization token
         Authorization: user!.token,
       },
-      body: JSON.stringify({
-        id: selectedUser?.id,
-        identifier: updatedIdentifier,
-        name: updatedName,
-        role: updatedRole,
-      }),
+      body: JSON.stringify(submittedBody),
+    }).then((res) => {
+      setModal(null);
+      handleToast("Update");
     });
-    setModal(null);
-    handleToast("Update");
 
     let tempData = data.map((row) => {
       if (row.id === selectedUser?.id) {
@@ -242,18 +269,27 @@ const Accounts: NextPage = () => {
       setErrorName("");
     }
 
+    let submittedBody: IAccountCreate = {
+      identifier: updatedIdentifier,
+      name: updatedName,
+      role: updatedRole,
+    };
+
+    if (updatedRole === "UKM") {
+      submittedBody = {
+        ...submittedBody,
+        pic: updatedPIC,
+        contact: updatedContact,
+      };
+    }
+
     fetch("/api/admin/accounts/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // Authorization token
         Authorization: user!.token,
       },
-      body: JSON.stringify({
-        identifier: updatedIdentifier,
-        name: updatedName,
-        role: updatedRole,
-      }),
+      body: JSON.stringify(submittedBody),
     }).then((res) => {
       setModal(null);
       handleToast("Create");
@@ -345,6 +381,27 @@ const Accounts: NextPage = () => {
               <div className="w-9/12 space-y-6 px-6 pb-4 sm:pb-6 lg:px-3 xl:pb-8 xl:pt-8">
                 <div className="flex flex-col gap-5">
                   <div>
+                    <Select
+                      label="Role"
+                      value={updatedRole}
+                      onChange={(e) => setUpdatedRole(e!.toString())}
+                    >
+                      <Option value="UKM">Unit Kegiatan Mahasiswa</Option>
+                      <Option value="KBAK">
+                        Kepala Biro Akademik dan Kemahasiswaan
+                      </Option>
+                      <Option value="MK">Manager Kemahasiswaan</Option>
+                      <Option value="SM">Supervisor Minarpresma</Option>
+                      <Option value="SB">Supervisor Bikalima</Option>
+                      <Option value="SK">Supervisor Kesmala</Option>
+                      <Option value="staf_SM">
+                        Staf Supervisor Minarpresma
+                      </Option>
+                      <Option value="staf_SB">Staf Supervisor Bikalima</Option>
+                      <Option value="staf_SK">Staf Supervisor Kesmala</Option>
+                    </Select>
+                  </div>
+                  <div>
                     <Input
                       label={"Identifier/Username/NIP"}
                       error={Boolean(errorIdentifier)}
@@ -372,23 +429,37 @@ const Accounts: NextPage = () => {
                     )}
                   </div>
 
-                  <Select
-                    label="Role"
-                    value={updatedRole}
-                    onChange={(e) => setUpdatedRole(e?.toString())}
-                  >
-                    <Option value="UKM">Unit Kegiatan Mahasiswa</Option>
-                    <Option value="KBAK">
-                      Kepala Biro Akademik dan Kemahasiswaan
-                    </Option>
-                    <Option value="MK">Manager Kemahasiswaan</Option>
-                    <Option value="SM">Supervisor Minarpresma</Option>
-                    <Option value="SB">Supervisor Bikalima</Option>
-                    <Option value="SK">Supervisor Kesmala</Option>
-                    <Option value="staf_SM">Staf Supervisor Minarpresma</Option>
-                    <Option value="staf_SB">Staf Supervisor Bikalima</Option>
-                    <Option value="staf_SK">Staf Supervisor Kesmala</Option>
-                  </Select>
+                  {updatedRole === "UKM" && (
+                    <>
+                      <div>
+                        <Input
+                          label={"Nama Penanggung Jawab"}
+                          error={Boolean(errorPIC)}
+                          id="identifier"
+                          required={true}
+                          value={updatedPIC}
+                          onChange={(e) => setUpdatedPIC(e.target.value)}
+                        />
+                        {errorPIC && (
+                          <p className="text-red-500 text-xs">{errorPIC}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <Input
+                          label={"Kontak Penanggung Jawab"}
+                          error={Boolean(errorContact)}
+                          id="identifier"
+                          required={true}
+                          value={updatedContact}
+                          onChange={(e) => setUpdatedContact(e.target.value)}
+                        />
+                        {errorContact && (
+                          <p className="text-red-500 text-xs">{errorContact}</p>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="flex justify-center gap-4">

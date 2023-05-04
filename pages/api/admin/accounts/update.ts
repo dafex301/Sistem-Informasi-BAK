@@ -8,7 +8,7 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const { id, identifier, name, role } = req.body;
+      const { id, identifier, name, role, pic, contact } = req.body;
 
       // Update user in firebase auth
       await admin.auth().updateUser(id, {
@@ -24,12 +24,23 @@ export default async function handler(
       let modified_at = admin.firestore.Timestamp.fromDate(new Date());
 
       // Update user in firestore
-      await admin.firestore().collection("users").doc(id).update({
-        name,
-        identifier,
-        role,
-        modified_at,
-      });
+      if (role === "UKM") {
+        await admin.firestore().collection("users").doc(id).update({
+          name,
+          identifier,
+          role,
+          pic,
+          contact,
+          modified_at,
+        });
+      } else {
+        await admin.firestore().collection("users").doc(id).update({
+          name,
+          identifier,
+          role,
+          modified_at,
+        });
+      }
 
       res.status(200).json({ message: "Success" });
     } catch (error: any) {
