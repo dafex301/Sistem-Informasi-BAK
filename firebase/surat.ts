@@ -199,14 +199,14 @@ export const getFinishedDisposisiSurat = async (role?: Role) => {
   });
 
   return surat as ISuratData[];
-}
+};
 
 export const getTebusanSurat = async (role?: Role) => {
   const surat: DocumentData[] = [];
   let q: Query<DocumentData>;
   q = query(
     collection(db, "surat"),
-    where(`tebusan.${role}.status`, "==", false),
+    where(`tebusan.${role}.status`, "==", true),
     orderBy("modified_at", "desc")
   );
   const querySnapshot = await getDocs(q);
