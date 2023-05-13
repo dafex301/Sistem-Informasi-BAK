@@ -322,7 +322,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
       <PageBody>
         {/* Select Penerima */}
         {props.type === "data" && (
-          <div className="absolute top-3 left-52 scale-90">
+          <div className="absolute top-3 left-[19.5rem] scale-90">
             <Select
               id={"penerima"}
               onChange={(e) => setPenerima(e.target.value as Role | "")}
@@ -337,25 +337,27 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
           </div>
         )}
 
-        <Select
-          id="periode"
-          onChange={(e) => setPeriode(e.target.value as string)}
-        >
-          <option value="">Periode</option>
-          {/* get year available from viewData */}
-          {/* also make sure there is no duplicate */}
-          {data
-            .map((item) => {
-              const tgl_surat = item.tanggal_surat as string;
-              return tgl_surat.split("-")[0];
-            })
-            .filter((item, index, self) => self.indexOf(item) === index)
-            .map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-        </Select>
+        <div className="absolute top-3 left-52 scale-90">
+          <Select
+            id="periode"
+            onChange={(e) => setPeriode(e.target.value as string)}
+          >
+            <option value="">Periode</option>
+            {/* get year available from viewData */}
+            {/* also make sure there is no duplicate */}
+            {data
+              .map((item) => {
+                const tgl_surat = item.tanggal_surat as string;
+                return tgl_surat.split("-")[0];
+              })
+              .filter((item, index, self) => self.indexOf(item) === index)
+              .map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+          </Select>
+        </div>
         {/* End of Select Penerima */}
 
         <DataTable

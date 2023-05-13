@@ -37,6 +37,7 @@ import { useRouter } from "next/router";
 import SelectTempat from "../../forms/SelectTempat";
 import { Timestamp } from "firebase/firestore";
 import { downloadExcel } from "../../../lib/xlsx";
+import Select from "../../forms/Select";
 
 const PDFViewer = dynamic(() => import("../../PDFViewer"), {
   ssr: false,
@@ -158,6 +159,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
   const [data, setData] = useState<IPeminjamanData[]>([]);
   const [viewData, setViewData] = useState<IPeminjamanData[]>([]);
   const [tempat, setTempat] = useState("");
+  const [periode, setPeriode] = useState("");
 
   const [selected, setSelected] = useState<
     [string, Irow | IPeminjamanData | undefined]
@@ -218,17 +220,26 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
     }
   }, [selected]);
 
-  // Update when tempat change
+  // Update when tempat and periode change
   useEffect(() => {
+    let filteredData = data;
     if (tempat !== "") {
-      const newData = data.filter((item) => {
+      filteredData = filteredData.filter((item) => {
         return item.peminjaman.jenis_pinjaman === tempat;
       });
-      setViewData(newData);
-    } else {
-      setViewData(data);
     }
-  }, [data, tempat]);
+
+    if (periode !== "") {
+      filteredData = filteredData.filter((item) => {
+        return (
+          item.peminjaman.waktu_pinjam.toDate().getFullYear().toString() ===
+          periode
+        );
+      });
+    }
+
+    setViewData(filteredData);
+  }, [data, periode, tempat]);
 
   // Handler
   const handleDelete = async () => {
@@ -416,7 +427,27 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
   return (
     <>
       <PageBody>
-        <div className="absolute left-52 top-3 scale-90">
+        <div className="absolute top-3 left-52 scale-90">
+          <Select
+            id="periode"
+            onChange={(e) => setPeriode(e.target.value as string)}
+          >
+            <option value="">Periode</option>
+            {/* get year available from viewData */}
+            {/* also make sure there is no duplicate */}
+            {data
+              .map((item) => {
+                return item.peminjaman.waktu_pinjam.toDate().getFullYear();
+              })
+              .filter((item, index, self) => self.indexOf(item) === index)
+              .map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+          </Select>
+        </div>
+        <div className="absolute left-[19.5rem] top-3 scale-90">
           <SelectTempat
             id="select-tempat"
             onChange={(e) => setTempat(e.target.value)}
