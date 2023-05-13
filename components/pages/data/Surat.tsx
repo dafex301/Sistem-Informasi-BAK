@@ -95,6 +95,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
   console.log(viewData);
 
   const [penerima, setPenerima] = useState<Role | "">("");
+  const [periode, setPeriode] = useState("");
 
   const router = useRouter();
 
@@ -103,14 +104,23 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     setViewData(data);
   }, [data]);
 
-  // Change data based on penerima
+  // Change data based on penerima and periode
   useEffect(() => {
-    if (penerima === "") {
-      setViewData(data);
-    } else {
-      setViewData(data.filter((item) => item.penerima === penerima));
+    let newData = data;
+    if (penerima !== "") {
+      newData = data.filter((item) => item.penerima === penerima);
     }
-  }, [data, penerima]);
+
+    if (periode !== "") {
+      newData = newData.filter(
+        (item) =>
+          new Date(item.tanggal_surat as string).getFullYear() ==
+          parseInt(periode)
+      );
+    }
+
+    setViewData(newData);
+  }, [data, penerima, periode]);
 
   // Handler
   const handleDelete = async () => {
@@ -326,6 +336,26 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
             </Select>
           </div>
         )}
+
+        <Select
+          id="periode"
+          onChange={(e) => setPeriode(e.target.value as string)}
+        >
+          <option value="">Periode</option>
+          {/* get year available from viewData */}
+          {/* also make sure there is no duplicate */}
+          {data
+            .map((item) => {
+              const tgl_surat = item.tanggal_surat as string;
+              return tgl_surat.split("-")[0];
+            })
+            .filter((item, index, self) => self.indexOf(item) === index)
+            .map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+        </Select>
         {/* End of Select Penerima */}
 
         <DataTable

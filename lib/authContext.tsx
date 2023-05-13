@@ -1,9 +1,6 @@
 import { useState, useEffect, useContext, createContext } from "react";
 import { getAuth, onAuthStateChanged, signOut as signout } from "firebase/auth";
 import { setCookie, destroyCookie, parseCookies } from "nookies";
-import { db } from "./firebaseConfig/init";
-import { doc, getDoc } from "firebase/firestore";
-import { createToken, verifyToken } from "./jwt/token";
 
 export type TIdTokenResult = {
   token: string;
@@ -32,7 +29,6 @@ export type TIdFirebase = {
   uid: string;
   user_id: string;
 };
-
 
 type Props = {
   children: React.ReactNode;
