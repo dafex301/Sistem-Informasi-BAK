@@ -12,9 +12,9 @@ const PeminjamanIndex: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Permohonan Peminjaman</title>
+        <title>Peminjaman Tempat</title>
       </Head>
-      <PageTitle>Permohonan Peminjaman</PageTitle>
+      <PageTitle>Peminjaman Tempat</PageTitle>
       <PageBody>
         <div className="grid grid-cols-2 gap-10">
           <Link href={"/ukm/peminjaman/create"}>
@@ -33,7 +33,7 @@ const PeminjamanIndex: NextPage = () => {
                 />
               </svg>
 
-              <p className="text-2xl">Buat Permohonan Peminjaman</p>
+              <p className="text-2xl">Buat Peminjaman Tempat</p>
             </div>
           </Link>
 
@@ -53,7 +53,7 @@ const PeminjamanIndex: NextPage = () => {
                 />
               </svg>
 
-              <p className="text-2xl">Buat Permohonan Peminjaman</p>
+              <p className="text-2xl">Buat Peminjaman Tempat</p>
             </div>
           </Link>
         </div>

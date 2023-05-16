@@ -35,7 +35,7 @@ const RevisiPeminjamanPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Revisi Permohonan Peminjaman</title>
+        <title>Revisi Peminjaman Tempat</title>
       </Head>
 
       {loadingData ? (
@@ -43,7 +43,7 @@ const RevisiPeminjamanPage: NextPage = () => {
         <p>Loading...</p>
       ) : (
         <>
-          <PageTitle>Revisi Permohonan Peminjaman</PageTitle>
+          <PageTitle>Revisi Peminjaman Tempat</PageTitle>
           <CreatePeminjaman type="revision" data={data} id={id as string} />
         </>
       )}

@@ -454,7 +454,6 @@ const Accounts: NextPage = () => {
                           label={"Kontak Penanggung Jawab"}
                           error={Boolean(errorContact)}
                           id="identifier"
-                          required={true}
                           value={updatedContact}
                           onChange={(e) => setUpdatedContact(e.target.value)}
                         />

@@ -138,7 +138,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
           route.push(
             {
               pathname: "/ukm/peminjaman",
-              query: { success: "Berhasil mengubah permohonan peminjaman" },
+              query: { success: "Berhasil mengubah Peminjaman Tempat" },
             },
             "/ukm/peminjaman"
           );
@@ -165,7 +165,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
         route.push(
           {
             pathname: "/ukm/peminjaman",
-            query: { success: "Berhasil mengubah permohonan peminjaman" },
+            query: { success: "Berhasil mengubah Peminjaman Tempat" },
           },
           "/ukm/peminjaman"
         );
@@ -180,7 +180,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
         route.push(
           {
             pathname: "/ukm/peminjaman",
-            query: { success: "Berhasil membuat permohonan peminjaman" },
+            query: { success: "Berhasil membuat Peminjaman Tempat" },
           },
           "/ukm/peminjaman"
         );
@@ -290,7 +290,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
             <DragDropFile
               setFile={setFile}
               setErrorFile={setErrorFile}
-              label="Scan Permohonan Peminjaman"
+              label="Scan Peminjaman Tempat"
               filetype={[".pdf"]}
               maxSize={512000}
               file={file}

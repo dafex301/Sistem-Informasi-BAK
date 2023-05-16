@@ -419,9 +419,7 @@ const CreateSuratPage: NextPage = () => {
               <Input
                 required
                 type="tel"
-
                 label={"Nomor WA Pengirim"}
-
                 error={errorKontakPengirim}
                 onChange={(e) => setKontakPengirim(e.target.value)}
                 id={"kontak-pengirim"}
@@ -439,7 +437,7 @@ const CreateSuratPage: NextPage = () => {
             <DragDropFile
               setFile={setFile}
               setErrorFile={setErrorFile}
-              label="Scan Permohonan Peminjaman"
+              label="Scan Peminjaman Tempat"
               filetype={[".pdf"]}
               maxSize={512000}
               file={file}

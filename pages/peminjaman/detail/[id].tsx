@@ -46,9 +46,9 @@ const PeminjamanDetail: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Permohonan Peminjaman Detail</title>
+        <title>Peminjaman Tempat Detail</title>
       </Head>
-      <PageTitle>Permohonan Peminjaman Detail</PageTitle>
+      <PageTitle>Peminjaman Tempat Detail</PageTitle>
       <PageBody>
         <div className="flex flex-col gap-5">
           <h1 className="text-2xl font-semibold">{data?.kegiatan}</h1>

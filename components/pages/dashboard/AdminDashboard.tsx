@@ -130,7 +130,7 @@ export default function AdminDashboard(props: any) {
       <div className="grid md:grid-cols-9 lg:grid-cols-12 mt-8 gap-8">
         <div className="grid grid-rows-3 gap-8 md:col-span-3">
           <div className="bg-gray-100 shadow-sm rounded-lg p-5 flex flex-col justify-evenly">
-            <h2 className="font-medium">Permohonan Peminjaman Baru</h2>
+            <h2 className="font-medium">Peminjaman Tempat Baru</h2>
             <div className="flex items-center gap-2">
               <p className="text-4xl font-bold">{peminjamanDataMonth.total}</p>
               <div

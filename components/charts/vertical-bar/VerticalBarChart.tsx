@@ -58,7 +58,7 @@ export default function VerticalBarChart(props: IVerticalBarChartProps) {
     labels,
     datasets: [
       {
-        label: "Permohonan Peminjaman",
+        label: "Peminjaman Tempat",
         data: props.dataPermohonan,
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },

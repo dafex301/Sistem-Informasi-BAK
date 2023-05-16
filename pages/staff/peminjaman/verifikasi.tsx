@@ -12,10 +12,10 @@ const ManajemenPeminjamanPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Verifikasi Permohonan Peminjaman</title>
+        <title>Verifikasi Peminjaman Tempat</title>
       </Head>
 
-      <PageTitle>Verifikasi Permohonan Peminjaman</PageTitle>
+      <PageTitle>Verifikasi Peminjaman Tempat</PageTitle>
       <ManajemenPeminjaman type="verify" role={user?.claims.role} />
     </>
   );

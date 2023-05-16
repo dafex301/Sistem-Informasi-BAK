@@ -11,10 +11,10 @@ const ManajemenPeminjamanPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Data Permohonan Peminjaman</title>
+        <title>Data Peminjaman Tempat</title>
       </Head>
 
-      <PageTitle>Data Permohonan Peminjaman</PageTitle>
+      <PageTitle>Data Peminjaman Tempat</PageTitle>
       <ManajemenPeminjaman role={user?.claims.role} />
     </>
   );

@@ -9,10 +9,10 @@ const CreatePeminjamanPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Pengajuan Permohonan Peminjaman</title>
+        <title>Pengajuan Peminjaman Tempat</title>
       </Head>
 
-      <PageTitle>Pengajuan Permohonan Peminjaman</PageTitle>
+      <PageTitle>Pengajuan Peminjaman Tempat</PageTitle>
       <CreatePeminjaman type="new" />
     </>
   );

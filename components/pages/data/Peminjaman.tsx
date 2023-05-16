@@ -494,7 +494,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
               className="w-24 h-24"
             />
             <h2 className="text-xl font-semibold text-gray-800">
-              Apakah anda yakin untuk menghapus permohonan peminjaman ini?
+              Apakah anda yakin untuk menghapus Peminjaman Tempat ini?
             </h2>
             <p className="text-gray-800">{selected[1]?.peminjaman.kegiatan}</p>
             <div className="flex gap-3">
@@ -518,7 +518,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
           <div className="flex flex-col p-5 h-auto w-[36rem] gap-5">
             <div className="">
               <h2 className="font-semibold text-lg text-gray-900">
-                Update Permohonan Peminjaman
+                Update Peminjaman Tempat
               </h2>
             </div>
             <form className="flex flex-col gap-4">
@@ -586,7 +586,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
               cancelHandler={setSelected}
               mainHandler={handleApprove}
               description={
-                "Apakah anda yakin untuk menyetujui permohonan peminjaman ini?"
+                "Apakah anda yakin untuk menyetujui Peminjaman Tempat ini?"
               }
               image={"/assets/document-approve.jpeg"}
               name={selected[1]?.peminjaman.kegiatan}
@@ -601,7 +601,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
               cancelHandler={setSelected}
               mainHandler={handleReject}
               description={
-                "Apakah anda yakin untuk menolak permohonan peminjaman ini?"
+                "Apakah anda yakin untuk menolak Peminjaman Tempat ini?"
               }
               name={selected[1]?.peminjaman.kegiatan}
               type={"reject"}

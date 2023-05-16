@@ -29,10 +29,10 @@ const EditPeminjamanPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Edit Permohonan Peminjaman</title>
+        <title>Edit Peminjaman Tempat</title>
       </Head>
 
-      <PageTitle>Edit Permohonan Peminjaman</PageTitle>
+      <PageTitle>Edit Peminjaman Tempat</PageTitle>
       <PageBody>
         <CreatePeminjaman type="update" data={data} id={id as string} />
       </PageBody>
