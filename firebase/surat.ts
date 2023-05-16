@@ -95,7 +95,7 @@ export type Role =
   | "staf_SB"
   | "staf_SM";
 
-export const getAllSurat = async (role?: Role) => {
+export const getAllSurat = async (role?: Role, ormawa_pengirim?: string) => {
   const surat: DocumentData[] = [];
   let q: Query<DocumentData>;
   if (role == "SM" || role == "staf_SM") {
@@ -126,6 +126,12 @@ export const getAllSurat = async (role?: Role) => {
     q = query(
       collection(db, "surat"),
       where("penerima", "==", "MK"),
+      orderBy("modified_at", "desc")
+    );
+  } else if (role == "UKM") {
+    q = query(
+      collection(db, "surat"),
+      where("ormawa_pengirim", "==", ormawa_pengirim),
       orderBy("modified_at", "desc")
     );
   } else {

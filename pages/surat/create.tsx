@@ -437,7 +437,7 @@ const CreateSuratPage: NextPage = () => {
             <DragDropFile
               setFile={setFile}
               setErrorFile={setErrorFile}
-              label="Scan Peminjaman Tempat"
+              label="Scan Surat"
               filetype={[".pdf"]}
               maxSize={512000}
               file={file}

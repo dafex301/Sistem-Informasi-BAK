@@ -1,11 +1,24 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageTitle from "../../../components/layout/PageTitle";
+import { ManajemenSurat } from "../../../components/pages/data/Surat";
+import { getAllSurat, ISuratData } from "../../../firebase/surat";
 import { useAuth } from "../../../lib/authContext";
 
-const UKMSurat: NextPage = () => {
+const SuratManajemen: NextPage = () => {
   const { user, loading } = useAuth();
+  const [data, setData] = useState<ISuratData[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const data: ISuratData[] = await getAllSurat(
+        user?.claims.role,
+        user?.claims.name
+      );
+      setData(data);
+    })();
+  }, [user?.claims.name, user?.claims.role]);
 
   return (
     <>
@@ -13,9 +26,9 @@ const UKMSurat: NextPage = () => {
         <title>Manajemen Surat</title>
       </Head>
       <PageTitle title="Manajemen Surat" />
-      <main></main>
+      <ManajemenSurat data={data} role={user?.claims.role} type="data" />
     </>
   );
 };
 
-export default UKMSurat;
+export default SuratManajemen;
