@@ -184,6 +184,8 @@ const Accounts: NextPage = () => {
     setUpdatedName("");
     setUpdatedIdentifier("");
     setUpdatedRole("UKM");
+    setUpdatedPIC("");
+    setUpdatedContact("");
     setModal("create");
   };
 
@@ -192,6 +194,8 @@ const Accounts: NextPage = () => {
     setUpdatedName(user.name);
     setUpdatedIdentifier(user.identifier);
     setUpdatedRole(user.role ?? "");
+    setUpdatedPIC(user.pic ?? "");
+    setUpdatedContact(user.contact ?? "");
 
     setModal("update");
   };
