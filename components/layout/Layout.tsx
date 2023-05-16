@@ -241,12 +241,12 @@ export default function Layout({ children }: Props) {
                       outlineIcon={<Building2Outline />}
                       text={"Manajemen Peminjaman"}
                     />
-                    <SidebarMenu
+                    {/* <SidebarMenu
                       href={"/admin/proposal"}
                       solidIcon={<DollarSolid />}
                       outlineIcon={<DollarOutline />}
                       text={"Manajemen Proposal"}
-                    />
+                    /> */}
                     <SidebarMenu
                       href={"/admin/tempat"}
                       solidIcon={
@@ -283,7 +283,7 @@ export default function Layout({ children }: Props) {
                       text={"Manajemen Tempat"}
                     />
 
-                    <SidebarMenu
+                    {/* <SidebarMenu
                       href={"/surat/manajemen"}
                       solidIcon={
                         <svg
@@ -317,7 +317,7 @@ export default function Layout({ children }: Props) {
                         </svg>
                       }
                       text={"Manajemen Surat"}
-                    />
+                    /> */}
                   </div>
                 )}
                 {/* End of Admin Menu */}

@@ -91,7 +91,7 @@ export default function Kalender() {
           </div>
         </div>
         <div className="mt-5 ">
-          <div className="absolute ">
+          <div className="w-1/4 absolute -translate-y-1">
             <SelectTempat
               label={"Pilih Tempat"}
               error={""}
