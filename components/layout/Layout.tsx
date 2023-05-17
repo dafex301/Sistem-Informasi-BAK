@@ -43,6 +43,7 @@ const staffRoles = [
   "staf_SB",
   "SK",
   "staf_SK",
+  "SBAK"
 ];
 
 const peminjamanRoles = ["KBAK", "MK", "SM"];
@@ -284,7 +285,7 @@ export default function Layout({ children }: Props) {
                     />
 
                     {/* <SidebarMenu
-                      href={"/surat/manajemen"}
+                      href={"/surat/monitoring"}
                       solidIcon={
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -316,7 +317,7 @@ export default function Layout({ children }: Props) {
                           />
                         </svg>
                       }
-                      text={"Manajemen Surat"}
+                      text={"Monitoring Surat"}
                     /> */}
                   </div>
                 )}
@@ -325,6 +326,9 @@ export default function Layout({ children }: Props) {
                 {/* Staff Menu */}
                 {staffRoles.includes(role) && (
                   <div>
+                    {/* Peminjaman Menu */}
+                    {peminjamanRoles.includes(role) && (
+                    <div className="mb-6">
                     <p className="text-xs mx-3 mb-2 text-gray-600">
                       Menu Peminjaman
                     </p>
@@ -334,7 +338,7 @@ export default function Layout({ children }: Props) {
                       outlineIcon={<Building2Outline />}
                       text={"Data Peminjaman"}
                     />
-                    {peminjamanRoles.includes(role) && (
+                    
                       <SidebarMenu
                         href={"/staff/peminjaman/verifikasi"}
                         solidIcon={
@@ -369,7 +373,7 @@ export default function Layout({ children }: Props) {
                         }
                         text={"Verifikasi Peminjaman"}
                       />
-                    )}
+                    
                     <SidebarMenu
                       href={"/peminjaman/kalender"}
                       solidIcon={
@@ -405,45 +409,46 @@ export default function Layout({ children }: Props) {
                       }
                       text={"Kalender Peminjaman"}
                     />
-                    <p className="text-xs mx-3 mb-2 mt-6 text-gray-600">
+                    </div>
+                    )}
+                    <p className={"text-xs mx-3 mb-2 text-gray-600"}>
                       Menu Surat
                     </p>
 
+                    {role === "SBAK" && <SidebarMenu
+                        href={"/sekretaris/surat/create"}
+                        solidIcon={
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            className="w-4 h-4"
+                          >
+                            <path d="M19.5 22.5a3 3 0 003-3v-8.174l-6.879 4.022 3.485 1.876a.75.75 0 01-.712 1.321l-5.683-3.06a1.5 1.5 0 00-1.422 0l-5.683 3.06a.75.75 0 01-.712-1.32l3.485-1.877L1.5 11.326V19.5a3 3 0 003 3h15z" />
+                            <path d="M1.5 9.589v-.745a3 3 0 011.578-2.641l7.5-4.039a3 3 0 012.844 0l7.5 4.039A3 3 0 0122.5 8.844v.745l-8.426 4.926-.652-.35a3 3 0 00-2.844 0l-.652.35L1.5 9.59z" />
+                          </svg>
+                        }
+                        outlineIcon={
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="w-4 h-4"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M21.75 9v.906a2.25 2.25 0 01-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 001.183 1.981l6.478 3.488m8.839 2.51l-4.66-2.51m0 0l-1.023-.55a2.25 2.25 0 00-2.134 0l-1.022.55m0 0l-4.661 2.51m16.5 1.615a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V8.844a2.25 2.25 0 011.183-1.98l7.5-4.04a2.25 2.25 0 012.134 0l7.5 4.04a2.25 2.25 0 011.183 1.98V19.5z"
+                            />
+                          </svg>
+                        }
+                        text={"Buat Surat"}
+                      />}
+                      {role !== "SBAK" && 
                     <SidebarMenu
-                      href="/staff/surat/inbox"
-                      solidIcon={
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          className="w-4 h-4"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M17.834 6.166a8.25 8.25 0 100 11.668.75.75 0 011.06 1.06c-3.807 3.808-9.98 3.808-13.788 0-3.808-3.807-3.808-9.98 0-13.788 3.807-3.808 9.98-3.808 13.788 0A9.722 9.722 0 0121.75 12c0 .975-.296 1.887-.809 2.571-.514.685-1.28 1.179-2.191 1.179-.904 0-1.666-.487-2.18-1.164a5.25 5.25 0 11-.82-6.26V8.25a.75.75 0 011.5 0V12c0 .682.208 1.27.509 1.671.3.401.659.579.991.579.332 0 .69-.178.991-.579.3-.4.509-.99.509-1.671a8.222 8.222 0 00-2.416-5.834zM15.75 12a3.75 3.75 0 10-7.5 0 3.75 3.75 0 007.5 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      }
-                      outlineIcon={
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          className="w-4 h-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            d="M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm0 0c0 1.657 1.007 3 2.25 3S21 13.657 21 12a9 9 0 10-2.636 6.364M16.5 12V8.25"
-                          />
-                        </svg>
-                      }
-                      text={"Surat Pribadi"}
-                    />
-                    <SidebarMenu
-                      href="/staff/surat/disposisi"
+                      href="/staff/surat/masuk"
                       solidIcon={
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -474,50 +479,13 @@ export default function Layout({ children }: Props) {
                           />
                         </svg>
                       }
-                      text={"Surat Disposisi"}
+                      text={"Surat Masuk"}
                     />
-                    <SidebarMenu
-                      href="/staff/surat/tembusan"
-                      solidIcon={
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          className="w-4 h-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M9 3.75H6.912a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859M12 3v8.25m0 0l-3-3m3 3l3-3"
-                          />
-                        </svg>
-                      }
-                      outlineIcon={
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          className="w-4 h-4"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M5.478 5.559A1.5 1.5 0 016.912 4.5H9A.75.75 0 009 3H6.912a3 3 0 00-2.868 2.118l-2.411 7.838a3 3 0 00-.133.882V18a3 3 0 003 3h15a3 3 0 003-3v-4.162c0-.299-.045-.596-.133-.882l-2.412-7.838A3 3 0 0017.088 3H15a.75.75 0 000 1.5h2.088a1.5 1.5 0 011.434 1.059l2.213 7.191H17.89a3 3 0 00-2.684 1.658l-.256.513a1.5 1.5 0 01-1.342.829h-3.218a1.5 1.5 0 01-1.342-.83l-.256-.512a3 3 0 00-2.684-1.658H3.265l2.213-7.191z"
-                            clipRule="evenodd"
-                          />
-                          <path
-                            fillRule="evenodd"
-                            d="M12 2.25a.75.75 0 01.75.75v6.44l1.72-1.72a.75.75 0 111.06 1.06l-3 3a.75.75 0 01-1.06 0l-3-3a.75.75 0 011.06-1.06l1.72 1.72V3a.75.75 0 01.75-.75z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      }
-                      text={"Surat Tembusan"}
-                    />
-                    {(role == "KBAK" || role == "MK") && (
+                  }
+                    
+                    {(role == "KBAK" || role == "MK" || role == "SBAK") && (
                       <SidebarMenu
-                        href={"/staff/surat/manajemen"}
+                        href={"/staff/surat/monitoring"}
                         solidIcon={
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -549,7 +517,7 @@ export default function Layout({ children }: Props) {
                             />
                           </svg>
                         }
-                        text={"Manajemen Surat"}
+                        text={"Monitoring Surat"}
                       />
                     )}
                   </div>
@@ -770,7 +738,7 @@ export default function Layout({ children }: Props) {
                           />
                         </svg>
                       }
-                      text={"Manajemen Surat"}
+                      text={"Monitoring Surat"}
                     />
                   </div>
                 )}

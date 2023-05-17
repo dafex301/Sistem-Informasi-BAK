@@ -55,9 +55,8 @@ const PeminjamanDetail: NextPage = () => {
           <div>
             <div className="flex justify-between">
               <h2 className="font-medium mb-2 text-lg">Detail Kegiatan</h2>
-              {data?.pemohon.contact ? (
                 <a
-                  href={`https://wa.me/62${data?.pemohon.contact}`}
+                  href={`https://wa.me/+62${data?.kontakPJ}`}
                   className="font-medium mb-2 text-lg bg-green-50 hover:bg-green-100 rounded-sm p-2 px-4 min-w-min flex gap-1 items-center"
                 >
                   <Image
@@ -69,18 +68,6 @@ const PeminjamanDetail: NextPage = () => {
 
                   <p>WA pengirim</p>
                 </a>
-              ) : (
-                <div className="font-medium mb-2 text-lg bg-green-50 opacity-50 cursor-not-allowed rounded-sm p-2 px-4 min-w-min flex gap-1 items-center">
-                  <Image
-                    src="/assets/whatsapp.svg"
-                    height={25}
-                    width={25}
-                    alt={"Whatsapp"}
-                  />
-
-                  <p>WA pengirim</p>
-                </div>
-              )}
             </div>
             <div className="grid grid-cols-4 bg-blue-50 p-5 gap-y-5">
               <div>
@@ -105,12 +92,12 @@ const PeminjamanDetail: NextPage = () => {
               </div>
               <div>
                 <h3 className="text-sm">Penanggung Jawab</h3>
-                <p className="text-lg">{data?.pemohon.pic}</p>
+                <p className="text-lg">{data?.penanggungJawab}</p>
               </div>
               <div>
                 <h3 className="text-sm">Contact Person</h3>
                 <p className="text-lg">
-                  {data?.pemohon.contact !== "" ? data?.pemohon.contact : "-"}
+                  {data?.kontakPJ}
                 </p>
               </div>
             </div>

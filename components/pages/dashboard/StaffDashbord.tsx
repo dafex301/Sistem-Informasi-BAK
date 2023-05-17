@@ -27,43 +27,30 @@ export default function StaffDashboard(props: any) {
 
   // Surat
   const [surat, setSurat] = useState({
-    pribadi: 0,
-    disposisi: 0,
-    tembusan: 0,
-    total: 0,
+    masuk: 0,
   });
 
   useEffect(() => {
-    let pribadi = 0;
-    let disposisi = 0;
-    let tembusan = 0;
+    let masuk = 0;
 
     suratData.forEach((item) => {
-      if (item.penerima === role) {
-        pribadi++;
-      }
       if (item.paraf[role]?.status === false) {
-        disposisi++;
+        masuk++;
       }
-      if (item?.tembusan[role].status === true) {
-        tembusan++;
-      }
+     
     });
 
     setSurat((prevSurat) => ({
       ...prevSurat,
-      pribadi,
-      disposisi,
-      tembusan,
+      masuk,
     }));
   }, [role, suratData]);
 
   useEffect(() => {
     setSurat((prevSurat) => ({
       ...prevSurat,
-      total: prevSurat.pribadi + prevSurat.disposisi + prevSurat.tembusan,
     }));
-  }, [surat.pribadi, surat.disposisi, surat.tembusan]);
+  }, [ surat.masuk]);
 
   useEffect(() => {
     (async () => {
@@ -169,7 +156,7 @@ export default function StaffDashboard(props: any) {
           </Link>
         </div>
         <div className="flex flex-col gap-5 col-span-2 md:col-span-1">
-          <Link href="/staff/surat/disposisi">
+          <Link href="/staff/surat/masuk">
             <div className="bg-gray-100 hover:bg-gray-200 rounded-md p-5">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -186,8 +173,8 @@ export default function StaffDashboard(props: any) {
                 />
               </svg>
 
-              <h1 className="mt-5 text-lg font-semibold">Disposisi Surat</h1>
-              <h2 className="text-2xl font-semibold">{surat.disposisi}</h2>
+              <h1 className="mt-5 text-lg font-semibold">Surat Masuk</h1>
+              <h2 className="text-2xl font-semibold">{surat.masuk}</h2>
             </div>
           </Link>
           <div className="col-span-2 lg:col-span-1">
@@ -207,25 +194,12 @@ export default function StaffDashboard(props: any) {
                 />
               </svg>
               <h2 className="mt-2 text-lg font-semibold">Surat Menyurat</h2>
-              <div className="flex items-center justify-between">
-                <p className="text-md">Pribadi</p>
-                <p className="text-md font-semibold">{surat.pribadi}</p>
-              </div>
 
               <div className="flex items-center justify-between ">
-                <p className="text-md">Disposisi</p>
-                <p className="text-md font-semibold">{surat.disposisi}</p>
+                <p className="text-md">Masuk</p>
+                <p className="text-md font-semibold">{surat.masuk}</p>
               </div>
 
-              <div className="flex items-center justify-between">
-                <p className="text-md">Tembusan</p>
-                <p className="text-md font-semibold">{surat.tembusan}</p>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <p className="text-md">Total</p>
-                <p className="text-md font-semibold">{surat.total}</p>
-              </div>
             </div>
           </div>
         </div>

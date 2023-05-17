@@ -24,21 +24,6 @@ import { TIdTokenResult } from "../lib/authContext";
 
 const storage = getStorage();
 
-export interface ITembusanDetail {
-  status: boolean;
-  view: boolean;
-  waktu?: FieldValue;
-}
-
-export interface ITembusan {
-  KBAK: ITembusanDetail;
-  MK: ITembusanDetail;
-  SM: ITembusanDetail;
-  SB: ITembusanDetail;
-  SK: ITembusanDetail;
-  [key: string]: ITembusanDetail;
-}
-
 export interface IParafDetail {
   status: boolean;
   nama?: string;
@@ -64,12 +49,13 @@ export interface ISurat {
   tanggal_surat: Timestamp | string | Date;
   perihal: string;
   penerima: string;
-  tembusan: ITembusan;
   nama_pengirim: string;
-  nim_pengirim: string;
-  prodi_pengirim: string;
-  fakultas_pengirim: string;
-  kontak_pengirim: string;
+  tipe_surat: string;
+  instansi_pengirim?: string;
+  nim_pengirim?: string;
+  prodi_pengirim?: string;
+  fakultas_pengirim?: string;
+  kontak_pengirim?: string;
   ormawa_pengirim?: string;
   file?: string;
 }
@@ -207,37 +193,44 @@ export const getFinishedDisposisiSurat = async (role?: Role) => {
   return surat as ISuratData[];
 };
 
-export const getTembusanSurat = async (role?: Role) => {
-  const surat: DocumentData[] = [];
-  let q: Query<DocumentData>;
-  q = query(
-    collection(db, "surat"),
-    where(`tembusan.${role}.status`, "==", true),
-    orderBy("modified_at", "desc")
-  );
-  const querySnapshot = await getDocs(q);
-
-  querySnapshot.forEach((doc) => {
-    surat.push({ id: doc.id, ...doc.data() });
-  });
-
-  return surat as ISuratData[];
-};
-
-export const createSurat = async (surat: ISurat) => {
+export const createSurat = async (surat: ISurat, sekretaris?: boolean) => {
   const { penerima } = surat;
 
-  const suratObj: ISuratRequest = {
-    ...surat,
-    status: `Diproses ${penerima}`,
-    paraf: {
-      [`${penerima}`]: {
-        status: false,
+  let suratObj: ISuratRequest;
+
+  console.log(sekretaris);
+
+  if (sekretaris) {
+
+    suratObj = {
+      ...surat,
+      status: `Diproses KBAK`,
+      paraf: {
+        KBAK: {
+          status: false,
+        },
       },
-    },
-    created_at: serverTimestamp() as Timestamp,
-    modified_at: serverTimestamp() as Timestamp,
-  };
+      created_at: serverTimestamp() as Timestamp,
+      modified_at: serverTimestamp() as Timestamp,
+    };
+
+  } else {
+
+    suratObj = {
+      ...surat,
+      status: `Diproses ${penerima}`,
+      paraf: {
+        [`${penerima}`]: {
+          status: false,
+        },
+      },
+      created_at: serverTimestamp() as Timestamp,
+      modified_at: serverTimestamp() as Timestamp,
+    };
+    
+  }
+
+  
 
   try {
     await addDoc(collection(db, "surat"), {

@@ -394,6 +394,9 @@ const Accounts: NextPage = () => {
                       <Option value="KBAK">
                         Kepala Biro Akademik dan Kemahasiswaan
                       </Option>
+                      <Option value="SBAK">
+                        Sekretaris Biro Akademik dan Kemahasiswaan
+                      </Option>
                       <Option value="MK">Manager Kemahasiswaan</Option>
                       <Option value="SM">Supervisor Minarpresma</Option>
                       <Option value="SB">Supervisor Bikalima</Option>

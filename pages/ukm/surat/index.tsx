@@ -23,9 +23,9 @@ const SuratManajemen: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Manajemen Surat</title>
+        <title>Monitoring Surat</title>
       </Head>
-      <PageTitle title="Manajemen Surat" />
+      <PageTitle title="Monitoring Surat" />
       <ManajemenSurat data={data} role={user?.claims.role} type="data" />
     </>
   );

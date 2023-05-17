@@ -39,6 +39,12 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
   const [waktuKembali, setWaktuKembali] = useState<string>("");
   const [errorWaktuKembali, setErrorWaktuKembali] = useState<string>("");
 
+  const [penanggungJawab, setPenanggungJawab] = useState<string>("");
+  const [errorPenanggungJawab, setErrorPenanggungJawab] = useState<string>("");
+
+  const [kontakPJ, setKontakPJ] = useState<string>("");
+  const [errorKontakPJ, setErrorKontakPJ] = useState<string>("");
+
   const [file, setFile] = useState<File | null>(null);
   const [errorFile, setErrorFile] = useState<string>("");
 
@@ -69,6 +75,23 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
       setErrorWaktuKembali("Waktu kembali tidak boleh kosong");
     } else {
       setErrorWaktuKembali("");
+    }
+
+    if (!penanggungJawab) {
+      setErrorPenanggungJawab("Penanggung jawab tidak boleh kosong");
+    } else {
+      setErrorPenanggungJawab("");
+    }
+
+    if (!kontakPJ) {
+      setErrorKontakPJ("Kontak penanggung jawab tidak boleh kosong");
+    } else {
+      if (!kontakPJ.startsWith("0")) {
+        setErrorKontakPJ("Kontak penanggung jawab harus diawali dengan 0");
+        return;
+      } else {
+        setErrorKontakPJ("");
+      }
     }
 
     if (props.type === "new") {
@@ -122,7 +145,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
       }
     }
 
-    if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali) {
+    if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali && penanggungJawab && kontakPJ) {
       try {
         if (file) {
           uploadFile("permohonan_peminjaman", file, setFileUrl);
@@ -133,7 +156,9 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
             kegiatan,
             jenisPinjaman,
             new Date(waktuPinjam),
-            new Date(waktuKembali)
+            new Date(waktuKembali),
+            penanggungJawab,
+            kontakPJ,
           );
           route.push(
             {
@@ -160,6 +185,8 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
           jenisPinjaman,
           new Date(waktuPinjam),
           new Date(waktuKembali),
+          penanggungJawab,
+          kontakPJ,
           fileUrl
         );
         route.push(
@@ -175,6 +202,8 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
           kegiatan,
           waktu_pinjam: new Date(waktuPinjam),
           waktu_kembali: new Date(waktuKembali),
+          penanggungJawab,
+            kontakPJ,
           file: fileUrl,
         });
         route.push(
@@ -187,17 +216,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
       }
     }
     setFileUrl("");
-  }, [
-    fileUrl,
-    jenisPinjaman,
-    kegiatan,
-    waktuPinjam,
-    waktuKembali,
-    props.data?.kegiatan,
-    props.id,
-    props.type,
-    route,
-  ]);
+  }, [fileUrl, jenisPinjaman, kegiatan, waktuPinjam, waktuKembali, props.data?.kegiatan, props.id, props.type, route, penanggungJawab, kontakPJ]);
 
   // If update or revision, set state from props
   useEffect(() => {
@@ -283,6 +302,31 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
                   label="Waktu Kembali"
                   id="Waktu-kembali"
                   error={errorWaktuKembali}
+                />
+              </div>
+            </div>
+
+            <div className="w-full grid grid-cols-12 gap-5">
+              <div className="col-span-6">
+                <Input
+                  type="text"
+                  value={penanggungJawab}
+                  onChange={(e) => setPenanggungJawab(e.target.value)}
+                  label="Penanggung Jawab"
+                  id="penanggung-jawab"
+                  error={errorPenanggungJawab}
+                  required
+                />
+              </div>
+              <div className="col-span-6">
+                <Input
+                  type="tel"
+                  value={kontakPJ}
+                  onChange={(e) => setKontakPJ(e.target.value)}
+                  label="Kontak Penanggung Jawab"
+                  id="kontak-penanggung-jawab"
+                  error={errorKontakPJ}
+                  required
                 />
               </div>
             </div>
