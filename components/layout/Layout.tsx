@@ -477,7 +477,7 @@ export default function Layout({ children }: Props) {
                       text={"Surat Disposisi"}
                     />
                     <SidebarMenu
-                      href="/staff/surat/tebusan"
+                      href="/staff/surat/tembusan"
                       solidIcon={
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -513,7 +513,7 @@ export default function Layout({ children }: Props) {
                           />
                         </svg>
                       }
-                      text={"Surat Tebusan"}
+                      text={"Surat Tembusan"}
                     />
                     {(role == "KBAK" || role == "MK") && (
                       <SidebarMenu

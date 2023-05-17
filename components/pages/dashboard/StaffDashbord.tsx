@@ -29,14 +29,14 @@ export default function StaffDashboard(props: any) {
   const [surat, setSurat] = useState({
     pribadi: 0,
     disposisi: 0,
-    tebusan: 0,
+    tembusan: 0,
     total: 0,
   });
 
   useEffect(() => {
     let pribadi = 0;
     let disposisi = 0;
-    let tebusan = 0;
+    let tembusan = 0;
 
     suratData.forEach((item) => {
       if (item.penerima === role) {
@@ -45,8 +45,8 @@ export default function StaffDashboard(props: any) {
       if (item.paraf[role]?.status === false) {
         disposisi++;
       }
-      if (item?.tebusan[role].status === true) {
-        tebusan++;
+      if (item?.tembusan[role].status === true) {
+        tembusan++;
       }
     });
 
@@ -54,16 +54,16 @@ export default function StaffDashboard(props: any) {
       ...prevSurat,
       pribadi,
       disposisi,
-      tebusan,
+      tembusan,
     }));
   }, [role, suratData]);
 
   useEffect(() => {
     setSurat((prevSurat) => ({
       ...prevSurat,
-      total: prevSurat.pribadi + prevSurat.disposisi + prevSurat.tebusan,
+      total: prevSurat.pribadi + prevSurat.disposisi + prevSurat.tembusan,
     }));
-  }, [surat.pribadi, surat.disposisi, surat.tebusan]);
+  }, [surat.pribadi, surat.disposisi, surat.tembusan]);
 
   useEffect(() => {
     (async () => {
@@ -218,8 +218,8 @@ export default function StaffDashboard(props: any) {
               </div>
 
               <div className="flex items-center justify-between">
-                <p className="text-md">Tebusan</p>
-                <p className="text-md font-semibold">{surat.tebusan}</p>
+                <p className="text-md">Tembusan</p>
+                <p className="text-md font-semibold">{surat.tembusan}</p>
               </div>
 
               <div className="flex items-center justify-between">

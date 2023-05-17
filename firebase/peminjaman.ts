@@ -250,6 +250,7 @@ export const getLogPeminjamanById = async (id: string) => {
   const logPeminjaman = await Promise.all(
     querySnapshot.docs.map(async (doc) => {
       const log = doc.data();
+      console.log(log);
       if (log.user instanceof DocumentReference<DocumentData>) {
         log.user = (await getDoc(log.user)).data();
       }

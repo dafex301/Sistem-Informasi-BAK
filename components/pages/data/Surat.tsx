@@ -74,7 +74,7 @@ const columnsData = [
 interface IManajemenSurat {
   data: ISuratData[];
   role: "KBAK" | "MK" | "SM" | "SB" | "SK" | "staf_SM" | "staf_SB" | "staf_SK";
-  type?: "data" | "pribadi" | "disposisi" | "tebusan";
+  type?: "data" | "pribadi" | "disposisi" | "tembusan";
 }
 
 const RoleUtama = ["KBAK", "MK", "SM", "SB", "SK"];

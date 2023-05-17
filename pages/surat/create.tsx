@@ -13,7 +13,7 @@ import { useAuth } from "../../lib/authContext";
 
 import fakultas from "../../data/fakultas.json";
 import jurusan from "../../data/jurusan.json";
-import { createSurat, ISurat, ITebusan } from "../../firebase/surat";
+import { createSurat, ISurat, ITembusan } from "../../firebase/surat";
 
 const CreateSuratPage: NextPage = () => {
   const { user, loading } = useAuth();
@@ -33,7 +33,7 @@ const CreateSuratPage: NextPage = () => {
   const [penerima, setPenerima] = useState<string>("");
   const [errorPenerima, setErrorPenerima] = useState<string>("");
 
-  const [tebusan, setTebusan] = useState<ITebusan>({
+  const [tembusan, setTembusan] = useState<ITembusan>({
     KBAK: {
       status: false,
       view: false,
@@ -55,7 +55,7 @@ const CreateSuratPage: NextPage = () => {
       view: false,
     },
   });
-  const [errorTebusan, setErrorTebusan] = useState<string>("");
+  const [errorTembusan, setErrorTembusan] = useState<string>("");
 
   const [namaPengirim, setNamaPengirim] = useState<string>("");
   const [errorNamaPengirim, setErrorNamaPengirim] = useState<string>("");
@@ -186,7 +186,7 @@ const CreateSuratPage: NextPage = () => {
         tanggal_surat: tanggalSurat,
         perihal: perihal,
         penerima: penerima,
-        tebusan: tebusan,
+        tembusan: tembusan,
         nama_pengirim: namaPengirim,
         nim_pengirim: nimPengirim,
         prodi_pengirim: prodiPengirim,
@@ -262,11 +262,11 @@ const CreateSuratPage: NextPage = () => {
 
             <div>
               <div className="block tracking-wide text-gray-700 text-sm font-bold mb-2">
-                Tebusan
+                Tembusan
               </div>
               <div
                 className={
-                  errorTebusan
+                  errorTembusan
                     ? "mt-2 bg-gray-200 py-2 px-4 text-gray-700 border-red-700  border rounded-md"
                     : "mt-2 bg-gray-200 py-2 px-4 text-gray-700 rounded-md"
                 }
@@ -278,8 +278,8 @@ const CreateSuratPage: NextPage = () => {
                     name="penerima1"
                     value="KBAK"
                     onChange={(e) => {
-                      setTebusan({
-                        ...tebusan,
+                      setTembusan({
+                        ...tembusan,
                         [e.target.value]: {
                           status: e.target.checked,
                           view: false,
@@ -296,8 +296,8 @@ const CreateSuratPage: NextPage = () => {
                     name="penerima2"
                     value="MK"
                     onChange={(e) => {
-                      setTebusan({
-                        ...tebusan,
+                      setTembusan({
+                        ...tembusan,
                         [e.target.value]: {
                           status: e.target.checked,
                           view: false,
@@ -314,8 +314,8 @@ const CreateSuratPage: NextPage = () => {
                     name="penerima3"
                     value="SM"
                     onChange={(e) => {
-                      setTebusan({
-                        ...tebusan,
+                      setTembusan({
+                        ...tembusan,
                         [e.target.value]: {
                           status: e.target.checked,
                           view: false,
@@ -332,8 +332,8 @@ const CreateSuratPage: NextPage = () => {
                     name="penerima4"
                     value="SB"
                     onChange={(e) => {
-                      setTebusan({
-                        ...tebusan,
+                      setTembusan({
+                        ...tembusan,
                         [e.target.value]: {
                           status: e.target.checked,
                           view: false,
@@ -350,8 +350,8 @@ const CreateSuratPage: NextPage = () => {
                     name="penerima5"
                     value="SK"
                     onChange={(e) => {
-                      setTebusan({
-                        ...tebusan,
+                      setTembusan({
+                        ...tembusan,
                         [e.target.value]: {
                           status: e.target.checked,
                           view: false,
@@ -362,7 +362,7 @@ const CreateSuratPage: NextPage = () => {
                   <label htmlFor="penerima5"> Supervisor Kesmala</label>
                 </div>
               </div>
-              <p className="text-red-500 text-xs mt-1">{errorTebusan}</p>
+              <p className="text-red-500 text-xs mt-1">{errorTembusan}</p>
             </div>
 
             <div className=" grid grid-cols-2 gap-3">

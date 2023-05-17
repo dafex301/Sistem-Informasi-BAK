@@ -24,19 +24,19 @@ import { TIdTokenResult } from "../lib/authContext";
 
 const storage = getStorage();
 
-export interface ITebusanDetail {
+export interface ITembusanDetail {
   status: boolean;
   view: boolean;
   waktu?: FieldValue;
 }
 
-export interface ITebusan {
-  KBAK: ITebusanDetail;
-  MK: ITebusanDetail;
-  SM: ITebusanDetail;
-  SB: ITebusanDetail;
-  SK: ITebusanDetail;
-  [key: string]: ITebusanDetail;
+export interface ITembusan {
+  KBAK: ITembusanDetail;
+  MK: ITembusanDetail;
+  SM: ITembusanDetail;
+  SB: ITembusanDetail;
+  SK: ITembusanDetail;
+  [key: string]: ITembusanDetail;
 }
 
 export interface IParafDetail {
@@ -64,7 +64,7 @@ export interface ISurat {
   tanggal_surat: Timestamp | string | Date;
   perihal: string;
   penerima: string;
-  tebusan: ITebusan;
+  tembusan: ITembusan;
   nama_pengirim: string;
   nim_pengirim: string;
   prodi_pengirim: string;
@@ -207,12 +207,12 @@ export const getFinishedDisposisiSurat = async (role?: Role) => {
   return surat as ISuratData[];
 };
 
-export const getTebusanSurat = async (role?: Role) => {
+export const getTembusanSurat = async (role?: Role) => {
   const surat: DocumentData[] = [];
   let q: Query<DocumentData>;
   q = query(
     collection(db, "surat"),
-    where(`tebusan.${role}.status`, "==", true),
+    where(`tembusan.${role}.status`, "==", true),
     orderBy("modified_at", "desc")
   );
   const querySnapshot = await getDocs(q);

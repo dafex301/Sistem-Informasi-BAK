@@ -3,10 +3,10 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import PageTitle from "../../../components/layout/PageTitle";
 import { ManajemenSurat } from "../../../components/pages/data/Surat";
-import { getTebusanSurat, ISuratData } from "../../../firebase/surat";
+import { getTembusanSurat, ISuratData } from "../../../firebase/surat";
 import { useAuth } from "../../../lib/authContext";
 
-const SuratTebusan: NextPage = () => {
+const SuratTembusan: NextPage = () => {
   const { user, loading } = useAuth();
   const [data, setData] = useState<ISuratData[]>([]);
 
@@ -16,7 +16,7 @@ const SuratTebusan: NextPage = () => {
 
   useEffect(() => {
     (async () => {
-      const data: ISuratData[] = await getTebusanSurat(roleWithoutStaf);
+      const data: ISuratData[] = await getTembusanSurat(roleWithoutStaf);
       setData(data);
     })();
   }, [roleWithoutStaf]);
@@ -24,12 +24,12 @@ const SuratTebusan: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Surat Tebusan</title>
+        <title>Surat Tembusan</title>
       </Head>
-      <PageTitle title="Surat Tebusan" />
-      <ManajemenSurat data={data} role={user?.claims.role} type="tebusan" />
+      <PageTitle title="Surat Tembusan" />
+      <ManajemenSurat data={data} role={user?.claims.role} type="tembusan" />
     </>
   );
 };
 
-export default SuratTebusan;
+export default SuratTembusan;
