@@ -26,6 +26,8 @@ export interface IPeminjaman {
   kegiatan: string;
   waktu_pinjam: Date;
   waktu_kembali: Date;
+  penanggungJawab: string;
+  kontakPJ: string;
   file?: string;
 }
 
@@ -431,6 +433,8 @@ type IEditPeminjaman = {
   jenis_pinjaman: string;
   waktu_pinjam: Date;
   waktu_kembali: Date;
+  penanggungJawab: string;
+  kontakPJ: string;
   file?: string;
   paraf_KBAK: boolean;
   paraf_MK: boolean;
@@ -447,6 +451,8 @@ export const editPeminjaman = async (
   jenis_pinjaman: string,
   waktu_pinjam: Date,
   waktu_kembali: Date,
+  penanggungJawab: string,
+  kontakPJ: string,
   file?: string
 ) => {
   try {
@@ -458,6 +464,8 @@ export const editPeminjaman = async (
       jenis_pinjaman,
       waktu_pinjam,
       waktu_kembali,
+      penanggungJawab,
+      kontakPJ,
       modified_at: new Date(),
       paraf_KBAK: false,
       paraf_MK: false,
