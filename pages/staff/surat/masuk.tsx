@@ -29,10 +29,15 @@ const SuratTembusan: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Disposisi Surat</title>
+        <title>Surat Masuk</title>
       </Head>
-      <PageTitle title="Disposisi Surat" />
-      <ManajemenSurat data={data} role={user?.claims.role} type="disposisi" />
+      <PageTitle title="Surat Masuk" />
+      <ManajemenSurat
+        data={data}
+        role={user?.claims.role}
+        type="disposisi"
+        setData={setData}
+      />
     </>
   );
 };

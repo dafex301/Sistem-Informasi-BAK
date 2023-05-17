@@ -112,10 +112,18 @@ const SuratDetail: NextPage = () => {
                 <h3 className="text-sm"> Nama Pengirim</h3>
                 <p className="text-lg">{data?.nama_pengirim}</p>
               </div>
-              <div>
-                <h3 className="text-sm"> NIM Pengirim</h3>
-                <p className="text-lg">{data?.nim_pengirim}</p>
-              </div>
+              {data?.tipe_surat === "sekretaris" ? (
+                <div>
+                  <h3 className="text-sm"> Instansi Pengirim</h3>
+                  <p className="text-lg">{data?.instansi_pengirim}</p>
+                </div>
+              ) : (
+                <div>
+                  <h3 className="text-sm"> NIM Pengirim</h3>
+                  <p className="text-lg">{data?.nim_pengirim}</p>
+                </div>
+              )}
+
               <div>
                 <h3 className="text-sm">Nomor WA Pengirim</h3>
                 <p className="text-lg">{data?.kontak_pengirim}</p>

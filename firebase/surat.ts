@@ -147,6 +147,27 @@ export const getSuratById = async (id: string) => {
   }
 };
 
+export const getSuratByNomorSurat = async (nomor_surat: string) => {
+  if (!nomor_surat) {
+    return;
+  }
+  const q = query(
+    collection(db, "surat"),
+    where("nomor_surat", "==", nomor_surat)
+  );
+  const querySnapshot = await getDocs(q);
+
+  if (querySnapshot.empty) {
+    return null;
+  } else {
+    const surat: DocumentData[] = [];
+    querySnapshot.forEach((doc) => {
+      surat.push({ id: doc.id, ...doc.data() });
+    });
+    return surat[0] as ISuratData;
+  }
+};
+
 export const getDisposisiSurat = async (role?: Role) => {
   const surat: DocumentData[] = [];
   let q: Query<DocumentData>;
@@ -158,18 +179,6 @@ export const getDisposisiSurat = async (role?: Role) => {
   const querySnapshot = await getDocs(q);
 
   querySnapshot.forEach((doc) => {
-    surat.push({ id: doc.id, ...doc.data() });
-  });
-
-  q = query(
-    collection(db, "surat"),
-    where(`paraf.${role}.status`, "==", true),
-    orderBy("modified_at", "desc")
-  );
-
-  const querySnapshot2 = await getDocs(q);
-
-  querySnapshot2.forEach((doc) => {
     surat.push({ id: doc.id, ...doc.data() });
   });
 
@@ -201,7 +210,6 @@ export const createSurat = async (surat: ISurat, sekretaris?: boolean) => {
   console.log(sekretaris);
 
   if (sekretaris) {
-
     suratObj = {
       ...surat,
       status: `Diproses KBAK`,
@@ -213,9 +221,7 @@ export const createSurat = async (surat: ISurat, sekretaris?: boolean) => {
       created_at: serverTimestamp() as Timestamp,
       modified_at: serverTimestamp() as Timestamp,
     };
-
   } else {
-
     suratObj = {
       ...surat,
       status: `Diproses ${penerima}`,
@@ -227,10 +233,7 @@ export const createSurat = async (surat: ISurat, sekretaris?: boolean) => {
       created_at: serverTimestamp() as Timestamp,
       modified_at: serverTimestamp() as Timestamp,
     };
-    
   }
-
-  
 
   try {
     await addDoc(collection(db, "surat"), {

@@ -75,9 +75,11 @@ interface IManajemenSurat {
   data: ISuratData[];
   role: "KBAK" | "MK" | "SM" | "SB" | "SK" | "staf_SM" | "staf_SB" | "staf_SK";
   type?: "data" | "pribadi" | "disposisi";
+  setData?: React.Dispatch<React.SetStateAction<ISuratData[]>>;
 }
 
 const RoleUtama = ["KBAK", "MK", "SM", "SB", "SK"];
+const RoleRektorat = ["Rektor", "WR1", "WR2", "WR3", "WR4"];
 const RoleStaff = ["staf_SM", "staf_SB", "staf_SK"];
 
 export const ManajemenSurat: NextPage<IManajemenSurat> = (
@@ -85,16 +87,14 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
 ) => {
   const { user, loading } = useAuth();
 
-  const { data } = props;
+  const { data, setData } = props;
   const [viewData, setViewData] = useState<ISuratData[]>([]);
   const [selected, setSelected] = useState<[string, ISuratData | undefined]>([
     "",
     undefined,
   ]);
 
-  console.log(viewData);
-
-  const [penerima, setPenerima] = useState<Role | "">("");
+  const [penerima, setPenerima] = useState<string>("");
   const [periode, setPeriode] = useState("");
 
   const router = useRouter();
@@ -108,7 +108,23 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
   useEffect(() => {
     let newData = data;
     if (penerima !== "") {
-      newData = data.filter((item) => item.penerima === penerima);
+      if (penerima === "lainnya") {
+        newData = newData.filter(
+          (item) =>
+            item.penerima !== "KBAK" &&
+            item.penerima !== "MK" &&
+            item.penerima !== "SM" &&
+            item.penerima !== "SB" &&
+            item.penerima !== "SK" &&
+            item.penerima !== "Rektor" &&
+            item.penerima !== "WR1" &&
+            item.penerima !== "WR2" &&
+            item.penerima !== "WR3" &&
+            item.penerima !== "WR4"
+        );
+      } else {
+        newData = newData.filter((item) => item.penerima === penerima);
+      }
     }
 
     if (periode !== "") {
@@ -140,7 +156,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     });
   };
 
-  const handleApprove = async (catatan: string) => {
+  const handleApprove = async (catatan?: string) => {
     await finalizeSurat(selected[1]!, user!, props.role, true, catatan).then(
       () => {
         setViewData((prev) => {
@@ -166,7 +182,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     );
   };
 
-  const handleReject = async (catatan: string) => {
+  const handleReject = async (catatan?: string) => {
     await finalizeSurat(selected[1]!, user!, props.role, false, catatan).then(
       () => {
         setViewData((prev) => {
@@ -192,15 +208,14 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     );
   };
 
-  const handleDisposisi = async (catatan: string, tujuan?: Role[]) => {
+  const handleDisposisi = async (catatan?: string, tujuan?: Role[]) => {
     if (tujuan) {
-      await disposisiSurat(selected[1]!, user!, props.role, catatan, tujuan);
+      await disposisiSurat(selected[1]!, user!, props.role, catatan!, tujuan);
     } else {
-      await disposisiSurat(selected[1]!, user!, props.role, catatan);
+      await disposisiSurat(selected[1]!, user!, props.role, catatan!);
     }
 
     setViewData((prev) => {
-      // change prev item.id == selected[1].id item.paraf.role.status to true
       return prev.map((item) => {
         if (item.id === selected[1]?.id) {
           return {
@@ -210,6 +225,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
                 status: true,
               },
             },
+            status: "Disposisi Berhasil",
           };
         } else {
           return item;
@@ -328,11 +344,17 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
               onChange={(e) => setPenerima(e.target.value as Role | "")}
             >
               <option value="">Penerima</option>
+              <option value="Rektor">Rektor</option>
+              <option value="WR1">WR1</option>
+              <option value="WR2">WR2</option>
+              <option value="WR3">WR3</option>
+              <option value="WR4">WR4</option>
               <option value="KBAK">Kepala BAK</option>
               <option value="MK">Manager Kemahasiswaan</option>
               <option value="SM">Supervisor Minarpresma</option>
               <option value="SB">Supervisor Bikalima</option>
               <option value="SK">Supervisor Kesmala</option>
+              <option value="lainnya">Lainnya</option>
             </Select>
           </div>
         )}

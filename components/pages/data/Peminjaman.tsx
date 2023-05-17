@@ -56,7 +56,7 @@ const columnsData = [
   },
   {
     field: "peminjaman.jenis_pinjaman",
-    use: "Jenis Pinjaman",
+    use: "Tempat",
   },
   {
     field: "peminjaman.waktu_pinjam",
@@ -95,7 +95,7 @@ const columnsVerify = [
   },
   {
     field: "peminjaman.jenis_pinjaman",
-    use: "Jenis Pinjaman",
+    use: "Tempat",
   },
   {
     field: "peminjaman.waktu_pinjam",

@@ -4,12 +4,13 @@ import { Role } from "../../firebase/surat";
 
 interface IModalWithImageProps {
   image: string;
-  description: string;
-  name: string;
+  description?: string;
+  name?: string;
   cancelHandler: (arg: [string, undefined]) => void;
   mainHandler: () => void;
   mainText?: string;
   color?: string;
+  children?: React.ReactNode;
 }
 
 export function ModalWithImage(props: IModalWithImageProps) {
@@ -23,10 +24,18 @@ export function ModalWithImage(props: IModalWithImageProps) {
           alt={"Document"}
           className="w-24 h-24"
         />
-        <h2 className="text-xl font-semibold text-gray-800 text-center">
-          {props.description}
-        </h2>
-        <p className="text-gray-900 font-medium">{props.name}</p>
+
+        {props.children ? (
+          props.children
+        ) : (
+          <>
+            <h2 className="text-xl font-semibold text-gray-800 text-center">
+              {props.description}
+            </h2>
+            <p className="text-gray-900 font-medium">{props.name}</p>
+          </>
+        )}
+
         <div className="w-full grid grid-cols-2 gap-3 font-medium">
           <button
             onClick={() => props.cancelHandler(["", undefined])}
@@ -152,8 +161,7 @@ export function DisposisiModal(props: IDisposisiModalProps) {
     } else if (tujuan.length === 0 && props.select) {
       setError("Tujuan wajib dipilih!");
       return;
-    } 
-    else {
+    } else {
       setError("");
     }
 

@@ -1,16 +1,24 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DragDropFile from "../../../components/forms/DragDropFile";
 import Input from "../../../components/forms/Input";
 import Select from "../../../components/forms/Select";
 import PageBody from "../../../components/layout/PageBody";
 import PageTitle from "../../../components/layout/PageTitle";
-import {  uploadFile } from "../../../firebase/file";
+import { uploadFile } from "../../../firebase/file";
 import { useAuth } from "../../../lib/authContext";
 
-import { createSurat, ISurat } from "../../../firebase/surat";
+import {
+  createSurat,
+  deleteSurat,
+  getSuratByNomorSurat,
+  ISurat,
+  ISuratData,
+} from "../../../firebase/surat";
+import { Dialog } from "@material-tailwind/react";
+import { ModalWithImage } from "../../../components/modal/Modal";
 
 const CreateSuratPage: NextPage = () => {
   const { user, loading } = useAuth();
@@ -28,11 +36,15 @@ const CreateSuratPage: NextPage = () => {
   const [penerima, setPenerima] = useState<string>("");
   const [errorPenerima, setErrorPenerima] = useState<string>("");
 
+  const [lainnya, setLainnya] = useState<string>("");
+  const [errorLainnya, setErrorLainnya] = useState<string>("");
+
   const [namaPengirim, setNamaPengirim] = useState<string>("");
   const [errorNamaPengirim, setErrorNamaPengirim] = useState<string>("");
 
   const [instansiPengirim, setInstansiPengirim] = useState<string>("");
-  const [errorInstansiPengirim, setErrorInstansiPengirim] = useState<string>("");
+  const [errorInstansiPengirim, setErrorInstansiPengirim] =
+    useState<string>("");
 
   const [kontakPengirim, setKontakPengirim] = useState<string>("");
   const [errorKontakPengirim, setErrorKontakPengirim] = useState<string>("");
@@ -41,6 +53,11 @@ const CreateSuratPage: NextPage = () => {
   const [errorFile, setErrorFile] = useState<string>("");
 
   const [fileUrl, setFileUrl] = useState<string>("");
+
+  const [modal, setModal] = useState<[string, ISuratData | undefined]>([
+    "",
+    undefined,
+  ]);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     if (route.isFallback) return;
@@ -75,6 +92,14 @@ const CreateSuratPage: NextPage = () => {
       setErrorPenerima("Penerima tidak boleh kosong");
     } else {
       setErrorPenerima("");
+      if (penerima === "lainnya") {
+        if (!lainnya) {
+          error = true;
+          setErrorLainnya("Penerima tidak boleh kosong");
+        } else {
+          setErrorLainnya("");
+        }
+      }
     }
 
     if (!namaPengirim) {
@@ -86,7 +111,9 @@ const CreateSuratPage: NextPage = () => {
 
     if (!instansiPengirim) {
       error = true;
-      setErrorInstansiPengirim('Instansi Pengirim tidak boleh kosong. Isi "-" jika tidak ada');
+      setErrorInstansiPengirim(
+        'Instansi Pengirim tidak boleh kosong. Isi "-" jika tidak ada'
+      );
     } else {
       setErrorInstansiPengirim("");
     }
@@ -95,7 +122,8 @@ const CreateSuratPage: NextPage = () => {
       error = true;
       setErrorKontakPengirim("Kontak Pengirim (WA) tidak boleh kosong");
     } else if (isNaN(Number(kontakPengirim))) {
-      error = true;``
+      error = true;
+      ``;
       setErrorKontakPengirim("Kontak Pengirim harus berupa angka");
     } else if (!kontakPengirim.startsWith("08")) {
       error = true;
@@ -111,13 +139,27 @@ const CreateSuratPage: NextPage = () => {
 
     if (!error) {
       try {
-        if (file) {
-          uploadFile("surat", file, setFileUrl);
-        }
+        await getSuratByNomorSurat(nomorSurat).then((surat) => {
+          if (surat) {
+            setModal(["replace", surat]);
+            console.log(surat);
+            return;
+          } else {
+            uploadFile("surat", file!, setFileUrl);
+            return;
+          }
+        });
       } catch (e) {
         console.log(e);
       }
     }
+  };
+
+  const handleReplace = async () => {
+    await deleteSurat(modal[1]!).then(() => {
+      uploadFile("surat", file!, setFileUrl);
+    });
+    setModal(["", undefined]);
   };
 
   // Submit if fileUrl is available
@@ -128,7 +170,7 @@ const CreateSuratPage: NextPage = () => {
         nomor_surat: nomorSurat,
         tanggal_surat: tanggalSurat,
         perihal: perihal,
-        penerima: penerima,
+        penerima: penerima === "lainnya" ? lainnya : penerima,
         tipe_surat: "sekretaris",
         nama_pengirim: namaPengirim,
         instansi_pengirim: instansiPengirim,
@@ -141,7 +183,6 @@ const CreateSuratPage: NextPage = () => {
       route.push("/staff/surat/monitoring");
     }
   }, [fileUrl]);
-
 
   return (
     <>
@@ -194,6 +235,17 @@ const CreateSuratPage: NextPage = () => {
               <option value="lainnya">Lainnya</option>
             </Select>
 
+            {penerima === "lainnya" && (
+              <Input
+                required
+                label={"Penerima Lainnya"}
+                error={errorLainnya}
+                onChange={(e) => setLainnya(e.target.value)}
+                id={"penerima-lainnya"}
+                value={lainnya}
+              />
+            )}
+
             <div className=" grid grid-cols-2 gap-3">
               <Input
                 required
@@ -243,6 +295,55 @@ const CreateSuratPage: NextPage = () => {
           </div>
         </form>
       </PageBody>
+
+      <Dialog
+        open={Boolean(modal[0])}
+        handler={() => setModal(["", undefined])}
+        className="overflow-auto min-w-min w-auto"
+      >
+        <ModalWithImage
+          cancelHandler={setModal}
+          mainHandler={handleReplace}
+          image={"/assets/document-approve.jpeg"}
+          name={"Surat"}
+          color={"green"}
+          mainText={"Ganti"}
+        >
+          <div className="text-sm">
+            <p className="font-semibold text-gray-900 text-center">
+              Surat dengan nomor ini sudah ada, apakah anda ingin mengganti
+              surat yang sebelumnya?
+            </p>
+            <table className="text-gray-700 table-auto mt-3 mx-auto border-separate border-spacing-x-3">
+              <tr className="w-10">
+                <td>Nomor Surat</td>
+                <td>:</td>
+                <td className="">{modal[1]?.nomor_surat}</td>
+              </tr>
+              <tr>
+                <td>Pengirim</td>
+                <td>:</td>
+                <td>{modal[1]?.nama_pengirim}</td>
+              </tr>
+              <tr>
+                <td>Perihal</td>
+                <td>:</td>
+                <td>{modal[1]?.perihal}</td>
+              </tr>
+              <tr>
+                <td>Dikirim pada</td>
+                <td>:</td>
+                <td>{modal[1]?.created_at.toDate().toLocaleDateString()}</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td>{modal[1]?.created_at.toDate().toLocaleTimeString()}</td>
+              </tr>
+            </table>
+          </div>
+        </ModalWithImage>
+      </Dialog>
     </>
   );
 };
