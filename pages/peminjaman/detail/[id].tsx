@@ -55,19 +55,19 @@ const PeminjamanDetail: NextPage = () => {
           <div>
             <div className="flex justify-between">
               <h2 className="font-medium mb-2 text-lg">Detail Kegiatan</h2>
-                <a
-                  href={`https://wa.me/+62${data?.kontakPJ}`}
-                  className="font-medium mb-2 text-lg bg-green-50 hover:bg-green-100 rounded-sm p-2 px-4 min-w-min flex gap-1 items-center"
-                >
-                  <Image
-                    src="/assets/whatsapp.svg"
-                    height={25}
-                    width={25}
-                    alt={"Whatsapp"}
-                  />
+              <a
+                href={`https://wa.me/+62${data?.kontakPJ}`}
+                className="font-medium mb-2 text-lg bg-green-50 hover:bg-green-100 rounded-sm p-2 px-4 min-w-min flex gap-1 items-center"
+              >
+                <Image
+                  src="/assets/whatsapp.svg"
+                  height={25}
+                  width={25}
+                  alt={"Whatsapp"}
+                />
 
-                  <p>WA pengirim</p>
-                </a>
+                <p>WA pengirim</p>
+              </a>
             </div>
             <div className="grid grid-cols-4 bg-blue-50 p-5 gap-y-5">
               <div>
@@ -79,13 +79,13 @@ const PeminjamanDetail: NextPage = () => {
                 <p className="text-lg">{data?.jenis_pinjaman}</p>
               </div>
               <div>
-                <h3 className="text-sm">Waktu Pinjam</h3>
+                <h3 className="text-sm">Waktu Mulai</h3>
                 <p className="text-lg">
                   {data?.waktu_pinjam.toDate().toLocaleString("id-ID")}
                 </p>
               </div>
               <div>
-                <h3 className="text-sm">Waktu Kembali</h3>
+                <h3 className="text-sm">Waktu Selesai</h3>
                 <p className="text-lg">
                   {data?.waktu_kembali.toDate().toLocaleString("id-ID")}
                 </p>
@@ -96,9 +96,7 @@ const PeminjamanDetail: NextPage = () => {
               </div>
               <div>
                 <h3 className="text-sm">Contact Person</h3>
-                <p className="text-lg">
-                  {data?.kontakPJ}
-                </p>
+                <p className="text-lg">{data?.kontakPJ}</p>
               </div>
             </div>
           </div>

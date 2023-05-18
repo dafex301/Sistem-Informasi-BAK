@@ -66,13 +66,13 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
     }
 
     if (!waktuPinjam) {
-      setErrorWaktuPinjam("Waktu pinjam tidak boleh kosong");
+      setErrorWaktuPinjam("Waktu mulai tidak boleh kosong");
     } else {
       setErrorWaktuPinjam("");
     }
 
     if (!waktuKembali) {
-      setErrorWaktuKembali("Waktu kembali tidak boleh kosong");
+      setErrorWaktuKembali("Waktu selesai tidak boleh kosong");
     } else {
       setErrorWaktuKembali("");
     }
@@ -105,10 +105,10 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
     if (waktuPinjam && waktuKembali) {
       if (waktuPinjam >= waktuKembali) {
         setErrorWaktuPinjam(
-          "Waktu kembali tidak boleh lebih dahulu dari waktu pinjam"
+          "Waktu selesai tidak boleh lebih dahulu dari waktu pinjam"
         );
         setErrorWaktuKembali(
-          "Waktu kembali tidak boleh lebih dahulu dari waktu pinjam"
+          "Waktu selesai tidak boleh lebih dahulu dari waktu pinjam"
         );
         return;
       } else {
@@ -145,7 +145,14 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
       }
     }
 
-    if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali && penanggungJawab && kontakPJ) {
+    if (
+      kegiatan &&
+      jenisPinjaman &&
+      waktuPinjam &&
+      waktuKembali &&
+      penanggungJawab &&
+      kontakPJ
+    ) {
       try {
         if (file) {
           uploadFile("permohonan_peminjaman", file, setFileUrl);
@@ -158,7 +165,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
             new Date(waktuPinjam),
             new Date(waktuKembali),
             penanggungJawab,
-            kontakPJ,
+            kontakPJ
           );
           route.push(
             {
@@ -203,7 +210,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
           waktu_pinjam: new Date(waktuPinjam),
           waktu_kembali: new Date(waktuKembali),
           penanggungJawab,
-            kontakPJ,
+          kontakPJ,
           file: fileUrl,
         });
         route.push(
@@ -216,7 +223,19 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
       }
     }
     setFileUrl("");
-  }, [fileUrl, jenisPinjaman, kegiatan, waktuPinjam, waktuKembali, props.data?.kegiatan, props.id, props.type, route, penanggungJawab, kontakPJ]);
+  }, [
+    fileUrl,
+    jenisPinjaman,
+    kegiatan,
+    waktuPinjam,
+    waktuKembali,
+    props.data?.kegiatan,
+    props.id,
+    props.type,
+    route,
+    penanggungJawab,
+    kontakPJ,
+  ]);
 
   // If update or revision, set state from props
   useEffect(() => {
@@ -289,7 +308,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
                   type="datetime-local"
                   value={waktuPinjam}
                   onChange={(e) => setWaktuPinjam(e.target.value)}
-                  label="Waktu Pinjam"
+                  label="Waktu Mulai"
                   id="Waktu-pinjam"
                   error={errorWaktuPinjam}
                 />
@@ -299,7 +318,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
                   type="datetime-local"
                   value={waktuKembali}
                   onChange={(e) => setWaktuKembali(e.target.value)}
-                  label="Waktu Kembali"
+                  label="Waktu Selesai"
                   id="Waktu-kembali"
                   error={errorWaktuKembali}
                 />

@@ -60,11 +60,11 @@ const columnsData = [
   },
   {
     field: "peminjaman.waktu_pinjam",
-    use: "Waktu Pinjam",
+    use: "Waktu Mulai",
   },
   {
     field: "peminjaman.waktu_kembali",
-    use: "Waktu Kembali",
+    use: "Waktu Selesai",
   },
 
   {
@@ -99,11 +99,11 @@ const columnsVerify = [
   },
   {
     field: "peminjaman.waktu_pinjam",
-    use: "Waktu Pinjam",
+    use: "Waktu Mulai",
   },
   {
     field: "peminjaman.waktu_kembali",
-    use: "Waktu Kembali",
+    use: "Waktu Selesai",
   },
   {
     field: "aksi",
@@ -123,11 +123,11 @@ const columnsPemohon = [
   },
   {
     field: "peminjaman.waktu_pinjam",
-    use: "Waktu Pinjam",
+    use: "Waktu Mulai",
   },
   {
     field: "peminjaman.waktu_kembali",
-    use: "Waktu Kembali",
+    use: "Waktu Selesai",
   },
 
   {
@@ -266,10 +266,10 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
     if (waktuPinjam && waktuKembali) {
       if (waktuPinjam > waktuKembali) {
         setErrorWaktuKembali(
-          "Waktu kembali tidak boleh kurang dari waktu pinjam"
+          "Waktu selesai tidak boleh kurang dari waktu pinjam"
         );
         setErrorWaktuKembali(
-          "Waktu kembali tidak boleh kurang dari waktu pinjam"
+          "Waktu selesai tidak boleh kurang dari waktu pinjam"
         );
         return;
       } else {
@@ -277,8 +277,8 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
         setErrorWaktuKembali("");
       }
     } else {
-      setErrorWaktuKembali("Waktu kembali tidak boleh kosong");
-      setErrorWaktuPinjam("Waktu pinjam tidak boleh kosong");
+      setErrorWaktuKembali("Waktu selesai tidak boleh kosong");
+      setErrorWaktuPinjam("Waktu mulai tidak boleh kosong");
     }
 
     if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali) {
@@ -542,7 +542,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
 
               <div className="grid grid-cols-2 gap-3">
                 <Input
-                  label="Waktu Pinjam"
+                  label="Waktu Mulai"
                   type="datetime-local"
                   error={errorWaktuPinjam}
                   onChange={(e) => setWaktuPinjam(e.target.value)}
@@ -552,7 +552,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
                   required
                 />
                 <Input
-                  label="Waktu Kembali"
+                  label="Waktu Selesai"
                   type="datetime-local"
                   error={errorWaktuKembali}
                   onChange={(e) => setWaktuKembali(e.target.value)}
