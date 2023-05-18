@@ -1,34 +1,72 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Sistem Informasi Biro Akademik dan Kemahasiswaan Undip
 
-## Getting Started
+This repository contains the source code for the Sistem Informasi Biro Akademik dan Kemahasiswaan Undip. The application is built using Next.js and Firebase, providing a comprehensive system for managing two main features: booking places for student organizations and letter disposition for Biro Akademik dan Kemahasiswaan Undip staffs.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+The Sistem Informasi Biro Akademik dan Kemahasiswaan Undip offers the following main features:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Booking Places for Student Organizations**: This feature allows student organizations to book various places for their activities or events. It provides an intuitive interface for selecting available venues, specifying the booking date and time, and managing the booking details.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+2. **Letter Disposition for Biro Akademik dan Kemahasiswaan Undip Staffs**: The application facilitates the process of handling letter dispositions for Biro Akademik dan Kemahasiswaan Undip staffs. It provides a streamlined workflow for receiving, reviewing, approving, and tracking letter dispositions, improving efficiency and organization within the department.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Technologies Used
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+The Sistem Informasi Biro Akademik dan Kemahasiswaan Undip is developed using the following technologies:
 
-## Learn More
+- Next.js: A React-based framework for building server-side rendered and static websites.
+- Firebase: A comprehensive suite of cloud-based services provided by Google, including authentication, database, and hosting.
 
-To learn more about Next.js, take a look at the following resources:
+## Installation and Setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To run the application locally, follow these steps:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. Clone this repository to your local machine.
+2. Make sure you have Node.js and npm (Node Package Manager) installed.
+3. Install the project dependencies by running the following command in your terminal:
+   ```
+   npm install
+   ```
+4. Set up your Firebase project and obtain the necessary credentials (Firebase SDK configuration).
+5. Create a `.env.local` file in the project root directory and populate it with the Firebase SDK configuration. You can refer to the `.env.example` file for the required variables.
+6. Start the development server by running the following command:
+   ```
+   npm run dev
+   ```
+7. Access the application locally in your browser at `http://localhost:3000`.
 
-## Deploy on Vercel
+Please note that the above steps assume you have already set up your Firebase project and configured it properly. If you haven't done so, please refer to the Firebase documentation for guidance.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Certainly! Here's the modified "Contributing" section with the names and identifier numbers of the creators:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Contributing
+
+Contributions to the Sistem Informasi Biro Akademik dan Kemahasiswaan Undip project are welcome! If you find any issues or want to propose new features, please open an issue in this repository. You can also submit pull requests to contribute directly to the codebase.
+
+When contributing, please follow the existing code style and conventions. Ensure that your changes are well-tested and provide clear documentation.
+
+### Creators
+
+The Sistem Informasi Biro Akademik dan Kemahasiswaan Undip was created by:
+
+- Fahrel Gibran Alghany - 24060120130106
+- Katarina Kanti Moksakamarga - 24060120140058
+
+Please feel free to reach out to them with any specific questions or inquiries related to their contributions.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). Feel free to modify and distribute the code as per the terms of the license.
+
+## Acknowledgments
+
+We would like to express our gratitude to the developers and contributors of the open-source libraries and frameworks used in this project. Their excellent work makes projects like this possible.
+
+## Contact
+
+For any inquiries or further information about the Sistem Informasi Biro Akademik dan Kemahasiswaan Undip, please contact:
+
+- Fahrel Gibran Alghany - Email: fahrel@students.undip.ac.id
+- Katarina Kanti Moksakamarga - Email: katarinakanti@students.undip.ac.id
+
+You can also visit our website [Sistem Informasi BAK](https://sistem-informasi-bak.vercel.app/) for more details.
