@@ -34,6 +34,7 @@ import {
 } from "../../../firebase/surat";
 import Select from "../../forms/Select";
 import { useAuth } from "../../../lib/authContext";
+import { dateLocaleFormat, roleAbbreviation } from "../../../lib/functions";
 
 const PDFViewer = dynamic(() => import("../../PDFViewer"), {
   ssr: false,
@@ -277,7 +278,11 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
     }
 
     if (column.field === "tanggal_surat") {
-      return <p>{display_value.split("-").reverse().join("/")}</p>;
+      return <p>{dateLocaleFormat(display_value)}</p>;
+    }
+
+    if (column.field === "penerima") {
+      return <p>{roleAbbreviation(display_value)}</p>;
     }
 
     if (column.field === "aksi") {

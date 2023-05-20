@@ -50,15 +50,43 @@ export const actionTranslation = (action: string) => {
   }
 };
 
-export const convertLocalTime = (date: string, time?: boolean) => {
+export const dateLocaleFormat = (date: string) => {
   const dateObj = new Date(date);
-  if (time) {
-    return dateObj.toLocaleString("id-ID", {
-      timeZone: "Asia/Jakarta",
-    });
-  } else {
-    return dateObj.toLocaleDateString("id-ID", {
-      timeZone: "Asia/Jakarta",
-    });
-  }
+  return dateObj.toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+};
+
+export const getMonthName = (month: string) => {
+  const monthNames = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+  return monthNames[parseInt(month) - 1];
+};
+
+export const formatTime = (time: string) => {
+  const timeComponents = time.split(".");
+  return `${timeComponents[0]}:${timeComponents[1]}:${timeComponents[2]}`;
+};
+
+export const formatDateTime = (date: string) => {
+  const dateObj = new Date(date);
+  return `${dateObj.toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  })} ${formatTime(dateObj.toLocaleTimeString("id-ID"))}`;
 };

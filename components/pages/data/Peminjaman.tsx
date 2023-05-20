@@ -38,6 +38,7 @@ import SelectTempat from "../../forms/SelectTempat";
 import { Timestamp } from "firebase/firestore";
 import { downloadExcel } from "../../../lib/xlsx";
 import Select from "../../forms/Select";
+import { formatDateTime } from "../../../lib/functions";
 
 const PDFViewer = dynamic(() => import("../../PDFViewer"), {
   ssr: false,
@@ -179,8 +180,6 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
   const [errorWaktuKembali, setErrorWaktuKembali] = useState("");
 
   const router = useRouter();
-
-  console.log(data);
 
   // Get Data
   useEffect(() => {
@@ -351,11 +350,11 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
     }
 
     if (column.field === "peminjaman.waktu_pinjam") {
-      return <p>{display_value.toDate().toLocaleString("id-ID")}</p>;
+      return <p>{formatDateTime(display_value.toDate())}</p>;
     }
 
     if (column.field === "peminjaman.waktu_kembali") {
-      return <p>{display_value.toDate().toLocaleString("id-ID")}</p>;
+      return <p>{formatDateTime(display_value.toDate())}</p>;
     }
 
     if (column.field === "aksi") {

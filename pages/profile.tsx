@@ -9,7 +9,6 @@ import Input from "../components/forms/Input";
 import { updatePassword, getAuth } from "firebase/auth";
 
 // Firebase
-import { query, collection, where, getDoc } from "firebase/firestore";
 import { getUserByUserId, updateUser, UserData } from "../firebase/account";
 import { toast, ToastContainer } from "react-toastify";
 import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";

@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import PageTitle from "../../../components/layout/PageTitle";
 import { useRouter } from "next/router";
 import PageBody from "../../../components/layout/PageBody";
-import { convertLocalTime, roleAbbreviation } from "../../../lib/functions";
+import {
+  dateLocaleFormat,
+  formatDateTime,
+  roleAbbreviation,
+} from "../../../lib/functions";
 import { getSuratById, ISuratData } from "../../../firebase/surat";
 import dynamic from "next/dynamic";
 import Dialog from "@material-tailwind/react/components/Dialog";
@@ -85,7 +89,7 @@ const SuratDetail: NextPage = () => {
                 <h3 className="text-sm">Tanggal Surat</h3>
                 <p className="text-lg">
                   {data
-                    ? convertLocalTime(data?.tanggal_surat.toString())
+                    ? dateLocaleFormat(data?.tanggal_surat.toString())
                     : "-"}
                 </p>
               </div>
@@ -97,16 +101,15 @@ const SuratDetail: NextPage = () => {
                 <h3 className="text-sm">Tanggal Input</h3>
                 <p className="text-lg">
                   {data
-                    ? convertLocalTime(
-                        data?.created_at.toDate().toLocaleString(),
-                        true
-                      )
+                    ? formatDateTime(data?.created_at.toDate().toLocaleString())
                     : "-"}
                 </p>
               </div>
               <div>
                 <h3 className="text-sm">Penerima</h3>
-                <p className="text-lg">{data?.penerima}</p>
+                <p className="text-lg">
+                  {data ? roleAbbreviation(data?.penerima) : ""}
+                </p>
               </div>
               <div>
                 <h3 className="text-sm"> Nama Pengirim</h3>
@@ -170,11 +173,10 @@ const SuratDetail: NextPage = () => {
                           >
                             <td className="px-5 py-2 ">
                               {data.paraf[key]!.waktu
-                                ? convertLocalTime(
+                                ? formatDateTime(
                                     data.paraf[
                                       key
-                                    ]!.waktu!.toDate().toLocaleString(),
-                                    true
+                                    ]!.waktu!.toDate().toLocaleString()
                                   )
                                 : "Diproses"}
                             </td>

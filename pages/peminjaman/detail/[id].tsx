@@ -11,7 +11,11 @@ import {
   getPeminjamanById,
 } from "../../../firebase/peminjaman";
 import { DocumentData } from "firebase/firestore";
-import { actionTranslation, roleAbbreviation } from "../../../lib/functions";
+import {
+  actionTranslation,
+  formatDateTime,
+  roleAbbreviation,
+} from "../../../lib/functions";
 import Image from "next/image";
 
 const PeminjamanDetail: NextPage = () => {
@@ -81,13 +85,13 @@ const PeminjamanDetail: NextPage = () => {
               <div>
                 <h3 className="text-sm">Waktu Mulai</h3>
                 <p className="text-lg">
-                  {data?.waktu_pinjam.toDate().toLocaleString("id-ID")}
+                  {formatDateTime(data?.waktu_pinjam.toDate())}
                 </p>
               </div>
               <div>
                 <h3 className="text-sm">Waktu Selesai</h3>
                 <p className="text-lg">
-                  {data?.waktu_kembali.toDate().toLocaleString("id-ID")}
+                  {formatDateTime(data?.waktu_kembali.toDate())}
                 </p>
               </div>
               <div>
