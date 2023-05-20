@@ -209,8 +209,6 @@ export const createSurat = async (surat: ISurat, sekretaris?: boolean) => {
 
   let suratObj: ISuratRequest;
 
-  console.log(sekretaris);
-
   if (sekretaris) {
     suratObj = {
       ...surat,

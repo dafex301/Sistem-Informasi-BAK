@@ -343,7 +343,6 @@ export const approvePeminjaman = async (id: string) => {
   try {
     const permohonanPeminjamanSnap = await getDoc(permohonanPeminjaman);
     const permohonanPeminjamanData = permohonanPeminjamanSnap.data();
-    console.log(permohonanPeminjamanData![`paraf_${role}`]);
 
     if (permohonanPeminjamanData![`paraf_${role}`] === false) {
       await setDoc(

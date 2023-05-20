@@ -135,7 +135,6 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
           props.id
         ))
       ) {
-        console.log("update and available");
         setErrorWaktuKembali("");
         setErrorWaktuPinjam("");
       } else {

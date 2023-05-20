@@ -142,7 +142,6 @@ const CreateSuratPage: NextPage = () => {
         await getSuratByNomorSurat(nomorSurat).then((surat) => {
           if (surat) {
             setModal(["replace", surat]);
-            console.log(surat);
             return;
           } else {
             uploadFile("surat", file!, setFileUrl);
