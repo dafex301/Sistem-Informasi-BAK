@@ -169,10 +169,10 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
           );
           route.push(
             {
-              pathname: "/ukm/peminjaman",
+              pathname: "/ormawa/peminjaman",
               query: { success: "Berhasil mengubah Peminjaman Tempat" },
             },
-            "/ukm/peminjaman"
+            "/ormawa/peminjaman"
           );
         }
       } catch (error) {
@@ -198,10 +198,10 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
         );
         route.push(
           {
-            pathname: "/ukm/peminjaman",
+            pathname: "/ormawa/peminjaman",
             query: { success: "Berhasil mengubah Peminjaman Tempat" },
           },
-          "/ukm/peminjaman"
+          "/ormawa/peminjaman"
         );
       } else {
         writePeminjaman({
@@ -215,10 +215,10 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
         });
         route.push(
           {
-            pathname: "/ukm/peminjaman",
+            pathname: "/ormawa/peminjaman",
             query: { success: "Berhasil membuat Peminjaman Tempat" },
           },
-          "/ukm/peminjaman"
+          "/ormawa/peminjaman"
         );
       }
     }
@@ -404,8 +404,8 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
               </p>
               <ol className="list-decimal mx-5 gap-3 flex flex-col text-sm text-justify">
                 <li>
-                  Pengurus Ormawa atau UKM yang akan menggunakan ruang yang ada
-                  di Gedung PKM Pleburan, PKM Tembalang atau Student Center,
+                  Pengurus Ormawa atau ORMAWA yang akan menggunakan ruang yang
+                  ada di Gedung PKM Pleburan, PKM Tembalang atau Student Center,
                   wajib mengajukan surat permohonan kepada Kepala Biro Akademik
                   dan Kemahasiswaan dengan format surat bisa didownload di web
                   Bagian Kemahasiswaan Undip.
@@ -428,7 +428,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
                 <li>
                   Petugas Ruang PKM dan/atau SC mempersiapkan ruang dimaksud
                   untuk proses penggunaan, dan mengunci kembali ruangan setelah
-                  selesai digunakan oleh Pengurus Ormawa dan/atau UKM.
+                  selesai digunakan oleh Pengurus Ormawa dan/atau ORMAWA.
                 </li>
                 <li>
                   Mahasiswa WAJIB mematuhi semua peraturan peminjaman ruang yang

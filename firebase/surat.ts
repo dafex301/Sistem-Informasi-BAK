@@ -72,6 +72,8 @@ export interface ISuratData extends ISuratRequest {
 }
 
 export type Role =
+  | "ORMAWA"
+  | "admin"
   | "MK"
   | "KBAK"
   | "SK"
@@ -114,7 +116,7 @@ export const getAllSurat = async (role?: Role, ormawa_pengirim?: string) => {
       where("penerima", "==", "MK"),
       orderBy("modified_at", "desc")
     );
-  } else if (role == "UKM") {
+  } else if (role == "ORMAWA") {
     q = query(
       collection(db, "surat"),
       where("ormawa_pengirim", "==", ormawa_pengirim),

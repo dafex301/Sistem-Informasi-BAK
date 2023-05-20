@@ -65,7 +65,7 @@ export interface ILogPeminjaman {
 }
 
 export const getAllPeminjaman = async (
-  role?: "admin" | "KBAK" | "MK" | "SM" | "UKM"
+  role?: "admin" | "KBAK" | "MK" | "SM" | "ORMAWA"
 ) => {
   const userRef = doc(db, "users", auth.currentUser!.uid);
 
@@ -98,7 +98,7 @@ export const getAllPeminjaman = async (
       where("paraf_SM", "==", false),
       where("rejected", "==", false)
     );
-  } else if (role === "UKM") {
+  } else if (role === "ORMAWA") {
     q = query(
       collection(db, "permohonan_peminjaman"),
       orderBy("modified_at", "desc"),

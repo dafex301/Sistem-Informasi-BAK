@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import PageTitle from "../../../../components/layout/PageTitle";
 import Loading from "../../../../components/Loading";
-import CreatePeminjaman from "../../../../components/pages/ukm/WritePeminjaman";
+import CreatePeminjaman from "../../../../components/pages/ormawa/WritePeminjaman";
 import {
   IPeminjamanData,
   getAllPeminjaman,

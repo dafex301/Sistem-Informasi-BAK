@@ -25,15 +25,28 @@ import {
   query,
   where,
   DocumentData,
+  getDoc,
 } from "firebase/firestore";
 
 // Other module
 import { setCookie, destroyCookie } from "nookies";
+import { async } from "@firebase/util";
 
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 const githubProvider = new GithubAuthProvider();
 const microsoftProvider = new OAuthProvider("microsoft.com");
+
+export interface UserData {
+  name: string;
+  identifier: string;
+  role: string;
+  email: string;
+  pic: string;
+  contact?: string;
+  created_at?: Date;
+  modified_at?: Date;
+}
 
 export const getAllUsers = async () => {
   const users: DocumentData[] = [];
@@ -45,6 +58,20 @@ export const getAllUsers = async () => {
   });
 
   return users;
+};
+
+export const updateUser = async (uid: string, data: UserData) => {
+  const docRef = doc(db, "users", uid);
+  await setDoc(docRef, data, { merge: true });
+};
+
+export const getUserByUserId = async (uid: string) => {
+  const docRef = doc(db, "users", uid);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return { ...docSnap.data() } as UserData;
+  }
+  return null;
 };
 
 export const createAccount = async (

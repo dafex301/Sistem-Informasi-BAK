@@ -142,7 +142,7 @@ export const RevisionButton = (props: IGeneralButtonProps) => {
   return (
     <Link
       className="bg-yellow-800 text-white p-2 rounded-md hover:bg-yellow-900"
-      href={`/ukm/peminjaman/revisi/${props.row.id}`}
+      href={`/ormawa/peminjaman/revisi/${props.row.id}`}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +164,7 @@ export const UpdateButton = (props: IGeneralButtonProps) => {
   return (
     <Link
       className="bg-teal-600 text-white p-2 rounded-md hover:bg-teal-800"
-      href={`/ukm/peminjaman/edit/${props.row.id}`}
+      href={`/ormawa/peminjaman/edit/${props.row.id}`}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

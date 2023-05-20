@@ -19,7 +19,7 @@ const CreateSuratPage: NextPage = () => {
   const { user, loading } = useAuth();
   const route = useRouter();
 
-  const ormawa = user?.claims.role === "UKM" ? user.claims.name : "";
+  const ormawa = user?.claims.role === "ORMAWA" ? user.claims.name : "";
 
   const [nomorSurat, setNomorSurat] = useState<string>("");
   const [errorNomorSurat, setNomorErrorSurat] = useState<string>("");

@@ -17,7 +17,7 @@ const PeminjamanIndex: NextPage = () => {
       <PageTitle>Peminjaman Tempat</PageTitle>
       <PageBody>
         <div className="grid grid-cols-2 gap-10">
-          <Link href={"/ukm/peminjaman/create"}>
+          <Link href={"/ormawa/peminjaman/create"}>
             <div className="flex flex-col bg-red-500 hover:bg-red-400 text-white min-w-max p-5 rounded-md">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +37,7 @@ const PeminjamanIndex: NextPage = () => {
             </div>
           </Link>
 
-          <Link href={"/ukm/peminjaman/create"}>
+          <Link href={"/ormawa/peminjaman/create"}>
             <div className="flex flex-col bg-blue-800 text-white min-w-max p-5 rounded-md">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

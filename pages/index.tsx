@@ -7,7 +7,7 @@ import PageTitle from "../components/layout/PageTitle";
 import AdminDashboard from "../components/pages/dashboard/AdminDashboard";
 import GuestDashboard from "../components/pages/dashboard/GuestDashboard";
 import StaffDashboard from "../components/pages/dashboard/StaffDashbord";
-import UKMDashboard from "../components/pages/dashboard/UKMDashboard";
+import ORMAWADashboard from "../components/pages/dashboard/ORMAWADashboard";
 import SekretarisDashboard from "../components/pages/dashboard/SekretarisDashboard";
 
 import { useAuth } from "../lib/authContext";
@@ -25,12 +25,13 @@ const Home: NextPage = () => {
       <PageBody>
         {role === "admin" ? (
           <AdminDashboard />
-        ) : role === "UKM" ? (
-          <UKMDashboard />
+        ) : role === "ORMAWA" ? (
+          <ORMAWADashboard />
         ) : role === "KBAK" || role === "SM" || role === "MK" ? (
           <StaffDashboard />
-        ) : role === "SBAK" ? <SekretarisDashboard /> : 
-        (
+        ) : role === "SBAK" ? (
+          <SekretarisDashboard />
+        ) : (
           <GuestDashboard />
         )}
       </PageBody>

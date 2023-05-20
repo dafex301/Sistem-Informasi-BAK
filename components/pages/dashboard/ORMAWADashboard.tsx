@@ -8,7 +8,7 @@ import {
 import { peminjamanMonthly, peminjamanRecap } from "../../../lib/dashboard";
 import VerticalBarChart from "../../charts/vertical-bar/VerticalBarChart";
 
-export default function UKMDashboard(props: any) {
+export default function ORMAWADashboard(props: any) {
   const [peminjamanData, setPeminjamanData] = useState<IPeminjamanData[]>([]);
   const [suratData, setSuratData] = useState([]);
 
@@ -16,17 +16,17 @@ export default function UKMDashboard(props: any) {
 
   useEffect(() => {
     (async () => {
-      setPeminjamanData(await getAllPeminjaman("UKM"));
+      setPeminjamanData(await getAllPeminjaman("ORMAWA"));
     })();
   }, []);
 
   return (
     <>
       <Head>
-        <title>Dashboard UKM</title>
+        <title>Dashboard ORMAWA</title>
       </Head>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7">
-        <Link href={"/ukm/peminjaman/create"} className="col-span-2">
+        <Link href={"/ormawa/peminjaman/create"} className="col-span-2">
           <div className="flex flex-col h-full shadow-sm bg-gray-100 rounded-lg p-5 hover:bg-gray-200 transition-all">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +74,7 @@ export default function UKMDashboard(props: any) {
           </div>
         </Link>
 
-        <Link href={"/ukm/peminjaman"} className="col-span-2 lg:col-span-1">
+        <Link href={"/ormawa/peminjaman"} className="col-span-2 lg:col-span-1">
           <div className="flex flex-col shadow-sm bg-gray-100 rounded-lg p-5 hover:bg-gray-200 transition-all">
             <svg
               xmlns="http://www.w3.org/2000/svg"

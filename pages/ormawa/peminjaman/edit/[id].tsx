@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import PageBody from "../../../../components/layout/PageBody";
 import PageTitle from "../../../../components/layout/PageTitle";
-import CreatePeminjaman from "../../../../components/pages/ukm/WritePeminjaman";
+import CreatePeminjaman from "../../../../components/pages/ormawa/WritePeminjaman";
 import { getPeminjamanById } from "../../../../firebase/peminjaman";
 import { useAuth } from "../../../../lib/authContext";
 

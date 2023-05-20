@@ -3,7 +3,7 @@ export interface userAccount {
   email: string;
   name: string;
   identifier: string;
-  role: "admin" | "UKM" | "TBAK" | "KBAK" | "MK" | "SM";
+  role: "admin" | "ORMAWA" | "TBAK" | "KBAK" | "MK" | "SM";
   created_at: Date;
   modified_at: Date;
 }

@@ -24,7 +24,7 @@ export default async function handler(
       let modified_at = admin.firestore.Timestamp.fromDate(new Date());
 
       // Update user in firestore
-      if (role === "UKM") {
+      if (role === "ORMAWA") {
         await admin.firestore().collection("users").doc(id).update({
           name,
           identifier,

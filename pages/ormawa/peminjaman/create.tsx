@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import PageTitle from "../../../components/layout/PageTitle";
-import CreatePeminjaman from "../../../components/pages/ukm/WritePeminjaman";
+import CreatePeminjaman from "../../../components/pages/ormawa/WritePeminjaman";
 import { useAuth } from "../../../lib/authContext";
 
 const CreatePeminjamanPage: NextPage = () => {

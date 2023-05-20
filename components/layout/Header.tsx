@@ -58,7 +58,7 @@ export default function Header(props: any) {
             className="bg-white drop-shadow-md flex flex-col rounded-md text-sm absolute z-10 left-0 top-12 min-w-full"
           >
             <Link
-              href="/account/profile"
+              href="/profile"
               className="flex gap-2 items-center hover:bg-gray-200 rounded-t-md p-2"
             >
               <UserCircleIcon className="w-4" />

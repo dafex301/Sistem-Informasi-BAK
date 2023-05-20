@@ -31,7 +31,7 @@ export default async function handler(
       let created_at = admin.firestore.Timestamp.fromDate(new Date());
 
       // Create user in firestore
-      if (role === "UKM") {
+      if (role === "ORMAWA") {
         await admin.firestore().collection("users").doc(user.uid).set({
           email,
           name,

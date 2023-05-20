@@ -16,6 +16,7 @@ import DataTable from "../../table/Table";
 import Link from "next/link";
 import { ActionModal, DisposisiModal } from "../../modal/Modal";
 import {
+  DeleteButton,
   DisposisiButton,
   FileButton,
   RejectButton,
@@ -73,7 +74,16 @@ const columnsData = [
 
 interface IManajemenSurat {
   data: ISuratData[];
-  role: "KBAK" | "MK" | "SM" | "SB" | "SK" | "staf_SM" | "staf_SB" | "staf_SK";
+  role:
+    | "admin"
+    | "KBAK"
+    | "MK"
+    | "SM"
+    | "SB"
+    | "SK"
+    | "staf_SM"
+    | "staf_SB"
+    | "staf_SK";
   type?: "data" | "pribadi" | "disposisi";
   setData?: React.Dispatch<React.SetStateAction<ISuratData[]>>;
 }
@@ -141,18 +151,9 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
   // Handler
   const handleDelete = async () => {
     await deleteSurat(selected[1]!).then(() => {
-      setViewData([]);
+      setViewData(viewData.filter((item) => item.id !== selected[1]?.id));
       setSelected(["", undefined]);
-      toast.success("Delete success", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.success("Delete success");
     });
   };
 
@@ -285,10 +286,10 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
           {/* File Button */}
           <FileButton row={row} setSelected={setSelected} />
 
-          {props.role === "KBAK" && (
+          {props.role === "admin" && (
             <>
               {/* Delete Button */}
-              {/* <DeleteButton row={row} setSelected={setSelected} /> */}
+              <DeleteButton row={row} setSelected={setSelected} />
             </>
           )}
 
@@ -344,11 +345,16 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
               onChange={(e) => setPenerima(e.target.value as Role | "")}
             >
               <option value="">Penerima</option>
-              <option value="Rektor">Rektor</option>
-              <option value="WR1">WR1</option>
-              <option value="WR2">WR2</option>
-              <option value="WR3">WR3</option>
-              <option value="WR4">WR4</option>
+              {user?.claims.role !== "ORMAWA" && (
+                <>
+                  <option value="Rektor">Rektor</option>
+                  <option value="WR1">WR1</option>
+                  <option value="WR2">WR2</option>
+                  <option value="WR3">WR3</option>
+                  <option value="WR4">WR4</option>
+                </>
+              )}
+
               <option value="KBAK">Kepala BAK</option>
               <option value="MK">Manager Kemahasiswaan</option>
               <option value="SM">Supervisor Minarpresma</option>

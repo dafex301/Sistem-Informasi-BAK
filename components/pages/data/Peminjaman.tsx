@@ -148,7 +148,7 @@ const columnsPemohon = [
 ];
 
 interface IManajemenPeminjamanProps {
-  role?: "admin" | "KBAK" | "SM" | "MK" | "UKM";
+  role?: "admin" | "KBAK" | "SM" | "MK" | "ORMAWA";
   type?: "verify" | "data";
 }
 
@@ -375,7 +375,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
           )}
 
           {/* Update Button when not verified yet */}
-          {props.role === "UKM" &&
+          {props.role === "ORMAWA" &&
             row.peminjaman.status === "Diproses KBAK" && (
               <>
                 <UpdateButton row={row} />
@@ -383,7 +383,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
             )}
 
           {/* Revision Button */}
-          {props.role === "UKM" && row.peminjaman.status === "Ditolak" && (
+          {props.role === "ORMAWA" && row.peminjaman.status === "Ditolak" && (
             <>
               <RevisionButton row={row} />
             </>
@@ -461,7 +461,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
           // per_page={3}
           row_render={rowcheck}
           columns={
-            props.role === "UKM"
+            props.role === "ORMAWA"
               ? columnsPemohon
               : props.type === "verify"
               ? columnsVerify
