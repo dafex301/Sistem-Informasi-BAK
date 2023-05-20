@@ -3,8 +3,6 @@ import { getAuth, onAuthStateChanged, signOut as signout } from "firebase/auth";
 import { setCookie, destroyCookie, parseCookies } from "nookies";
 
 export type TIdTokenResult = {
-  user_id(user_id: (user_id: any) => unknown): unknown;
-  user_id(user_id: any): unknown;
   token: string;
   expirationTime: string;
   authTime: string;
