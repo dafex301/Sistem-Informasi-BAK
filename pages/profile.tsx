@@ -151,12 +151,14 @@ const Profile: NextPage = () => {
           </div>
         </div>
         <div className="flex justify-center flex-col items-center">
-          <button
-            onClick={handleUpdate}
-            className="bg-black text-white rounded py-3 px-4 mt-5 w-36 hover:bg-gray-900"
-          >
-            Update User
-          </button>
+          {user?.claims.role === "ORMAWA" && (
+            <button
+              onClick={handleUpdate}
+              className="bg-black text-white rounded py-3 px-4 mt-5 w-36 hover:bg-gray-900"
+            >
+              Update User
+            </button>
+          )}
           <button
             onClick={() => {
               setModal(true);
