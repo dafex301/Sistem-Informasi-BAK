@@ -26,10 +26,8 @@ export const roleAbbreviation = (role: string) => {
       return "Staf Supervisor Bikalima";
     case "TBAK":
       return "Tim BAK";
-    case "ORMAWA":
-      return "Unit Kegiatan Mahasiswa";
     default:
-      return "User";
+      return role;
   }
 };
 
