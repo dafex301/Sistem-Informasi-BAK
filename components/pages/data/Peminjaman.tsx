@@ -210,12 +210,16 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
     if (selected[1]) {
       setKegiatan(selected[1].peminjaman.kegiatan);
       setJenisPinjaman(selected[1].peminjaman.jenis_pinjaman);
-      setWaktuPinjam(
-        selected[1].peminjaman.waktu_pinjam.toDate().toISOString().slice(0, 16)
+      const waktuPinjam = selected[1].peminjaman.waktu_pinjam.toDate();
+      const waktuKembali = selected[1].peminjaman.waktu_kembali.toDate();
+      const adjustedWaktuPinjam = new Date(
+        waktuPinjam.getTime() - waktuPinjam.getTimezoneOffset() * 60000
       );
-      setWaktuKembali(
-        selected[1].peminjaman.waktu_kembali.toDate().toISOString().slice(0, 16)
+      const adjustedWaktuKembali = new Date(
+        waktuKembali.getTime() - waktuKembali.getTimezoneOffset() * 60000
       );
+      setWaktuPinjam(adjustedWaktuPinjam.toISOString().slice(0, 16));
+      setWaktuKembali(adjustedWaktuKembali.toISOString().slice(0, 16));
     }
   }, [selected]);
 
@@ -289,7 +293,25 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
         new Date(waktuPinjam),
         new Date(waktuKembali)
       ).then(() => {
-        setData([]);
+        setViewData((prev) => {
+          const newData = [...prev];
+          newData.forEach((item) => {
+            if (item.id === selected[1]?.id) {
+              item.peminjaman.kegiatan = kegiatan;
+              item.peminjaman.jenis_pinjaman = jenisPinjaman;
+              item.peminjaman.waktu_pinjam = new Timestamp(
+                new Date(waktuPinjam).getTime() / 1000,
+                0
+              );
+              item.peminjaman.waktu_kembali = new Timestamp(
+                new Date(waktuKembali).getTime() / 1000,
+                0
+              );
+            }
+          });
+          return newData;
+        });
+
         setSelected(["", undefined]);
 
         toast.success("Update success");
