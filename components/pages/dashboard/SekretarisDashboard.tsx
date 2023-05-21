@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 export default function SekretarisDashboard(props: any) {
-
   return (
     <>
       <div className="grid grid-cols-2 justify-items-center gap-6 pt-5">
@@ -34,7 +33,7 @@ export default function SekretarisDashboard(props: any) {
           </button>
         </Link>
 
-        <Link href="/surat/monitoring">
+        <Link href="/sekretaris/surat/monitoring">
           <button className="rounded-lg bg-gray-200 hover:bg-gray-300 m-4 p-4 grid grid-cols-4 items-center">
             <div className="grid grid-cols-1">
               <svg
