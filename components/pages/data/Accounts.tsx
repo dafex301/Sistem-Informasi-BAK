@@ -407,7 +407,7 @@ const Accounts: NextPage = () => {
             color="green"
             className="translate-y-16"
           >
-            Create Account
+            Buat Akun
           </Button>
         </div>
         <DataTable
@@ -520,9 +520,9 @@ const Accounts: NextPage = () => {
 
                 <div className="flex justify-center gap-4">
                   {modal === "create" ? (
-                    <Button onClick={handleCreate}>Create Account</Button>
+                    <Button onClick={handleCreate}>Buat Akun</Button>
                   ) : (
-                    <Button onClick={handleUpdate}>Update Account</Button>
+                    <Button onClick={handleUpdate}>Ubah Akun</Button>
                   )}
                   <Button color="gray" onClick={() => setModal(null)}>
                     Batal
