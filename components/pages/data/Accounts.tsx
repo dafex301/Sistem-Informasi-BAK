@@ -224,6 +224,7 @@ const Accounts: NextPage = () => {
 
   const handleChangePasswordButton = (user: any) => {
     setSelectedUser(user);
+    setUpdatedPassword("");
     setModal("changePassword");
   };
 
@@ -354,6 +355,7 @@ const Accounts: NextPage = () => {
         password: updatedPassword,
       }),
     }).then((res) => {
+      setUpdatedPassword("");
       setModal(null);
       handleToast("Update");
     });
