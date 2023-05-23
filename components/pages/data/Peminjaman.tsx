@@ -120,7 +120,7 @@ const columnsPemohon = [
   },
   {
     field: "peminjaman.jenis_pinjaman",
-    use: "Jenis Pinjaman",
+    use: "Tempat",
   },
   {
     field: "peminjaman.waktu_pinjam",
@@ -185,21 +185,21 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
   useEffect(() => {
     (async () => {
       const data: IPeminjamanData[] = await getAllPeminjaman(props.role);
-      if (props.type === "verify") {
-        // Sort data by modified_at asc
-        data.sort((a, b) => {
-          if (
-            a.peminjaman.created_at instanceof Timestamp &&
-            b.peminjaman.created_at instanceof Timestamp
-          ) {
-            return a.peminjaman.created_at.toDate() <
-              b.peminjaman.created_at.toDate()
-              ? -1
-              : 1;
-          }
-          return 0;
-        });
-      }
+      // if (props.type === "verify") {
+      //   // Sort data by modified_at asc
+      //   data.sort((a, b) => {
+      //     if (
+      //       a.peminjaman.created_at instanceof Timestamp &&
+      //       b.peminjaman.created_at instanceof Timestamp
+      //     ) {
+      //       return a.peminjaman.created_at.toDate() <
+      //         b.peminjaman.created_at.toDate()
+      //         ? -1
+      //         : 1;
+      //     }
+      //     return 0;
+      //   });
+      // }
       setData(data);
       setViewData(data);
     })();
@@ -261,7 +261,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
     }
 
     if (jenisPinjaman === "") {
-      setErrorJenisPinjaman("Jenis pinjaman tidak boleh kosong");
+      setErrorJenisPinjaman("Tempat tidak boleh kosong");
     } else {
       setErrorJenisPinjaman("");
     }
@@ -285,7 +285,6 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
     }
 
     if (kegiatan && jenisPinjaman && waktuPinjam && waktuKembali) {
-      console.log("updating");
       await updatePeminjaman(
         selected[1]?.id,
         kegiatan,
@@ -328,11 +327,13 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
   };
 
   const handleReject = async (reason: string) => {
-    await rejectPeminjaman(selected[1]?.id, reason).then(async () => {
-      setData(await getAllPeminjaman(props.role));
-      setSelected(["", undefined]);
-      toast.success("Reject berhasil");
-    });
+    await rejectPeminjaman(selected[1]?.id, reason, props.role!).then(
+      async () => {
+        setData(await getAllPeminjaman(props.role));
+        setSelected(["", undefined]);
+        toast.success("Reject berhasil");
+      }
+    );
   };
 
   const handleExport = () => {
@@ -411,15 +412,19 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
           )}
 
           {/* Verify Button */}
-          {props.type === "verify" && (
-            <>
-              {/* Verify Button */}
-              <VerifyButton row={row} setSelected={setSelected} />
+          {props.type === "verify" &&
+            !row.peminjaman.rejected &&
+            ((props.role === "KBAK" && !row.peminjaman.paraf_KBAK) ||
+              (props.role === "MK" && !row.peminjaman.paraf_MK) ||
+              (props.role === "SM" && !row.peminjaman.paraf_SM)) && (
+              <>
+                {/* Verify Button */}
+                <VerifyButton row={row} setSelected={setSelected} />
 
-              {/* Reject Button */}
-              <RejectButton row={row} setSelected={setSelected} />
-            </>
-          )}
+                {/* Reject Button */}
+                <RejectButton row={row} setSelected={setSelected} />
+              </>
+            )}
         </div>
       );
     }
@@ -489,7 +494,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
               : columnsData
           }
           rows={viewData}
-          export={props.type !== "verify"}
+          export
           handleExport={handleExport}
         />
       </PageBody>
@@ -553,7 +558,7 @@ const ManajemenPeminjaman: NextPage<IManajemenPeminjamanProps> = (
                 required
               />
               <SelectTempat
-                label={"Jenis Pinjaman"}
+                label={"Tempat"}
                 required
                 onChange={(e) => setJenisPinjaman(e.target.value)}
                 error={errorJenisPinjaman}

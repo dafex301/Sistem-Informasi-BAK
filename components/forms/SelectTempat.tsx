@@ -30,7 +30,12 @@ export default function SelectTempat(props: AdvancedSelectProps) {
           {props.label}
         </option>
         {tempat.map((tempat) => (
-          <option key={tempat.id} value={tempat.nama_tempat}>
+          // if props.value === tempat.nama_tempat, set selected
+          <option
+            key={tempat.id}
+            value={tempat.id}
+            selected={tempat.nama_tempat === props.value}
+          >
             {tempat.nama_tempat}
           </option>
         ))}

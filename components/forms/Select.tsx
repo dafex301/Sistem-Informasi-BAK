@@ -6,6 +6,7 @@ export interface SelectProps {
   children?: React.ReactNode;
   style?: "light" | "dark";
   required?: boolean;
+  value?: string;
 }
 
 export default function Select(props: SelectProps) {

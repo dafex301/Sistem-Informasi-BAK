@@ -68,14 +68,14 @@ export default function Layout({ children }: Props) {
 
   if (!loading) {
     if (route.pathname.startsWith("/admin") && role !== "admin") {
-      route.push("/dashboard");
+      route.push("/");
     } else if (route.pathname.startsWith("/ormawa") && role !== "ORMAWA") {
-      route.push("/dashboard");
+      route.push("/");
     } else if (
       route.pathname.startsWith("/staff") &&
       !staffRoles.includes(role)
     ) {
-      route.push("/dashboard");
+      route.push("/");
     } else {
       return (
         <>
@@ -368,12 +368,12 @@ export default function Layout({ children }: Props) {
                         <p className="text-xs mx-3 mb-2 text-gray-600">
                           Menu Peminjaman
                         </p>
-                        <SidebarMenu
+                        {/* <SidebarMenu
                           href={"/staff/peminjaman"}
                           solidIcon={<Building2Solid />}
                           outlineIcon={<Building2Outline />}
                           text={"Data Peminjaman"}
-                        />
+                        /> */}
 
                         <SidebarMenu
                           href={"/staff/peminjaman/verifikasi"}

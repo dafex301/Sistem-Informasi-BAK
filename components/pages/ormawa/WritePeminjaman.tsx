@@ -60,7 +60,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
     }
 
     if (!jenisPinjaman) {
-      setErrorJenisPinjaman("Jenis pinjaman tidak boleh kosong");
+      setErrorJenisPinjaman("Tempat tidak boleh kosong");
     } else {
       setErrorJenisPinjaman("");
     }
@@ -258,6 +258,9 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
           .toISOString()
           .slice(0, 16)
       );
+
+      setPenanggungJawab(props.data?.penanggungJawab);
+      setKontakPJ(props.data?.kontakPJ);
     }
   }, [props.data]);
 
@@ -299,6 +302,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
               error={errorJenisPinjaman}
               label="Tempat"
               id="jenis-pinjaman"
+              value={jenisPinjaman}
             />
 
             <div className="w-full grid grid-cols-12 gap-5">

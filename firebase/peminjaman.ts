@@ -15,6 +15,7 @@ import {
   updateDoc,
   serverTimestamp,
   Timestamp,
+  Query,
 } from "firebase/firestore";
 
 import { getStorage, ref, deleteObject } from "firebase/storage";
@@ -69,7 +70,9 @@ export const getAllPeminjaman = async (
 ) => {
   const userRef = doc(db, "users", auth.currentUser!.uid);
 
-  let q;
+  let q: Query<DocumentData> | undefined,
+    q2: Query<DocumentData> | undefined,
+    q3: Query<DocumentData> | undefined;
 
   if (role === "KBAK") {
     q = query(
@@ -80,6 +83,11 @@ export const getAllPeminjaman = async (
       where("paraf_SM", "==", false),
       where("rejected", "==", false)
     );
+    q2 = query(
+      collection(db, "permohonan_peminjaman"),
+      orderBy("modified_at", "desc"),
+      where("paraf_KBAK", "==", true)
+    );
   } else if (role === "MK") {
     q = query(
       collection(db, "permohonan_peminjaman"),
@@ -89,6 +97,12 @@ export const getAllPeminjaman = async (
       where("paraf_SM", "==", false),
       where("rejected", "==", false)
     );
+    q2 = query(
+      collection(db, "permohonan_peminjaman"),
+      orderBy("modified_at", "desc"),
+      where("paraf_KBAK", "==", true),
+      where("paraf_MK", "==", true)
+    );
   } else if (role === "SM") {
     q = query(
       collection(db, "permohonan_peminjaman"),
@@ -97,6 +111,13 @@ export const getAllPeminjaman = async (
       where("paraf_MK", "==", true),
       where("paraf_SM", "==", false),
       where("rejected", "==", false)
+    );
+    q2 = query(
+      collection(db, "permohonan_peminjaman"),
+      orderBy("modified_at", "desc"),
+      where("paraf_KBAK", "==", true),
+      where("paraf_MK", "==", true),
+      where("paraf_SM", "==", true)
     );
   } else if (role === "ORMAWA") {
     q = query(
@@ -120,6 +141,46 @@ export const getAllPeminjaman = async (
       peminjaman: doc.data(),
     });
   });
+
+  if (role === "KBAK" || role === "SM" || role === "MK") {
+    const querySnapshot2 = await getDocs(q2!);
+    querySnapshot2.forEach((doc) => {
+      peminjaman.push({
+        id: doc.id,
+        peminjaman: doc.data(),
+      });
+    });
+
+    if (role === "KBAK") {
+      q3 = query(
+        collection(db, "permohonan_peminjaman"),
+        where("rejected", "==", true),
+        orderBy("modified_at", "desc")
+      );
+    } else if (role === "MK") {
+      q3 = query(
+        collection(db, "permohonan_peminjaman"),
+        where("rejected", "==", true),
+        where("rejected_by", "==", "MK"),
+        orderBy("modified_at", "desc")
+      );
+    } else if (role === "SM") {
+      q3 = query(
+        collection(db, "permohonan_peminjaman"),
+        where("rejected", "==", true),
+        where("rejected_by", "==", "SM"),
+        orderBy("modified_at", "desc")
+      );
+    }
+
+    const querySnapshot3 = await getDocs(q3!);
+    querySnapshot3.forEach((doc) => {
+      peminjaman.push({
+        id: doc.id,
+        peminjaman: doc.data(),
+      });
+    });
+  }
 
   // Foreach peminjaman, get pemohon data from user
   // Edit peminjaman.pemohon to pemohon data
@@ -365,7 +426,11 @@ export const approvePeminjaman = async (id: string) => {
   }
 };
 
-export const rejectPeminjaman = async (id: string, reason: string) => {
+export const rejectPeminjaman = async (
+  id: string,
+  reason: string,
+  role: string
+) => {
   const userRef = doc(db, "users", auth.currentUser!.uid);
 
   const permohonanPeminjaman = doc(db, "permohonan_peminjaman", id);
@@ -384,6 +449,7 @@ export const rejectPeminjaman = async (id: string, reason: string) => {
 
           rejected: true,
           rejected_reason: reason,
+          rejected_by: role,
 
           modified_at: new Date(),
         },
@@ -440,6 +506,7 @@ type IEditPeminjaman = {
   paraf_SM: boolean;
   rejected: boolean;
   rejected_reason: string;
+  rejected_by?: string;
   modified_at: Date;
 };
 
@@ -470,6 +537,7 @@ export const editPeminjaman = async (
       paraf_MK: false,
       paraf_SM: false,
       rejected: false,
+      rejected_by: "",
       rejected_reason: "",
     };
 

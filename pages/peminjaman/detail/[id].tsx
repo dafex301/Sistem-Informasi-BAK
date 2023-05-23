@@ -17,6 +17,8 @@ import {
   roleAbbreviation,
 } from "../../../lib/functions";
 import Image from "next/image";
+import { Dialog } from "@material-tailwind/react";
+import PDFViewer from "../../../components/PDFViewer";
 
 const PeminjamanDetail: NextPage = () => {
   const router = useRouter();
@@ -26,6 +28,7 @@ const PeminjamanDetail: NextPage = () => {
   // State
   const [data, setData] = useState<DocumentData | null>(null);
   const [logData, setLogData] = useState<DocumentData | null>(null);
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -59,19 +62,41 @@ const PeminjamanDetail: NextPage = () => {
           <div>
             <div className="flex justify-between">
               <h2 className="font-medium mb-2 text-lg">Detail Kegiatan</h2>
-              <a
-                href={`https://wa.me/+62${data?.kontakPJ}`}
-                className="font-medium mb-2 text-lg bg-green-50 hover:bg-green-100 rounded-sm p-2 px-4 min-w-min flex gap-1 items-center"
-              >
-                <Image
-                  src="/assets/whatsapp.svg"
-                  height={25}
-                  width={25}
-                  alt={"Whatsapp"}
-                />
+              <div className="flex gap-3">
+                <a
+                  href={`https://wa.me/+62${data?.kontakPJ}`}
+                  className="font-medium mb-2 text-lg bg-green-50 hover:bg-green-100 rounded-sm p-2 px-4 min-w-min flex gap-1 items-center"
+                >
+                  <Image
+                    src="/assets/whatsapp.svg"
+                    height={25}
+                    width={25}
+                    alt={"Whatsapp"}
+                  />
 
-                <p>WA pengirim</p>
-              </a>
+                  <p>WA pengirim</p>
+                </a>
+                <button
+                  onClick={() => setOpenModal(true)}
+                  className="font-medium mb-2 text-lg bg-gray-200 hover:bg-gray-300 rounded-sm p-2 px-4 min-w-min flex gap-1 items-center"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                    />
+                  </svg>
+                  <p>Lihat surat</p>
+                </button>
+              </div>
             </div>
             <div className="grid grid-cols-4 bg-blue-50 p-5 gap-y-5">
               <div>
@@ -79,7 +104,7 @@ const PeminjamanDetail: NextPage = () => {
                 <p className="text-lg">{data?.pemohon.name}</p>
               </div>
               <div>
-                <h3 className="text-sm">Jenis Pinjaman</h3>
+                <h3 className="text-sm">Tempat</h3>
                 <p className="text-lg">{data?.jenis_pinjaman}</p>
               </div>
               <div>
@@ -176,6 +201,16 @@ const PeminjamanDetail: NextPage = () => {
           </div>
         </div>
       </PageBody>
+
+      <Dialog
+        open={openModal}
+        handler={() => setOpenModal(false)}
+        className="overflow-auto min-w-min w-auto"
+      >
+        <div className="h-[36rem]">
+          <PDFViewer file={data?.file!} />
+        </div>
+      </Dialog>
     </>
   );
 };
