@@ -3,13 +3,14 @@ import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
 
 import { useState } from "react";
+import { ISuratData } from "../firebase/surat";
 
 pdfjs.GlobalWorkerOptions.workerSrc =
   "//cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/build/pdf.worker.js";
 
 interface IPDFViewerProps {
   file: string;
-  data: any;
+  data?: ISuratData;
 }
 
 export default function PDFViewer(props: IPDFViewerProps) {
@@ -109,25 +110,37 @@ export default function PDFViewer(props: IPDFViewerProps) {
             <Page className="" pageNumber={pageNumber} />
             <div className="bg-white ml-2 w-64 text-black p-3 flex flex-col gap-4">
               <h1 className="text-lg font-semibold">Catatan Disposisi</h1>
-              <p className="text-sm">
-                {/* TODO */}
-                <span className="font-semibold">KBAK: </span>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Obcaecati consectetur atque voluptates eius dignissimos ratione
-                earum iste tempora ab molestiae.
-              </p>
-              <p className="text-sm">
-                <span className="font-semibold">MK: </span>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Obcaecati consectetur atque voluptates eius dignissimos ratione
-                earum iste tempora ab molestiae.
-              </p>
-              <p className="text-sm">
-                <span className="font-semibold">SM: </span>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Obcaecati consectetur atque voluptates eius dignissimos ratione
-                earum iste tempora ab molestiae.
-              </p>
+              {props.data?.paraf.KBAK?.status && (
+                <p className="text-sm">
+                  {/* TODO */}
+                  <span className="font-semibold">KBAK: </span>
+                  {props.data.paraf.KBAK.catatan}
+                </p>
+              )}
+              {props.data?.paraf.MK?.status && (
+                <p className="text-sm">
+                  <span className="font-semibold">MK: </span>
+                  {props.data.paraf.MK.catatan}
+                </p>
+              )}
+              {props.data?.paraf.SM?.status && (
+                <p className="text-sm">
+                  <span className="font-semibold">SM: </span>
+                  {props.data.paraf.SM.catatan}
+                </p>
+              )}
+              {props.data?.paraf.SB?.status && (
+                <p className="text-sm">
+                  <span className="font-semibold">SB: </span>
+                  {props.data.paraf.SB.catatan}
+                </p>
+              )}
+              {props.data?.paraf.SK?.status && (
+                <p className="text-sm">
+                  <span className="font-semibold">SK: </span>
+                  {props.data.paraf.SK.catatan}
+                </p>
+              )}
             </div>
           </div>
         </Document>

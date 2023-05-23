@@ -13,7 +13,15 @@ import { useAuth } from "../../lib/authContext";
 
 import fakultas from "../../data/fakultas.json";
 import jurusan from "../../data/jurusan.json";
-import { createSurat, ISurat } from "../../firebase/surat";
+import {
+  createSurat,
+  deleteSurat,
+  getSuratByNomorSurat,
+  ISurat,
+  ISuratData,
+} from "../../firebase/surat";
+import { Dialog } from "@material-tailwind/react";
+import { ModalWithImage } from "../../components/modal/Modal";
 
 const CreateSuratPage: NextPage = () => {
   const { user, loading } = useAuth();
@@ -56,6 +64,11 @@ const CreateSuratPage: NextPage = () => {
   const [errorFile, setErrorFile] = useState<string>("");
 
   const [fileUrl, setFileUrl] = useState<string>("");
+
+  const [modal, setModal] = useState<[string, ISuratData | undefined]>([
+    "",
+    undefined,
+  ]);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     if (route.isFallback) return;
@@ -145,13 +158,26 @@ const CreateSuratPage: NextPage = () => {
 
     if (!error) {
       try {
-        if (file) {
-          uploadFile("surat", file, setFileUrl);
-        }
+        await getSuratByNomorSurat(nomorSurat).then((surat) => {
+          if (surat) {
+            setModal(["replace", surat]);
+            return;
+          } else {
+            uploadFile("surat", file!, setFileUrl);
+            return;
+          }
+        });
       } catch (e) {
         console.log(e);
       }
     }
+  };
+
+  const handleReplace = async () => {
+    await deleteSurat(modal[1]!).then(() => {
+      uploadFile("surat", file!, setFileUrl);
+    });
+    setModal(["", undefined]);
   };
 
   // Submit if fileUrl is available
@@ -327,6 +353,55 @@ const CreateSuratPage: NextPage = () => {
           </div>
         </form>
       </PageBody>
+
+      <Dialog
+        open={Boolean(modal[0])}
+        handler={() => setModal(["", undefined])}
+        className="overflow-auto min-w-min w-auto"
+      >
+        <ModalWithImage
+          cancelHandler={setModal}
+          mainHandler={handleReplace}
+          image={"/assets/document-approve.jpeg"}
+          name={"Surat"}
+          color={"green"}
+          mainText={"Ganti"}
+        >
+          <div className="text-sm">
+            <p className="font-semibold text-gray-900 text-center">
+              Surat dengan nomor ini sudah ada, apakah anda ingin mengganti
+              surat yang sebelumnya?
+            </p>
+            <table className="text-gray-700 table-auto mt-3 mx-auto border-separate border-spacing-x-3">
+              <tr className="w-10">
+                <td>Nomor Surat</td>
+                <td>:</td>
+                <td className="">{modal[1]?.nomor_surat}</td>
+              </tr>
+              <tr>
+                <td>Pengirim</td>
+                <td>:</td>
+                <td>{modal[1]?.nama_pengirim}</td>
+              </tr>
+              <tr>
+                <td>Perihal</td>
+                <td>:</td>
+                <td>{modal[1]?.perihal}</td>
+              </tr>
+              <tr>
+                <td>Dikirim pada</td>
+                <td>:</td>
+                <td>{modal[1]?.created_at.toDate().toLocaleDateString()}</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td>{modal[1]?.created_at.toDate().toLocaleTimeString()}</td>
+              </tr>
+            </table>
+          </div>
+        </ModalWithImage>
+      </Dialog>
     </>
   );
 };
