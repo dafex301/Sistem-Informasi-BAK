@@ -87,7 +87,7 @@ const Forget: NextPage = (props: Props) => {
           Lupa Password
         </button>
         <div className="mt-5 flex justify-between text-sm text-gray-600">
-          <Link href="/auth/login" className="hover:underline">
+          <Link href="/" className="hover:underline">
             Kembali ke halaman masuk
           </Link>
         </div>
@@ -96,7 +96,7 @@ const Forget: NextPage = (props: Props) => {
   }
 
   if (user) {
-    route.push("/");
+    route.push("/dashboard");
   }
   return <></>;
 };

@@ -24,6 +24,16 @@ function MyApp({ Component, pageProps }: AppProps) {
     );
   }
 
+  if (route.pathname === "/") {
+    return (
+      <ThemeProvider>
+        <FirebaseProvider>
+          <Component {...pageProps} />
+        </FirebaseProvider>
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider>
       <FirebaseProvider>

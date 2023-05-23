@@ -174,7 +174,7 @@ const CreateSuratPage: NextPage = () => {
 
       createSurat(suratRequest);
 
-      route.push("/");
+      route.push("/dashboard");
     }
   }, [fileUrl]);
 

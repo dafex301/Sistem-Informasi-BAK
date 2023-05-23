@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import {  useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../../lib/authContext";
 import { loginAccount, loginWithProvider } from "../../firebase/account";
 
@@ -11,7 +11,6 @@ const Login: NextPage = () => {
   const [identifier, setIdentifier] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
-
 
   const { user, loading } = useAuth();
 
@@ -32,7 +31,13 @@ const Login: NextPage = () => {
         </Head>
         <section className="flex flex-col md:flex-row h-screen items-center">
           <div className="bg-indigo-600 hidden md:block w-full md:w-1/2 xl:w-2/3 h-screen">
-            <Image className="h-full object-cover" alt={"Undip"} src={'/home.jpg'} width={4032} height={3024}/>
+            <Image
+              className="h-full object-cover"
+              alt={"Undip"}
+              src={"/home.jpg"}
+              width={4032}
+              height={3024}
+            />
           </div>
           <div
             className="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12
@@ -50,7 +55,11 @@ const Login: NextPage = () => {
                 SI-BAK Undip
               </h1>
               <form className="mt-6" action="#" onSubmit={handleLogin}>
-                {error && <div className="w-full px-4 py-3 mb-2 text-red-900 bg-red-50 rounded-lg items-center ">{error}</div>}
+                {error && (
+                  <div className="w-full px-4 py-3 mb-2 text-red-900 bg-red-50 rounded-lg items-center ">
+                    {error}
+                  </div>
+                )}
                 <div>
                   <label className="block text-gray-700">Username/NIP</label>
                   <input
@@ -87,7 +96,7 @@ const Login: NextPage = () => {
                   type="button"
                   className="w-full block bg-white border-gray-700 border hover:bg-gray-200 focus:bg-gray-200 text-black font-semibold rounded-lg
                   px-4 py-3 mt-6"
-                  onClick={() => route.push("/")}
+                  onClick={() => route.push("/dashboard")}
                 >
                   <span className="">Masuk tanpa Akun</span>
                 </button>
@@ -100,7 +109,7 @@ const Login: NextPage = () => {
   }
 
   if (!loading && user) {
-    route.push("/");
+    route.push("/dashboard");
   }
 
   return <></>;

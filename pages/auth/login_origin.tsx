@@ -118,7 +118,7 @@ const Login: NextPage = () => {
   }
 
   if (!loading && user) {
-    route.push("/");
+    route.push("/dashboard");
   }
 
   return <></>;

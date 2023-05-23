@@ -60,21 +60,22 @@ export default function Layout({ children }: Props) {
     !user &&
     route.pathname !== "/" &&
     route.pathname !== "/auth/login" &&
-    !route.pathname.startsWith("/surat")
+    !route.pathname.startsWith("/surat") &&
+    !route.pathname.startsWith("/dashboard")
   ) {
-    route.push("/auth/login");
+    route.push("/");
   }
 
   if (!loading) {
     if (route.pathname.startsWith("/admin") && role !== "admin") {
-      route.push("/");
+      route.push("/dashboard");
     } else if (route.pathname.startsWith("/ormawa") && role !== "ORMAWA") {
-      route.push("/");
+      route.push("/dashboard");
     } else if (
       route.pathname.startsWith("/staff") &&
       !staffRoles.includes(role)
     ) {
-      route.push("/");
+      route.push("/dashboard");
     } else {
       return (
         <>
@@ -85,7 +86,7 @@ export default function Layout({ children }: Props) {
             >
               {/* Logo */}
               <Link
-                href={"/"}
+                href={"/dashboard"}
                 className="flex gap-3 items-center justify-center mt-5 px-14 mx-1"
               >
                 <Image src={undip} alt={"Undip"} className="w-10" />
@@ -99,7 +100,7 @@ export default function Layout({ children }: Props) {
               <div className="flex flex-col gap-8 mt-12 mx-2 text-gray-500">
                 <SidebarMenu
                   dashboard
-                  href={"/"}
+                  href={"/dashboard"}
                   solidIcon={<SquaresSolid />}
                   outlineIcon={<SquaresOutline />}
                   text={"Dashboard"}

@@ -170,7 +170,7 @@ const Register: NextPage = () => {
           <div></div>
           <div>
             Sudah punya akun?{" "}
-            <Link href="/auth/login" className="hover:underline">
+            <Link href="/" className="hover:underline">
               Masuk
             </Link>
           </div>

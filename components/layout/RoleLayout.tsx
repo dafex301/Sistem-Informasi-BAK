@@ -26,7 +26,7 @@ export const RoleLayout = (props: Props) => {
   }
 
   if (!loading && user) {
-    route.push("/");
+    route.push("/dashboard");
   }
 
   return <Loading />;

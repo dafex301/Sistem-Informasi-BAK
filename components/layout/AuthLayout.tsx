@@ -10,7 +10,7 @@ export const AuthLayout = ({ children }: Props) => {
   const route = useRouter();
 
   if (!loading && user) {
-    route.push("/");
+    route.push("/dashboard");
   }
 
   if (!loading) {

@@ -410,7 +410,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
       >
         {selected[0] === "file" && (
           <div className="h-[36rem]">
-            <PDFViewer file={selected[1]?.file!} />
+            <PDFViewer file={selected[1]?.file!} data={selected[1]} />
           </div>
         )}
 
