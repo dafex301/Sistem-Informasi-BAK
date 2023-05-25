@@ -107,6 +107,11 @@ const columnsVerify = [
     use: "Waktu Selesai",
   },
   {
+    field: "peminjaman.status",
+    use: "Status",
+    // use_in_search:false
+  },
+  {
     field: "aksi",
     use: "Aksi",
     use_in_search: false,
