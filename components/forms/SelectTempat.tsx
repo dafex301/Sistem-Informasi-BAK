@@ -33,7 +33,7 @@ export default function SelectTempat(props: AdvancedSelectProps) {
           // if props.value === tempat.nama_tempat, set selected
           <option
             key={tempat.id}
-            value={tempat.id}
+            value={tempat.nama_tempat}
             selected={tempat.nama_tempat === props.value}
           >
             {tempat.nama_tempat}
