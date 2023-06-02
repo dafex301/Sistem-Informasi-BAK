@@ -45,7 +45,7 @@ export default function ORMAWADashboard(props: any) {
 
             <h2 className="mt-2 text-lg font-semibold">Buat Peminjaman</h2>
             <p className="text-sm">
-              Ajukan Peminjaman Tempat tempat baru untuk kegiatan kemahasiswaan
+              Ajukan peminjaman tempat baru untuk kegiatan kemahasiswaan
             </p>
           </div>
         </Link>
