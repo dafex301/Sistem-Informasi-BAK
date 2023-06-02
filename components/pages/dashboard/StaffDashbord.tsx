@@ -37,7 +37,6 @@ export default function StaffDashboard(props: any) {
       if (item.paraf[role]?.status === false) {
         masuk++;
       }
-     
     });
 
     setSurat((prevSurat) => ({
@@ -50,7 +49,7 @@ export default function StaffDashboard(props: any) {
     setSurat((prevSurat) => ({
       ...prevSurat,
     }));
-  }, [ surat.masuk]);
+  }, [surat.masuk]);
 
   useEffect(() => {
     (async () => {
@@ -129,7 +128,7 @@ export default function StaffDashboard(props: any) {
               </div>
             </div>
           </Link>
-          <Link href={"/peminjaman/kalender"} className="col-span-2">
+          <Link href={"/peminjaman/kalendar"} className="col-span-2">
             <div className="flex flex-col h-full shadow-sm bg-gray-100 rounded-lg p-5 hover:bg-gray-200 transition-all">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -147,7 +146,7 @@ export default function StaffDashboard(props: any) {
               </svg>
 
               <h2 className="mt-2 text-lg font-semibold">
-                Kalender Peminjaman
+                Kalendar Peminjaman
               </h2>
               <p className="text-sm">
                 Lihat jadwal kegiatan peminjaman tempat yang telah diajukan
@@ -199,7 +198,6 @@ export default function StaffDashboard(props: any) {
                 <p className="text-md">Masuk</p>
                 <p className="text-md font-semibold">{surat.masuk}</p>
               </div>
-
             </div>
           </div>
         </div>

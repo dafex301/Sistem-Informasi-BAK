@@ -13,7 +13,7 @@ import Head from "next/head";
 const endDate = new Date();
 endDate.setHours(endDate.getHours() + 1);
 
-export default function Kalender() {
+export default function Kalendar() {
   const [events, setEvents] = useState<any[]>([]);
   const [data, setData] = useState<IPeminjamanData[]>([]);
   const [tempat, setTempat] = useState<string>("");
@@ -75,9 +75,9 @@ export default function Kalender() {
   return (
     <>
       <Head>
-        <title>Kalender Peminjaman</title>
+        <title>Kalendar Peminjaman</title>
       </Head>
-      <PageTitle>Kalender Peminjaman</PageTitle>
+      <PageTitle>Kalendar Peminjaman</PageTitle>
       <PageBody>
         <div className="flex flex-col">
           <p className="font-semibold">Keterangan</p>

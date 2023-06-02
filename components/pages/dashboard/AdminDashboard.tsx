@@ -195,7 +195,7 @@ export default function AdminDashboard(props: any) {
               />
             </svg>
 
-            <h2 className="font-medium text-xl">Kalender Peminjaman</h2>
+            <h2 className="font-medium text-xl">Kalendar Peminjaman</h2>
           </Link>
         </div>
         <div className="md:col-span-9 flex items-center justify-center shadow-lg rounded-lg p-5">

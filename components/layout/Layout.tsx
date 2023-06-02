@@ -411,7 +411,7 @@ export default function Layout({ children }: Props) {
                         />
 
                         <SidebarMenu
-                          href={"/peminjaman/kalender"}
+                          href={"/peminjaman/kalendar"}
                           solidIcon={
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -443,7 +443,7 @@ export default function Layout({ children }: Props) {
                               />
                             </svg>
                           }
-                          text={"Kalender Peminjaman"}
+                          text={"Kalendar Peminjaman"}
                         />
                       </div>
                     )}
@@ -603,7 +603,7 @@ export default function Layout({ children }: Props) {
                       text={"Buat Peminjaman"}
                     />
                     <SidebarMenu
-                      href={"/peminjaman/kalender"}
+                      href={"/peminjaman/kalendar"}
                       solidIcon={
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -635,7 +635,7 @@ export default function Layout({ children }: Props) {
                           />
                         </svg>
                       }
-                      text={"Kalender Peminjaman"}
+                      text={"Kalendar Peminjaman"}
                     />
                     <SidebarMenu
                       href={"/ormawa/peminjaman"}

@@ -378,7 +378,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
 
           {/* Right Section */}
           <div className="col-span-4">
-            <Link href="/peminjaman/kalender">
+            <Link href="/peminjaman/kalendar">
               <div className="flex p-5 items-center gap-3 text-gray-900 mb-5 bg-gray-100 hover:bg-gray-300 transition-all rounded-md">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -394,7 +394,7 @@ const WritePeminjaman: NextPage<IPeminjamanProposalProps> = (props) => {
                   />
                 </svg>
                 <div>
-                  <p className="text-xl font-semibold">Kalender Peminjaman</p>
+                  <p className="text-xl font-semibold">Kalendar Peminjaman</p>
                   <p className="text-sm">Cek jadwal peminjaman yang tersedia</p>
                 </div>
               </div>

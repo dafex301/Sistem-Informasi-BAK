@@ -50,7 +50,7 @@ export default function ORMAWADashboard(props: any) {
           </div>
         </Link>
 
-        <Link href={"/peminjaman/kalender"} className="col-span-2">
+        <Link href={"/peminjaman/kalendar"} className="col-span-2">
           <div className="flex flex-col h-full shadow-sm bg-gray-100 rounded-lg p-5 hover:bg-gray-200 transition-all">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +67,7 @@ export default function ORMAWADashboard(props: any) {
               />
             </svg>
 
-            <h2 className="mt-2 text-lg font-semibold">Kalender Peminjaman</h2>
+            <h2 className="mt-2 text-lg font-semibold">Kalendar Peminjaman</h2>
             <p className="text-sm">
               Lihat jadwal kegiatan peminjaman tempat yang telah diajukan
             </p>
