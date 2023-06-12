@@ -106,7 +106,13 @@ const CreateSuratPage: NextPage = () => {
       error = true;
       setErrorNamaPengirim("Nama Pengirim tidak boleh kosong");
     } else {
-      setErrorNamaPengirim("");
+      // if namaPengirim contain number
+      if (/\d/.test(namaPengirim)) {
+        error = true;
+        setErrorNamaPengirim("Nama Pengirim tidak boleh mengandung angka");
+      } else {
+        setErrorNamaPengirim("");
+      }
     }
 
     if (!instansiPengirim) {
