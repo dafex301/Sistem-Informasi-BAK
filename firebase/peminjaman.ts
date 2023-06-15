@@ -44,6 +44,57 @@ export interface IPeminjamanRequest extends IPeminjaman {
   status?: string;
 }
 
+// TODO: REWORKING
+interface IPeminjamanNew {
+  jenis_pinjaman: string;
+  kegiatan: string;
+  pemohon: string;
+  waktu_pinjam: Date;
+  waktu_kembali: Date;
+  penanggungJawab: string;
+  kontakPJ: string;
+  file?: string;
+  paraf: {
+    KBAK: {
+      status: boolean;
+      waktu: Date;
+      nama: string;
+      catatan: string;
+    };
+    MK: {
+      status: boolean;
+      waktu: Date;
+      nama: string;
+      catatan: string;
+    };
+    SM: {
+      status: boolean;
+      waktu: Date;
+      nama: string;
+      catatan: string;
+    };
+  };
+  rejected: {
+    status: boolean;
+    waktu: Date;
+    catatan: string;
+    role: string;
+    nama: string;
+  };
+  status: string;
+  logs: ILogPeminjamanNew[];
+  created_at: Timestamp | Date;
+  modified_at: Timestamp | Date;
+}
+
+interface ILogPeminjamanNew {
+  nama: string;
+  waktu: Date;
+  aksi: string;
+  role: string;
+  catatan: string;
+}
+
 export interface IUserData {
   email: string;
   name: string;

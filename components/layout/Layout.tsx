@@ -59,7 +59,6 @@ export default function Layout({ children }: Props) {
     !loading &&
     !user &&
     route.pathname !== "/" &&
-    route.pathname !== "/auth/login" &&
     !route.pathname.startsWith("/surat") &&
     !route.pathname.startsWith("/dashboard")
   ) {
@@ -184,7 +183,7 @@ export default function Layout({ children }: Props) {
                     <div>
                       <p className="text-xs mx-3 mb-2 text-gray-600">Akun</p>
                       <SidebarMenu
-                        href={"/auth/login"}
+                        href={"/"}
                         solidIcon={
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
