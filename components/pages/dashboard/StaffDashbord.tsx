@@ -11,6 +11,7 @@ import {
   peminjamanMonthly,
   peminjamanRecap,
   peminjamanVerify,
+  suratMonthly,
 } from "../../../lib/dashboard";
 import VerticalBarChart from "../../charts/vertical-bar/VerticalBarChart";
 
@@ -205,7 +206,7 @@ export default function StaffDashboard(props: any) {
           <VerticalBarChart
             title={"Permohonan dan Surat"}
             dataPermohonan={peminjamanMonthly(peminjamanData)}
-            dataSurat={[]}
+            dataSurat={suratMonthly(suratData)}
           />
         </div>
       </div>

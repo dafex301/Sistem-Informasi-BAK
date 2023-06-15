@@ -39,23 +39,29 @@ export default function VerticalBarChart(props: IVerticalBarChartProps) {
     },
   };
 
-  const labels = [
+  // Make array of last 12 months, including current month
+  const monthNames = [
     "Jan",
     "Feb",
     "Mar",
     "Apr",
-    "Mei",
+    "May",
     "Jun",
     "Jul",
-    "Agu",
+    "Aug",
     "Sep",
-    "Okt",
+    "Oct",
     "Nov",
-    "Des",
+    "Dec",
   ];
+  const now = new Date();
+  const last12Months = Array.from(
+    { length: 12 },
+    (_, i) => monthNames[(now.getMonth() - i + 12) % 12]
+  ).reverse();
 
   const data = {
-    labels,
+    labels: last12Months,
     datasets: [
       {
         label: "Peminjaman Tempat",

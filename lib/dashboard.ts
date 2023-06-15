@@ -1,4 +1,5 @@
 import { IPeminjamanData } from "../firebase/peminjaman";
+import { ISuratData } from "../firebase/surat";
 
 export function peminjamanRecap(data: IPeminjamanData[]) {
   const recap = data.reduce(
@@ -18,12 +19,59 @@ export function peminjamanRecap(data: IPeminjamanData[]) {
 }
 
 export function peminjamanMonthly(data: IPeminjamanData[]) {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+
   const monthly = data.reduce((acc, d) => {
-    const month = d.peminjaman.created_at.toDate().getMonth();
-    acc[month] += 1;
+    const date = d.peminjaman.created_at.toDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+
+    // Only consider records of the current year and last 12 months.
+    if (
+      year === currentYear ||
+      (year === currentYear - 1 && month > now.getMonth())
+    ) {
+      acc[month] += 1;
+    }
     return acc;
   }, new Array(12).fill(0));
-  return monthly;
+
+  // Rearrange array to have the last 12 months in order.
+  const last12Months = [
+    ...monthly.slice(now.getMonth() + 1),
+    ...monthly.slice(0, now.getMonth() + 1),
+  ];
+
+  return last12Months;
+}
+
+export function suratMonthly(data: ISuratData[]) {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+
+  const monthly = data.reduce((acc, d) => {
+    const date = d.created_at.toDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+
+    // Only consider records of the current year and last 12 months.
+    if (
+      year === currentYear ||
+      (year === currentYear - 1 && month > now.getMonth())
+    ) {
+      acc[month] += 1;
+    }
+    return acc;
+  }, new Array(12).fill(0));
+
+  // Rearrange array to have the last 12 months in order.
+  const last12Months = [
+    ...monthly.slice(now.getMonth() + 1),
+    ...monthly.slice(0, now.getMonth() + 1),
+  ];
+
+  return last12Months;
 }
 
 export const peminjamanVerify = (

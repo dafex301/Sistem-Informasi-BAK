@@ -5,7 +5,11 @@ import {
   getAllPeminjaman,
   IPeminjamanData,
 } from "../../../firebase/peminjaman";
-import { peminjamanMonthly, peminjamanRecap } from "../../../lib/dashboard";
+import {
+  peminjamanMonthly,
+  peminjamanRecap,
+  suratMonthly,
+} from "../../../lib/dashboard";
 import VerticalBarChart from "../../charts/vertical-bar/VerticalBarChart";
 
 export default function ORMAWADashboard(props: any) {
@@ -158,9 +162,8 @@ export default function ORMAWADashboard(props: any) {
           <VerticalBarChart
             title={"Data Permohonan dan Surat"}
             dataPermohonan={peminjamanMonthly(peminjamanData)}
-            dataSurat={[]}
+            dataSurat={suratMonthly(suratData)}
           />
-          ``
         </div>
       </div>
     </>

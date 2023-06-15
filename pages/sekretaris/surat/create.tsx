@@ -129,7 +129,6 @@ const CreateSuratPage: NextPage = () => {
       setErrorKontakPengirim("Kontak Pengirim (WA) tidak boleh kosong");
     } else if (isNaN(Number(kontakPengirim))) {
       error = true;
-      ``;
       setErrorKontakPengirim("Kontak Pengirim harus berupa angka");
     } else if (!kontakPengirim.startsWith("08")) {
       error = true;
