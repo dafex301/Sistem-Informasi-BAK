@@ -22,6 +22,8 @@ export default function Header(props: any) {
   const [modal, setModal] = useState(false);
 
   const handleLogout = async () => {
+    // destroy browser cookie
+    destroyCookie(null, "idToken");
     router.push("/");
     await signOut();
   };
