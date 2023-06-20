@@ -18,6 +18,7 @@ const Login: NextPage = () => {
 
   function handleLogin(e: any) {
     e.preventDefault();
+    setError("");
     loginAccount(identifier, password).catch((error) => {
       console.log(error);
       setError("Login gagal. username dan/atau password salah.");
