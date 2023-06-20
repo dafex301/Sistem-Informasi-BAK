@@ -27,7 +27,14 @@ const Home: NextPage = () => {
           <AdminDashboard />
         ) : role === "ORMAWA" ? (
           <ORMAWADashboard user={user} />
-        ) : role === "KBAK" || role === "SM" || role === "MK" ? (
+        ) : role === "KBAK" ||
+          role === "MK" ||
+          role === "SM" ||
+          role === "SB" ||
+          role === "SK" ||
+          role === "staf_SB" ||
+          role === "staf_SK" ||
+          role === "staf_SM" ? (
           <StaffDashboard />
         ) : role === "SBAK" ? (
           <SekretarisDashboard />
