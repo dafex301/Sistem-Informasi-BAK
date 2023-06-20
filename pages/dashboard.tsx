@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import PageBody from "../components/layout/PageBody";
 import PageTitle from "../components/layout/PageTitle";
 import AdminDashboard from "../components/pages/dashboard/AdminDashboard";

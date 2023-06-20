@@ -172,6 +172,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
                     status: true,
                   },
                 },
+                status: "Disposisi Berhasil",
               };
             } else {
               return item;
@@ -198,6 +199,7 @@ export const ManajemenSurat: NextPage<IManajemenSurat> = (
                     status: true,
                   },
                 },
+                status: "Ditolak",
               };
             } else {
               return item;
