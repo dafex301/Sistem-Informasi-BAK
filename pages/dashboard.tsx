@@ -26,7 +26,7 @@ const Home: NextPage = () => {
         {role === "admin" ? (
           <AdminDashboard />
         ) : role === "ORMAWA" ? (
-          <ORMAWADashboard />
+          <ORMAWADashboard user={user} />
         ) : role === "KBAK" || role === "SM" || role === "MK" ? (
           <StaffDashboard />
         ) : role === "SBAK" ? (

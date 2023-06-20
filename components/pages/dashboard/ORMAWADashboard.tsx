@@ -5,24 +5,37 @@ import {
   getAllPeminjaman,
   IPeminjamanData,
 } from "../../../firebase/peminjaman";
+import { getSuratByOrmawaPengirim, ISuratData } from "../../../firebase/surat";
 import {
   peminjamanMonthly,
   peminjamanRecap,
   suratMonthly,
+  suratRecap,
 } from "../../../lib/dashboard";
 import VerticalBarChart from "../../charts/vertical-bar/VerticalBarChart";
 
 export default function ORMAWADashboard(props: any) {
   const [peminjamanData, setPeminjamanData] = useState<IPeminjamanData[]>([]);
-  const [suratData, setSuratData] = useState([]);
+  const [suratData, setSuratData] = useState<ISuratData[]>([]);
 
-  const { diproses, ditolak, disetujui } = peminjamanRecap(peminjamanData);
+  const {
+    diproses: peminjamanDiproses,
+    ditolak: peminjamanDitolak,
+    disetujui: peminjamanDisetujui,
+  } = peminjamanRecap(peminjamanData);
+
+  const {
+    diproses: suratDiproses,
+    ditolak: suratDitolak,
+    disetujui: suratDisetujui,
+  } = suratRecap(suratData);
 
   useEffect(() => {
     (async () => {
       setPeminjamanData(await getAllPeminjaman("ORMAWA"));
+      setSuratData(await getSuratByOrmawaPengirim(props.user.claims.name));
     })();
-  }, []);
+  }, [props.user.claims.name]);
 
   return (
     <>
@@ -97,17 +110,19 @@ export default function ORMAWADashboard(props: any) {
             <h2 className="mt-2 text-lg font-semibold">Peminjaman Tempat</h2>
             <div className="flex items-center justify-between">
               <p className="text-md">Diproses</p>
-              <p className="text-md font-semibold">{diproses ?? 0}</p>
+              <p className="text-md font-semibold">{peminjamanDiproses ?? 0}</p>
             </div>
 
             <div className="flex items-center justify-between ">
               <p className="text-md">Ditolak</p>
-              <p className="text-md font-semibold">{ditolak ?? 0}</p>
+              <p className="text-md font-semibold">{peminjamanDitolak ?? 0}</p>
             </div>
 
             <div className="flex items-center justify-between">
               <p className="text-md">Disetujui</p>
-              <p className="text-md font-semibold">{disetujui ?? 0}</p>
+              <p className="text-md font-semibold">
+                {peminjamanDisetujui ?? 0}
+              </p>
             </div>
 
             <div className="flex items-center justify-between">
@@ -119,7 +134,7 @@ export default function ORMAWADashboard(props: any) {
           </div>
         </Link>
 
-        <Link href="/" className="col-span-2 lg:col-span-1">
+        <Link href="/ormawa/surat" className="col-span-2 lg:col-span-1">
           <div className="flex flex-col shadow-sm bg-gray-100 rounded-lg p-5 hover:bg-gray-200 transition-all">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -138,17 +153,17 @@ export default function ORMAWADashboard(props: any) {
             <h2 className="mt-2 text-lg font-semibold">Surat Menyurat</h2>
             <div className="flex items-center justify-between">
               <p className="text-md">Diproses</p>
-              <p className="text-md font-semibold">{suratData.length ?? 0}</p>
+              <p className="text-md font-semibold">{suratDiproses ?? 0}</p>
             </div>
 
             <div className="flex items-center justify-between ">
               <p className="text-md">Ditolak</p>
-              <p className="text-md font-semibold">{suratData.length ?? 0}</p>
+              <p className="text-md font-semibold">{suratDitolak ?? 0}</p>
             </div>
 
             <div className="flex items-center justify-between">
               <p className="text-md">Disetujui</p>
-              <p className="text-md font-semibold">{suratData.length ?? 0}</p>
+              <p className="text-md font-semibold">{suratDisetujui ?? 0}</p>
             </div>
 
             <div className="flex items-center justify-between">

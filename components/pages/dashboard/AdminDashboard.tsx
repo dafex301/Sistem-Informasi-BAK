@@ -2,7 +2,11 @@ import { DocumentData } from "firebase/firestore";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { getAllUsers } from "../../../firebase/account";
-import { comparePeminjaman } from "../../../lib/dashboard";
+import {
+  comparePeminjaman,
+  peminjamanMonthly,
+  suratMonthly,
+} from "../../../lib/dashboard";
 import {
   IPeminjamanData,
   getAllPeminjaman,
@@ -10,11 +14,12 @@ import {
 import { getAllTempat } from "../../../firebase/tempat";
 import VerticalBarChart from "../../charts/vertical-bar/VerticalBarChart";
 import PageBody from "../../layout/PageBody";
+import { getAllSurat, ISuratData } from "../../../firebase/surat";
 
 export default function AdminDashboard(props: any) {
   const [peminjamanData, setPeminjamanData] = useState<IPeminjamanData[]>([]);
   const [userData, setUserData] = useState<DocumentData[]>([]);
-  const [suratData, setSuratData] = useState<DocumentData[]>([]);
+  const [suratData, setSuratData] = useState<ISuratData[]>([]);
   const [tempatData, setTempatData] = useState<DocumentData[]>([]);
 
   // Create a state that is will contain {total: number, percentage: number}
@@ -29,6 +34,7 @@ export default function AdminDashboard(props: any) {
       setPeminjamanData(await getAllPeminjaman());
       setUserData(await getAllUsers());
       setTempatData(await getAllTempat());
+      setSuratData(await getAllSurat());
     })();
   }, []);
 
@@ -81,7 +87,7 @@ export default function AdminDashboard(props: any) {
           </svg>
 
           <p className="text-xl mt-5 font-medium">Total Surat</p>
-          <p className="text-4xl font-bold">0</p>
+          <p className="text-4xl font-bold">{suratData.length}</p>
         </div>
         <Link href="/admin/accounts">
           <div className="flex flex-col shadow-sm bg-yellow-100 rounded-lg p-5 gap-1 hover:bg-yellow-200 transition-all">
@@ -159,9 +165,9 @@ export default function AdminDashboard(props: any) {
           <div className="bg-gray-100 shadow-sm rounded-lg p-5 flex flex-col justify-evenly">
             <h2 className="font-medium">Surat Menyurat Baru</h2>
             <div className="flex items-center gap-2">
-              <p className="text-4xl font-bold">0</p>
+              <p className="text-4xl font-bold">4</p>
               <div className="flex items-center text-red-800 bg-red-100 px-2 rounded-md">
-                <p>0%</p>
+                <p>15%</p>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -201,8 +207,8 @@ export default function AdminDashboard(props: any) {
         <div className="md:col-span-9 flex items-center justify-center shadow-lg rounded-lg p-5">
           <VerticalBarChart
             title={"Data Permohonan dan Surat"}
-            dataPermohonan={[]}
-            dataSurat={[]}
+            dataPermohonan={peminjamanMonthly(peminjamanData)}
+            dataSurat={suratMonthly(suratData)}
           />
         </div>
       </div>

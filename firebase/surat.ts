@@ -204,6 +204,22 @@ export const getFinishedDisposisiSurat = async (role?: Role) => {
   return surat as ISuratData[];
 };
 
+export const getSuratByOrmawaPengirim = async (ormawa_pengirim: string) => {
+  const surat: DocumentData[] = [];
+  const q = query(
+    collection(db, "surat"),
+    where("ormawa_pengirim", "==", ormawa_pengirim),
+    orderBy("modified_at", "desc")
+  );
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach((doc) => {
+    surat.push({ id: doc.id, ...doc.data() });
+  });
+
+  return surat as ISuratData[];
+};
+
 export const createSurat = async (surat: ISurat, sekretaris?: boolean) => {
   const { penerima } = surat;
 

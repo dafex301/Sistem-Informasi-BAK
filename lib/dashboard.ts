@@ -18,6 +18,23 @@ export function peminjamanRecap(data: IPeminjamanData[]) {
   return recap;
 }
 
+export function suratRecap(data: ISuratData[]) {
+  const recap = data.reduce(
+    (acc, d) => {
+      if (d.status === "Ditolak") {
+        acc.ditolak += 1;
+      } else if (d.status?.startsWith("Diproses")) {
+        acc.diproses += 1;
+      } else if (d.status === "Disetujui") {
+        acc.disetujui += 1;
+      }
+      return acc;
+    },
+    { diproses: 0, ditolak: 0, disetujui: 0 }
+  );
+  return recap;
+}
+
 export function peminjamanMonthly(data: IPeminjamanData[]) {
   const now = new Date();
   const currentYear = now.getFullYear();
