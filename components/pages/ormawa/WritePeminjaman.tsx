@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../../lib/authContext";
 
 import Input from "../../forms/Input";
-import Select from "../../forms/Select";
 import DragDropFile from "../../forms/DragDropFile";
 import { getFileName, uploadFile } from "../../../firebase/file";
 import {
